@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Prompt Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #09090f;
+      --surface:   #12121e;
+      --surface2:  #1c1c2e;
+      --border:    #2a2a42;
+      --accent:    #7c3aed;
+      --accent-h:  #6d28d9;
+      --accent2:   #4f46e5;
+      --teal:      #0ea5e9;
+      --green:     #10b981;
+      --red:       #ef4444;
+      --text:      #e2e8f0;
+      --muted:     #7b8499;
+      --chip-bg:   #1e1e32;
+      --chip-on:   #4c1d95;
+      --chip-brd:  #3b3b5c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1a0533 0%, #0f0f2e 60%, #0a1628 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 32px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header p { color: var(--muted); font-size: .85rem; margin-top: 2px; }
+
+    /* ── MODE TOGGLE ── */
+    .mode-toggle {
+      display: flex;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .mode-toggle button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 500;
+      padding: 7px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .mode-toggle button.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+    @media (max-width: 960px) { main { grid-template-columns: 1fr; } }
+
+    /* ── MODEL TABS ── */
+    .model-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .model-tab {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .model-tab:hover { border-color: var(--accent); color: var(--text); }
+    .model-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .model-tab .badge {
+      font-size: .65rem;
+      background: rgba(255,255,255,.15);
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+
+    /* ── SUBJECT INPUT ── */
+    .subject-wrap {
+      margin-bottom: 20px;
+    }
+    .subject-wrap label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 8px;
+    }
+    .subject-wrap textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: .95rem;
+      padding: 12px 14px;
+      resize: vertical;
+      min-height: 72px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .subject-wrap textarea:focus { border-color: var(--accent); }
+    .subject-wrap textarea::placeholder { color: var(--muted); }
+
+    /* ── CATEGORY GRID ── */
+    .categories { display: flex; flex-direction: column; gap: 14px; }
+
+    .cat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      transition: border-color .2s;
+    }
+    .cat-card:hover { border-color: #3d3d60; }
+    .cat-card.video-only { display: none; }
+    body.video-mode .cat-card.video-only { display: block; }
+
+    .cat-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .cat-icon { font-size: 1rem; }
+    .cat-title {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .cat-hint { font-size: .72rem; color: #4d5468; margin-left: auto; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      border: 1px solid var(--chip-brd);
+      background: var(--chip-bg);
+      color: #a0aec0;
+      font-family: inherit;
+      font-size: .8rem;
+      padding: 5px 11px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all .15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--text); }
+    .chip.selected {
+      background: var(--chip-on);
+      border-color: #7c3aed;
+      color: #d8b4fe;
+    }
+
+    /* ── SIDEBAR: PROMPT OUTPUT ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+    .prompt-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: sticky;
+      top: 24px;
+    }
+    .prompt-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .prompt-card-header span {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .char-count { font-size: .75rem; color: var(--muted); }
+
+    #prompt-output {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem;
+      line-height: 1.7;
+      color: #c4d0e8;
+      padding: 16px;
+      min-height: 220px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #prompt-output.empty { color: var(--muted); font-style: italic; }
+
+    .prompt-actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .btn {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: .82rem;
+      font-weight: 600;
+      padding: 9px 14px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-copy {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-copy:hover { background: var(--accent-h); }
+    .btn-copy.copied { background: var(--green); }
+    .btn-reset {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── TIPS CARD ── */
+    .tips-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .tips-card h3 {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+    .model-tip {
+      font-size: .78rem;
+      color: var(--muted);
+      line-height: 1.6;
+      display: none;
+    }
+    .model-tip.active { display: block; }
+    .model-tip strong { color: #a78bfa; }
+
+    /* ── HIGHLIGHT ── */
+    .hl-style   { color: #f0abfc; }
+    .hl-light   { color: #fde68a; }
+    .hl-lens    { color: #67e8f9; }
+    .hl-mood    { color: #f9a8d4; }
+    .hl-palette { color: #86efac; }
+    .hl-comp    { color: #a5f3fc; }
+    .hl-detail  { color: #c4b5fd; }
+    .hl-env     { color: #6ee7b7; }
+    .hl-time    { color: #fcd34d; }
+    .hl-quality { color: #93c5fd; }
+    .hl-motion  { color: #fb923c; }
+    .hl-extra   { color: #f87171; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--green);
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 10px;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .3s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+      z-index: 999;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>✦ AI Prompt Generator</h1>
+    <p>Генератор промтів для Nano Bano 2 · GPT Image 2 · Kling · Midjourney · та інших</p>
+  </div>
+  <div class="mode-toggle">
+    <button id="btn-image" class="active" onclick="setMode('image')">🖼 Зображення</button>
+    <button id="btn-video" onclick="setMode('video')">🎬 Відео</button>
+  </div>
+</header>
+
+<main>
+  <div class="left-col">
+
+    <!-- MODEL TABS -->
+    <div class="model-tabs" id="model-tabs"></div>
+
+    <!-- SUBJECT -->
+    <div class="subject-wrap">
+      <label>Що зображати / сцена</label>
+      <textarea id="subject" placeholder="Наприклад: молода жінка в червоному пальто, стоїть під дощем на вулиці Парижа..." rows="3" oninput="buildPrompt()"></textarea>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="categories" id="categories"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="prompt-card">
+      <div class="prompt-card-header">
+        <span>Готовий промт</span>
+        <span class="char-count" id="char-count">0 символів</span>
+      </div>
+      <div id="prompt-output" class="empty">Оберіть параметри зліва — промт з'явиться тут...</div>
+      <div class="prompt-actions">
+        <button class="btn btn-copy" id="btn-copy" onclick="copyPrompt()">Копіювати</button>
+        <button class="btn btn-reset" onclick="resetAll()">Скинути</button>
+      </div>
+    </div>
+
+    <div class="tips-card">
+      <h3>Поради для моделі</h3>
+      <div id="tips-container"></div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Скопійовано!</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const MODELS = [
+  {
+    id: 'universal', label: 'Universal', badge: null,
+    tip: '<strong>Universal</strong> — збалансований промт, що працює з більшістю моделей. Добре підходить коли не певні яку модель будете використовувати.'
+  },
+  {
+    id: 'nano-bano', label: 'Nano Bano 2', badge: 'new',
+    tip: '<strong>Nano Bano 2</strong> — добре розуміє структуровані описи через подвійні двокрапки <code>::</code>. Підтримує художні та стильові ключові слова.'
+  },
+  {
+    id: 'gpt-image', label: 'GPT Image 2', badge: null,
+    tip: '<strong>GPT Image 2</strong> — найкраще реагує на <em>природні речення</em>. Описуйте деталі послідовно, як в оповіданні. Уникайте зайвих тегів.'
+  },
+  {
+    id: 'kling', label: 'Kling', badge: 'video',
+    tip: '<strong>Kling</strong> — спеціалізується на відео. Обовʼязково вкажіть рух камери, динаміку сцени та темп. Перемкніться в режим Відео для кращого результату.'
+  },
+  {
+    id: 'midjourney', label: 'Midjourney', badge: null,
+    tip: '<strong>Midjourney</strong> — використовує суфікси <code>--ar</code>, <code>--v 6.1</code>, <code>--style raw</code>. Коми між елементами обов\'язкові. Не потребує артиклів.'
+  },
+  {
+    id: 'stable-diff', label: 'Stable Diffusion', badge: null,
+    tip: '<strong>Stable Diffusion</strong> — підтримує вагові теги <code>(keyword:1.3)</code>. Якість та деталізація на початку промту дають найкращий ефект.'
+  },
+  {
+    id: 'dalle3', label: 'DALL-E 3', badge: null,
+    tip: '<strong>DALL-E 3</strong> — розуміє природну мову чудово. Описуйте сцену повними реченнями. Уникайте слова "realistic photo" — додайте "photograph of".'
+  },
+  {
+    id: 'flux', label: 'Flux', badge: null,
+    tip: '<strong>Flux</strong> — гібрид тегів і природної мови. Добре реагує на деталі про освітлення та якість. Підтримує стилістичні суфікси.'
+  },
+];
+
+const CATEGORIES = [
+  {
+    id: 'style', icon: '🎨', title: 'Стиль', hint: 'мульти-вибір', videoOnly: false,
+    options: ['Фотореалізм','Аніме','Манга','Олійний живопис','Акварель','Цифровий арт',
+      'Кінематографічний','Концепт-арт','Піксель-арт','3D рендер','Ілюстрація',
+      'Ретро / Вінтаж','Мінімалізм','Сюрреалізм','Поп-арт','Noir','Гіперреалізм','Line art']
+  },
+  {
+    id: 'lighting', icon: '💡', title: 'Освітлення', hint: null, videoOnly: false,
+    options: ['Золота година','Синя година','Природне денне','Студійне','Кінематографічне',
+      'Неонове','Контражур (backlit)','М\'яке розсіяне','Жорстке та різке','Драматичне',
+      'Свічки / вогонь','Боке','Вулична лампа','Місячне','Сонячні промені','Бічне']
+  },
+  {
+    id: 'lens', icon: '📷', title: "Об'єктив / Камера", hint: null, videoOnly: false,
+    options: ['24mm широкий','35mm','50mm стандарт','85mm портретний','135mm телефото',
+      '200mm+','Макро','Риб\'яче Oko','Tilt-shift','Кіно-об\'єктив','DSLR',
+      'Film grain 35mm','Середній формат','Старовинний фотоапарат','Drone / aerial']
+  },
+  {
+    id: 'mood', icon: '🌀', title: 'Настрій / Атмосфера', hint: null, videoOnly: false,
+    options: ['Епічний','Таємничий','Романтичний','Меланхолійний','Радісний',
+      'Напружений','Умиротворений','Містичний','Жахливий','Ностальгійний',
+      'Мрійливий','Самотній','Надія','Тривожний','Пригодницький','Медитативний']
+  },
+  {
+    id: 'palette', icon: '🎨', title: 'Колірна палітра', hint: null, videoOnly: false,
+    options: ['Тепла (помаранч/золото)','Холодна (синій/сталь)','Пастельна',
+      'Монохромна','Вібрантна / насичена','Земляні тони','Неонова',
+      'Чорно-біла','Дуотон','Лавандова','Сепія','Тропічна','Скандинавська']
+  },
+  {
+    id: 'composition', icon: '🖼', title: 'Композиція', hint: null, videoOnly: false,
+    options: ['Правило третин','Золотий перетин','Симетрія','Центральна',
+      'Від\'ємний простір','Лінії-провідники','Кадр у кадрі',
+      'Низький кут (worm\'s eye)','Вид зверху (bird\'s eye)','Нідерландський кут',
+      'Панорама','Крупний план','Середній план','Широкий план']
+  },
+  {
+    id: 'details', icon: '🔬', title: 'Деталі', hint: 'точність', videoOnly: false,
+    options: ['Ультрадеталізовано','Гіперреалістично','Чіткий фокус на суб\'єкті',
+      'Боке фон','Видимі текстури','Fine brushstrokes','Зернистість плівки',
+      'Глибина різкості','Відблиски та блики','Мікродеталі шкіри']
+  },
+  {
+    id: 'environment', icon: '🌍', title: 'Середовище', hint: null, videoOnly: false,
+    options: ['Міський / урбаністичний','Природний пейзаж','Студія','Ліс','Пустеля',
+      'Гори','Підводний','Космос','Фантастичний світ','Постапокаліпс',
+      'Японська вулиця','Середньовічний замок','Дощовий місто','Снігова рівнина',
+      'Тропічний пляж','Внутрішній інтер\'єр','Кафе / ресторан']
+  },
+  {
+    id: 'time', icon: '🕐', title: 'Час доби', hint: null, videoOnly: false,
+    options: ['Ранкова зоря','Ранок','Полудень','Час чаю (afternoon)','Захід сонця',
+      'Сутінки','Ніч','Пізня ніч','Опівніч','Золота година','Синя година']
+  },
+  {
+    id: 'era', icon: '⏳', title: 'Ера / Епоха', hint: 'час сеттинґу', videoOnly: false,
+    options: ['Сучасність','1990-ті','1980-ті','1970-ті','1960-ті','1950-ті',
+      'Вікторіанська','Середньовіччя','Стародавній світ','Майбутнє / sci-fi',
+      'Кіберпанк','Стімпанк','Ретрофутуризм']
+  },
+  {
+    id: 'quality', icon: '✨', title: 'Якість', hint: null, videoOnly: false,
+    options: ['8K','4K','RAW','Masterpiece','Highly detailed','Professional photography',
+      'Award-winning','Photorealistic render','Ultra HD','Studio quality','Film quality']
+  },
+  {
+    id: 'motion', icon: '🎬', title: 'Рух / Динаміка', hint: 'для відео', videoOnly: true,
+    options: ['Повільний рух (slow-mo)','Прискорена зйомка','Заморожений момент',
+      'Плавний рух','Вибух / splash','Розлітається','Легкий рух вітру','Дим та туман',
+      'Вода та хвилі','Падіння','Танець','Хода персонажа']
+  },
+  {
+    id: 'camera-move', icon: '🎥', title: 'Рух камери', hint: 'для відео', videoOnly: true,
+    options: ['Статична камера','Повільний зум (push in)','Відкатування (pull out)',
+      'Панорама зліва направо','Панорама справа наліво','Кружляння навколо (orbit)',
+      'Низький кут польоту','Аеро-спуск','Стедікам / стабілізована','Handheld / трясіння',
+      'Dolly zoom (vertigo)','FPV дрон']
+  },
+  {
+    id: 'video-pace', icon: '⚡', title: 'Темп / Тривалість', hint: 'для відео', videoOnly: true,
+    options: ['3 секунди','5 секунд','10 секунд','15 секунд',
+      'Повільний темп','Середній темп','Динамічний темп','Кінематографічний ритм']
+  },
+];
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+
+let currentModel = 'universal';
+let currentMode  = 'image';
+const selections = {};  // { catId: Set of selected strings }
+
+CATEGORIES.forEach(c => { selections[c.id] = new Set(); });
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+
+function init() {
+  renderModelTabs();
+  renderCategories();
+  renderTips();
+  buildPrompt();
+}
+
+function renderModelTabs() {
+  const el = document.getElementById('model-tabs');
+  el.innerHTML = MODELS.map(m => `
+    <button class="model-tab ${m.id === currentModel ? 'active' : ''}"
+            onclick="setModel('${m.id}')">
+      ${m.label}
+      ${m.badge ? `<span class="badge">${m.badge}</span>` : ''}
+    </button>
+  `).join('');
+}
+
+function renderCategories() {
+  const el = document.getElementById('categories');
+  el.innerHTML = CATEGORIES.map(cat => `
+    <div class="cat-card${cat.videoOnly ? ' video-only' : ''}" id="cat-${cat.id}">
+      <div class="cat-header">
+        <span class="cat-icon">${cat.icon}</span>
+        <span class="cat-title">${cat.title}</span>
+        ${cat.hint ? `<span class="cat-hint">${cat.hint}</span>` : ''}
+      </div>
+      <div class="chips">
+        ${cat.options.map(opt => `
+          <button class="chip" data-cat="${cat.id}" data-val="${opt}"
+                  onclick="toggleChip('${cat.id}', this)">${opt}</button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTips() {
+  const el = document.getElementById('tips-container');
+  el.innerHTML = MODELS.map(m => `
+    <div class="model-tip${m.id === currentModel ? ' active' : ''}" id="tip-${m.id}">
+      ${m.tip}
+    </div>
+  `).join('');
+}
+
+// ─── INTERACTION ─────────────────────────────────────────────────────────────
+
+function setModel(id) {
+  currentModel = id;
+  document.querySelectorAll('.model-tab').forEach((b, i) => {
+    b.classList.toggle('active', MODELS[i].id === id);
+  });
+  document.querySelectorAll('.model-tip').forEach(el => {
+    el.classList.toggle('active', el.id === `tip-${id}`);
+  });
+  buildPrompt();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-image').classList.toggle('active', mode === 'image');
+  document.getElementById('btn-video').classList.toggle('active', mode === 'video');
+  document.body.classList.toggle('video-mode', mode === 'video');
+  buildPrompt();
+}
+
+function toggleChip(catId, btn) {
+  const val = btn.dataset.val;
+  const s = selections[catId];
+  if (s.has(val)) {
+    s.delete(val);
+    btn.classList.remove('selected');
+  } else {
+    s.add(val);
+    btn.classList.add('selected');
+  }
+  buildPrompt();
+}
+
+function resetAll() {
+  CATEGORIES.forEach(c => selections[c.id].clear());
+  document.querySelectorAll('.chip.selected').forEach(b => b.classList.remove('selected'));
+  document.getElementById('subject').value = '';
+  buildPrompt();
+}
+
+// ─── PROMPT BUILDERS ─────────────────────────────────────────────────────────
+
+function get(id) { return [...selections[id]]; }
+function has(id) { return selections[id].size > 0; }
+
+function buildPrompt() {
+  const subject = document.getElementById('subject').value.trim();
+  const data = {
+    subject,
+    style:      get('style'),
+    lighting:   get('lighting'),
+    lens:       get('lens'),
+    mood:       get('mood'),
+    palette:    get('palette'),
+    comp:       get('composition'),
+    details:    get('details'),
+    env:        get('environment'),
+    time:       get('time'),
+    era:        get('era'),
+    quality:    get('quality'),
+    motion:     get('motion'),
+    camMove:    get('camera-move'),
+    pace:       get('video-pace'),
+  };
+
+  let prompt = '';
+  const isVideo = currentMode === 'video';
+
+  switch (currentModel) {
+    case 'midjourney':   prompt = buildMidjourney(data, isVideo); break;
+    case 'stable-diff':  prompt = buildStableDiff(data, isVideo); break;
+    case 'gpt-image':    prompt = buildGPTImage(data, isVideo);   break;
+    case 'dalle3':       prompt = buildDALLE3(data, isVideo);     break;
+    case 'kling':        prompt = buildKling(data, isVideo);      break;
+    case 'flux':         prompt = buildFlux(data, isVideo);       break;
+    case 'nano-bano':    prompt = buildNanoBano(data, isVideo);   break;
+    default:             prompt = buildUniversal(data, isVideo);  break;
+  }
+
+  prompt = prompt.trim();
+
+  const outEl = document.getElementById('prompt-output');
+  if (!prompt) {
+    outEl.innerHTML = 'Оберіть параметри зліва — промт з\'явиться тут...';
+    outEl.classList.add('empty');
+  } else {
+    outEl.innerHTML = highlightPrompt(prompt, currentModel);
+    outEl.classList.remove('empty');
+  }
+  document.getElementById('char-count').textContent = `${prompt.length} символів`;
+  outEl._raw = prompt;
+}
+
+// ── Universal ──
+function buildUniversal(d, isVideo) {
+  const parts = [];
+  if (d.subject) parts.push(d.subject);
+  if (d.style.length)    parts.push(d.style.join(', ') + ' style');
+  if (d.env.length)      parts.push(d.env.join(', ') + ' environment');
+  if (d.time.length)     parts.push(d.time.join(', '));
+  if (d.era.length)      parts.push(d.era.join(' '));
+  if (d.lighting.length) parts.push(d.lighting.join(', ') + ' lighting');
+  if (d.lens.length)     parts.push(d.lens.join(', ') + ' lens');
+  if (d.mood.length)     parts.push(d.mood.join(', ') + ' mood');
+  if (d.palette.length)  parts.push(d.palette.join(', ') + ' color palette');
+  if (d.comp.length)     parts.push(d.comp.join(', ') + ' composition');
+  if (d.details.length)  parts.push(d.details.join(', '));
+  if (isVideo) {
+    if (d.motion.length)  parts.push(d.motion.join(', '));
+    if (d.camMove.length) parts.push('camera: ' + d.camMove.join(', '));
+    if (d.pace.length)    parts.push(d.pace.join(', '));
+  }
+  if (d.quality.length)  parts.push(d.quality.join(', '));
+  return parts.join(', ');
+}
+
+// ── Midjourney ──
+function buildMidjourney(d, isVideo) {
+  const parts = [];
+  if (d.subject) parts.push(d.subject);
+  if (d.style.length)    parts.push(d.style.join(', '));
+  if (d.env.length)      parts.push(d.env.join(', '));
+  if (d.time.length)     parts.push(d.time.join(', '));
+  if (d.lighting.length) parts.push(d.lighting.join(', ') + ' lighting');
+  if (d.lens.length)     parts.push(d.lens.join(', '));
+  if (d.mood.length)     parts.push(d.mood.join(', ') + ' atmosphere');
+  if (d.palette.length)  parts.push(d.palette.join(', ') + ' palette');
+  if (d.comp.length)     parts.push(d.comp.join(', ') + ' composition');
+  if (d.details.length)  parts.push(d.details.join(', '));
+  if (isVideo && d.motion.length) parts.push(d.motion.join(', '));
+  const suffix = ['--ar 16:9', '--v 6.1'];
+  if (d.style.some(s => s.toLowerCase().includes('аніме') || s.toLowerCase().includes('anime'))) {
+    suffix.push('--niji 6');
+  } else {
+    suffix.push('--style raw');
+  }
+  if (d.quality.some(q => q.includes('detail'))) suffix.push('--q 2');
+  return parts.join(', ') + '\n\n' + suffix.join(' ');
+}
+
+// ── Stable Diffusion ──
+function buildStableDiff(d, isVideo) {
+  const front = [];
+  if (d.quality.length) d.quality.forEach(q => front.push(`(${q}:1.4)`));
+  else front.push('(masterpiece:1.4)', '(best quality:1.3)');
+  if (d.details.length) d.details.forEach(det => front.push(`(${det}:1.3)`));
+  const main = [];
+  if (d.subject) main.push(d.subject);
+  if (d.style.length) d.style.forEach(s => main.push(`(${s} style:1.2)`));
+  if (d.env.length)   main.push(d.env.join(', '));
+  if (d.time.length)  main.push(d.time.join(', '));
+  if (d.lighting.length) main.push(d.lighting.join(', ') + ' lighting');
+  if (d.lens.length)  main.push(d.lens.join(', '));
+  if (d.mood.length)  main.push(d.mood.join(', '));
+  if (d.palette.length) main.push(d.palette.join(', ') + ' color scheme');
+  if (d.comp.length)  main.push(d.comp.join(', '));
+  if (isVideo && d.motion.length) main.push(d.motion.join(', '));
+  return [...front, ...main].join(', ');
+}
+
+// ── GPT Image 2 ──
+function buildGPTImage(d, isVideo) {
+  let s = '';
+  const style = d.style.length ? d.style.join(' and ') + ' style' : 'photorealistic style';
+  const subject = d.subject || 'a scene';
+  s += `A ${style} ${isVideo ? 'video' : 'image'} of ${subject}.`;
+  if (d.env.length || d.time.length || d.era.length) {
+    const ctx = [...d.env, ...d.time, ...d.era].join(', ');
+    s += ` The setting is ${ctx}.`;
+  }
+  if (d.lighting.length) s += ` Lighting: ${d.lighting.join(' and ')}.`;
+  if (d.mood.length)     s += ` The mood is ${d.mood.join(' and ')}.`;
+  if (d.palette.length)  s += ` Color palette: ${d.palette.join(', ')}.`;
+  if (d.comp.length)     s += ` Composition: ${d.comp.join(', ')}.`;
+  if (d.lens.length)     s += ` Shot with ${d.lens.join(', ')}.`;
+  if (d.details.length)  s += ` ${d.details.join(', ')}.`;
+  if (isVideo) {
+    if (d.motion.length)  s += ` Motion: ${d.motion.join(', ')}.`;
+    if (d.camMove.length) s += ` Camera movement: ${d.camMove.join(', ')}.`;
+    if (d.pace.length)    s += ` ${d.pace.join(', ')}.`;
+  }
+  if (d.quality.length)  s += ` ${d.quality.join(', ')}.`;
+  return s;
+}
+
+// ── DALL-E 3 ──
+function buildDALLE3(d, isVideo) {
+  const style = d.style.length ? d.style.join(' and ') : 'photorealistic';
+  const subject = d.subject || 'a detailed scene';
+  let s = `A photograph depicting ${subject}. Rendered in ${style} aesthetic`;
+  if (d.era.length) s += `, set in ${d.era.join(' and ')}`;
+  s += '.';
+  if (d.env.length) s += ` The environment is ${d.env.join(', ')}.`;
+  if (d.time.length) s += ` Time of day: ${d.time.join(', ')}.`;
+  if (d.lighting.length) s += ` Illuminated with ${d.lighting.join(' and ')} lighting.`;
+  if (d.mood.length) s += ` The atmosphere feels ${d.mood.join(' and ')}.`;
+  if (d.palette.length) s += ` The color palette is ${d.palette.join(' and ')}.`;
+  if (d.lens.length) s += ` Captured using ${d.lens.join(', ')}.`;
+  if (d.comp.length) s += ` ${d.comp.join(', ')} composition.`;
+  if (d.details.length) s += ` ${d.details.join(', ')}.`;
+  if (d.quality.length) s += ` ${d.quality.join(', ')}.`;
+  return s;
+}
+
+// ── Kling ──
+function buildKling(d, isVideo) {
+  const parts = [];
+  if (d.subject) parts.push(d.subject);
+  if (d.env.length)      parts.push(d.env.join(', '));
+  if (d.time.length)     parts.push(d.time.join(', '));
+  if (d.era.length)      parts.push(d.era.join(', '));
+  if (d.style.length)    parts.push(d.style.join(', ') + ' visual style');
+  if (d.lighting.length) parts.push(d.lighting.join(', ') + ' lighting');
+  if (d.mood.length)     parts.push(d.mood.join(', ') + ' atmosphere');
+  if (d.palette.length)  parts.push(d.palette.join(', ') + ' color grade');
+  const sceneDesc = parts.join(', ');
+  const motionParts = [];
+  if (d.motion.length)  motionParts.push(d.motion.join(', '));
+  if (d.camMove.length) motionParts.push('Camera: ' + d.camMove.join(', '));
+  if (d.pace.length)    motionParts.push(d.pace.join(', '));
+  if (d.lens.length)    motionParts.push(d.lens.join(', '));
+  const qualParts = [];
+  if (d.details.length) qualParts.push(d.details.join(', '));
+  if (d.quality.length) qualParts.push(d.quality.join(', '));
+  const sections = [];
+  if (sceneDesc) sections.push(sceneDesc);
+  if (motionParts.length) sections.push(motionParts.join('. '));
+  if (qualParts.length)   sections.push(qualParts.join(', '));
+  return sections.join('.\n');
+}
+
+// ── Flux ──
+function buildFlux(d, isVideo) {
+  const parts = [];
+  if (d.subject) parts.push(d.subject);
+  if (d.style.length)    parts.push(d.style.join(', ') + ' style');
+  if (d.env.length)      parts.push(d.env.join(', '));
+  if (d.time.length)     parts.push(d.time.join(', '));
+  if (d.era.length)      parts.push(d.era.join(', '));
+  if (d.lighting.length) parts.push(d.lighting.join(' and ') + ' lighting');
+  if (d.lens.length)     parts.push(d.lens.join(', '));
+  if (d.mood.length)     parts.push(d.mood.join(', ') + ' mood');
+  if (d.palette.length)  parts.push(d.palette.join(', ') + ' color palette');
+  if (d.comp.length)     parts.push(d.comp.join(', '));
+  if (d.details.length)  parts.push(d.details.join(', '));
+  if (isVideo && d.motion.length)  parts.push(d.motion.join(', '));
+  if (isVideo && d.camMove.length) parts.push(d.camMove.join(', '));
+  if (d.quality.length)  parts.push(d.quality.join(', '));
+  return parts.join(', ');
+}
+
+// ── Nano Bano 2 ──
+function buildNanoBano(d, isVideo) {
+  const blocks = [];
+  if (d.subject)         blocks.push(d.subject);
+  if (d.style.length)    blocks.push(d.style.join(' + ') + ' aesthetic');
+  if (d.env.length)      blocks.push(d.env.join(', '));
+  if (d.time.length)     blocks.push(d.time.join(', '));
+  if (d.era.length)      blocks.push(d.era.join(', '));
+  if (d.lighting.length) blocks.push(d.lighting.join(' & ') + ' lighting');
+  if (d.mood.length)     blocks.push(d.mood.join(' & ') + ' atmosphere');
+  if (d.palette.length)  blocks.push(d.palette.join(', ') + ' palette');
+  if (d.comp.length)     blocks.push(d.comp.join(', '));
+  if (d.lens.length)     blocks.push(d.lens.join(', '));
+  if (d.details.length)  blocks.push(d.details.join(', '));
+  if (isVideo && d.motion.length)  blocks.push(d.motion.join(', '));
+  if (isVideo && d.camMove.length) blocks.push(d.camMove.join(', '));
+  if (d.quality.length)  blocks.push(d.quality.join(', '));
+  return blocks.join(' :: ');
+}
+
+// ─── HIGHLIGHT ───────────────────────────────────────────────────────────────
+
+function highlightPrompt(text) {
+  // Escape HTML
+  text = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  const maps = [
+    { cat: 'style',       cls: 'hl-style'   },
+    { cat: 'lighting',    cls: 'hl-light'   },
+    { cat: 'lens',        cls: 'hl-lens'    },
+    { cat: 'mood',        cls: 'hl-mood'    },
+    { cat: 'palette',     cls: 'hl-palette' },
+    { cat: 'composition', cls: 'hl-comp'    },
+    { cat: 'details',     cls: 'hl-detail'  },
+    { cat: 'environment', cls: 'hl-env'     },
+    { cat: 'time',        cls: 'hl-time'    },
+    { cat: 'quality',     cls: 'hl-quality' },
+    { cat: 'motion',      cls: 'hl-motion'  },
+    { cat: 'camera-move', cls: 'hl-motion'  },
+    { cat: 'era',         cls: 'hl-extra'   },
+  ];
+
+  maps.forEach(({ cat, cls }) => {
+    selections[cat].forEach(val => {
+      const safeVal = val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      text = text.replace(new RegExp(safeVal, 'g'), `<span class="${cls}">${val}</span>`);
+    });
+  });
+
+  // Midjourney params
+  text = text.replace(/(--\w[\w.]*)/g, '<span style="color:#60a5fa">$1</span>');
+
+  return text;
+}
+
+// ─── COPY ─────────────────────────────────────────────────────────────────────
+
+function copyPrompt() {
+  const raw = document.getElementById('prompt-output')._raw || '';
+  if (!raw) return;
+  navigator.clipboard.writeText(raw).then(() => {
+    const btn = document.getElementById('btn-copy');
+    btn.textContent = '✓ Скопійовано';
+    btn.classList.add('copied');
+    showToast();
+    setTimeout(() => {
+      btn.textContent = 'Копіювати';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ─── START ───────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
