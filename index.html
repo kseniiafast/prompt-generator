@@ -1,337 +1,147 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Prompt Generator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #09090f;
-      --surface:   #12121e;
-      --surface2:  #1c1c2e;
-      --border:    #2a2a42;
-      --accent:    #7c3aed;
-      --accent-h:  #6d28d9;
-      --accent2:   #4f46e5;
-      --teal:      #0ea5e9;
-      --green:     #10b981;
-      --red:       #ef4444;
-      --text:      #e2e8f0;
-      --muted:     #7b8499;
-      --chip-bg:   #1e1e32;
-      --chip-on:   #4c1d95;
-      --chip-brd:  #3b3b5c;
+      --bg: #09090f; --surface: #12121e; --surface2: #1c1c2e; --border: #2a2a42;
+      --accent: #7c3aed; --accent-h: #6d28d9; --green: #10b981; --red: #ef4444;
+      --teal: #0ea5e9; --text: #e2e8f0; --muted: #7b8499;
+      --chip-bg: #1e1e32; --chip-on: #4c1d95; --chip-brd: #3b3b5c;
     }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── HEADER ── */
+    /* HEADER */
     header {
       background: linear-gradient(135deg, #1a0533 0%, #0f0f2e 60%, #0a1628 100%);
       border-bottom: 1px solid var(--border);
-      padding: 24px 32px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      padding: 18px 28px; display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 12px;
     }
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #a78bfa, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    header p { color: var(--muted); font-size: .85rem; margin-top: 2px; }
+    header h1 { font-size: 1.35rem; font-weight: 700; background: linear-gradient(90deg,#a78bfa,#60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    header p { color: var(--muted); font-size: .8rem; margin-top: 2px; }
+    .mode-toggle { display: flex; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; gap: 2px; }
+    .mode-toggle button { border: none; background: transparent; color: var(--muted); font-family: inherit; font-size: .8rem; font-weight: 500; padding: 7px 15px; border-radius: 7px; cursor: pointer; transition: all .2s; white-space: nowrap; }
+    .mode-toggle button.active { background: var(--accent); color: #fff; }
 
-    /* ── MODE TOGGLE ── */
-    .mode-toggle {
-      display: flex;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 3px;
-      gap: 2px;
-    }
-    .mode-toggle button {
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-family: inherit;
-      font-size: .85rem;
-      font-weight: 500;
-      padding: 7px 18px;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: all .2s;
-    }
-    .mode-toggle button.active {
-      background: var(--accent);
-      color: #fff;
-    }
+    /* LAYOUT */
+    main { max-width: 1360px; margin: 0 auto; padding: 22px 20px 60px; display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
+    @media (max-width: 1020px) { main { grid-template-columns: 1fr; } }
 
-    /* ── MAIN LAYOUT ── */
-    main {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 28px 24px 60px;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 24px;
-    }
-    @media (max-width: 960px) { main { grid-template-columns: 1fr; } }
-
-    /* ── MODEL TABS ── */
-    .model-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-    .model-tab {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--muted);
-      font-family: inherit;
-      font-size: .8rem;
-      font-weight: 500;
-      padding: 7px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all .2s;
-      white-space: nowrap;
-    }
+    /* MODEL TABS */
+    .model-tabs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+    .model-tab { border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-family: inherit; font-size: .76rem; font-weight: 500; padding: 6px 13px; border-radius: 8px; cursor: pointer; transition: all .2s; }
     .model-tab:hover { border-color: var(--accent); color: var(--text); }
-    .model-tab.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .model-tab .badge {
-      font-size: .65rem;
-      background: rgba(255,255,255,.15);
-      padding: 1px 5px;
-      border-radius: 4px;
-      margin-left: 4px;
-    }
+    .model-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .model-tab .badge { font-size: .6rem; background: rgba(255,255,255,.18); padding: 1px 5px; border-radius: 4px; margin-left: 4px; }
 
-    /* ── SUBJECT INPUT ── */
-    .subject-wrap {
-      margin-bottom: 20px;
-    }
-    .subject-wrap label {
-      display: block;
-      font-size: .8rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 8px;
-    }
-    .subject-wrap textarea {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: .95rem;
-      padding: 12px 14px;
-      resize: vertical;
-      min-height: 72px;
-      outline: none;
-      transition: border-color .2s;
-    }
+    /* FIELD */
+    .field-label { display: block; font-size: .72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+    .subject-wrap { margin-bottom: 16px; }
+    .subject-wrap textarea { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: inherit; font-size: .9rem; padding: 11px 13px; resize: vertical; min-height: 70px; outline: none; transition: border-color .2s; }
     .subject-wrap textarea:focus { border-color: var(--accent); }
     .subject-wrap textarea::placeholder { color: var(--muted); }
+    .translate-status { font-size: .7rem; margin-top: 5px; height: 14px; color: transparent; transition: color .2s; }
+    .translate-status.translating { color: var(--teal); }
+    .translate-status.done { color: var(--green); }
+    .translate-status.error { color: var(--red); }
 
-    /* ── CATEGORY GRID ── */
-    .categories { display: flex; flex-direction: column; gap: 14px; }
-
-    .cat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      transition: border-color .2s;
-    }
+    /* CATEGORIES */
+    .categories { display: flex; flex-direction: column; gap: 11px; }
+    .cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; transition: border-color .2s; }
     .cat-card:hover { border-color: #3d3d60; }
+    /* video-only: shown only in video mode */
     .cat-card.video-only { display: none; }
-    body.video-mode .cat-card.video-only { display: block; }
+    body.mode-video .cat-card.video-only { display: block; }
+    /* edit-only: shown only in edit mode */
+    .cat-card.edit-only { display: none; }
+    body.mode-edit .cat-card.edit-only { display: block; }
+    /* hide non-edit cards in edit mode */
+    body.mode-edit .cat-card:not(.edit-only) { display: none; }
 
-    .cat-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .cat-icon { font-size: 1rem; }
-    .cat-title {
-      font-size: .8rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-    .cat-hint { font-size: .72rem; color: #4d5468; margin-left: auto; }
+    .cat-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .cat-icon { font-size: .9rem; }
+    .cat-title { font-size: .74rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .cat-badge { font-size: .65rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 1px 7px; border-radius: 10px; margin-left: auto; }
 
     .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip {
-      border: 1px solid var(--chip-brd);
-      background: var(--chip-bg);
-      color: #a0aec0;
-      font-family: inherit;
-      font-size: .8rem;
-      padding: 5px 11px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all .15s;
-      user-select: none;
-    }
+    .chip { border: 1px solid var(--chip-brd); background: var(--chip-bg); color: #a0aec0; font-family: inherit; font-size: .77rem; padding: 5px 11px; border-radius: 20px; cursor: pointer; transition: all .15s; user-select: none; }
     .chip:hover { border-color: var(--accent); color: var(--text); }
-    .chip.selected {
-      background: var(--chip-on);
-      border-color: #7c3aed;
-      color: #d8b4fe;
-    }
+    .chip.on { background: var(--chip-on); border-color: #7c3aed; color: #d8b4fe; }
 
-    /* ── SIDEBAR: PROMPT OUTPUT ── */
-    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .extra-textarea { width: 100%; background: var(--chip-bg); border: 1px solid var(--chip-brd); border-radius: 8px; color: var(--text); font-family: inherit; font-size: .8rem; padding: 9px 12px; resize: vertical; min-height: 58px; outline: none; margin-top: 10px; transition: border-color .2s; }
+    .extra-textarea:focus { border-color: var(--accent); }
+    .extra-textarea::placeholder { color: var(--muted); }
 
-    .prompt-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      position: sticky;
-      top: 24px;
-    }
-    .prompt-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface2);
-    }
-    .prompt-card-header span {
-      font-size: .8rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-    .char-count { font-size: .75rem; color: var(--muted); }
+    /* REFERENCES */
+    .ref-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 11px; overflow: hidden; }
+    body.mode-edit .ref-section { display: none; }
+    .ref-header { display: flex; align-items: center; justify-content: space-between; padding: 13px 15px; cursor: pointer; user-select: none; }
+    .ref-header-left { display: flex; align-items: center; gap: 8px; }
+    .ref-title { font-size: .74rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .ref-arrow { color: var(--muted); font-size: .75rem; transition: transform .2s; }
+    .ref-section.open .ref-arrow { transform: rotate(180deg); }
+    .ref-body { display: none; padding: 0 14px 14px; }
+    .ref-section.open .ref-body { display: block; }
+    .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .ref-grid { grid-template-columns: 1fr; } }
+    .ref-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 11px; }
+    .ref-item-title { font-size: .7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+    .upload-zone { border: 1.5px dashed var(--chip-brd); border-radius: 7px; padding: 10px; text-align: center; cursor: pointer; transition: border-color .2s; margin-bottom: 7px; position: relative; min-height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    .upload-zone:hover { border-color: var(--accent); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .upload-hint { font-size: .7rem; color: var(--muted); pointer-events: none; }
+    .ref-thumb { width: 100%; max-height: 70px; object-fit: cover; border-radius: 5px; display: none; pointer-events: none; }
+    .ref-thumb.show { display: block; }
+    .ref-fname { font-size: .65rem; color: var(--teal); display: none; pointer-events: none; }
+    .ref-fname.show { display: block; }
+    .ref-desc { width: 100%; background: var(--chip-bg); border: 1px solid var(--chip-brd); border-radius: 6px; color: var(--text); font-family: inherit; font-size: .75rem; padding: 7px 9px; resize: none; min-height: 46px; outline: none; transition: border-color .2s; }
+    .ref-desc:focus { border-color: var(--accent); }
+    .ref-desc::placeholder { color: var(--muted); }
 
-    #prompt-output {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .78rem;
-      line-height: 1.7;
-      color: #c4d0e8;
-      padding: 16px;
-      min-height: 220px;
-      white-space: pre-wrap;
-      word-break: break-word;
+    /* SIDEBAR */
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+    .prompt-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; position: sticky; top: 20px; }
+    .prompt-card-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    .prompt-card-top span { font-size: .73rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .char-count { font-size: .7rem; color: var(--muted); }
+    #prompt-out {
+      font-family: 'JetBrains Mono', monospace; font-size: .73rem; line-height: 1.75;
+      color: #c4d0e8; padding: 14px 15px; min-height: 280px; max-height: 580px;
+      overflow-y: auto; white-space: pre-wrap; word-break: break-word;
     }
-    #prompt-output.empty { color: var(--muted); font-style: italic; }
-
-    .prompt-actions {
-      display: flex;
-      gap: 8px;
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      background: var(--surface2);
-    }
-    .btn {
-      flex: 1;
-      border: none;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: .82rem;
-      font-weight: 600;
-      padding: 9px 14px;
-      cursor: pointer;
-      transition: all .2s;
-    }
-    .btn-copy {
-      background: var(--accent);
-      color: #fff;
-    }
+    #prompt-out.empty { font-family: 'Inter', sans-serif; font-size: .85rem; color: var(--muted); font-style: italic; display: flex; align-items: center; justify-content: center; min-height: 280px; text-align: center; padding: 30px 20px; }
+    .prompt-btns { display: flex; gap: 8px; padding: 11px 14px; border-top: 1px solid var(--border); background: var(--surface2); }
+    .btn { flex: 1; border: none; border-radius: 8px; font-family: inherit; font-size: .79rem; font-weight: 600; padding: 9px 12px; cursor: pointer; transition: all .2s; }
+    .btn-copy { background: var(--accent); color: #fff; }
     .btn-copy:hover { background: var(--accent-h); }
     .btn-copy.copied { background: var(--green); }
-    .btn-reset {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
+    .btn-reset { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
     .btn-reset:hover { border-color: var(--red); color: var(--red); }
 
-    /* ── TIPS CARD ── */
-    .tips-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .tips-card h3 {
-      font-size: .78rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 10px;
-    }
-    .model-tip {
-      font-size: .78rem;
-      color: var(--muted);
-      line-height: 1.6;
-      display: none;
-    }
-    .model-tip.active { display: block; }
-    .model-tip strong { color: #a78bfa; }
+    /* TIPS */
+    .tips-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+    .tips-card h3 { font-size: .7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 9px; }
+    .tip { font-size: .75rem; color: var(--muted); line-height: 1.65; display: none; }
+    .tip.on { display: block; }
+    .tip strong { color: #a78bfa; }
+    .tip code { background: var(--surface2); padding: 1px 5px; border-radius: 3px; font-size: .7rem; color: #67e8f9; font-family: 'JetBrains Mono', monospace; }
 
-    /* ── HIGHLIGHT ── */
-    .hl-style   { color: #f0abfc; }
-    .hl-light   { color: #fde68a; }
-    .hl-lens    { color: #67e8f9; }
-    .hl-mood    { color: #f9a8d4; }
-    .hl-palette { color: #86efac; }
-    .hl-comp    { color: #a5f3fc; }
-    .hl-detail  { color: #c4b5fd; }
-    .hl-env     { color: #6ee7b7; }
-    .hl-time    { color: #fcd34d; }
-    .hl-quality { color: #93c5fd; }
-    .hl-motion  { color: #fb923c; }
-    .hl-extra   { color: #f87171; }
+    /* PROMPT SYNTAX COLORS */
+    .pl { color: #818cf8; font-weight: 600; }   /* label  */
+    .pv { color: #e2e8f0; }                      /* value  */
+    .ps { color: #f0abfc; }                      /* subject value */
+    .pb { color: #34d399; }                      /* bullet */
+    .pp { color: #60a5fa; }                      /* params */
+    .pd { color: #94a3b8; }                      /* divider */
+    .pe { color: #f87171; }                      /* edit header */
 
-    /* ── TOAST ── */
-    .toast {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      background: var(--green);
-      color: #fff;
-      font-size: .85rem;
-      font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 10px;
-      transform: translateY(80px);
-      opacity: 0;
-      transition: all .3s cubic-bezier(.34,1.56,.64,1);
-      pointer-events: none;
-      z-index: 999;
-    }
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #fff; font-size: .82rem; font-weight: 600; padding: 10px 18px; border-radius: 9px; transform: translateY(60px); opacity: 0; transition: all .3s cubic-bezier(.34,1.56,.64,1); pointer-events: none; z-index: 999; }
     .toast.show { transform: translateY(0); opacity: 1; }
   </style>
 </head>
@@ -340,565 +150,741 @@
 <header>
   <div>
     <h1>✦ AI Prompt Generator</h1>
-    <p>Генератор промтів для Nano Bano 2 · GPT Image 2 · Kling · Midjourney · та інших</p>
+    <p>Nano Bano 2 · GPT Image 2 · Kling · Midjourney · Stable Diffusion · DALL-E 3 · Flux</p>
   </div>
   <div class="mode-toggle">
-    <button id="btn-image" class="active" onclick="setMode('image')">🖼 Зображення</button>
-    <button id="btn-video" onclick="setMode('video')">🎬 Відео</button>
+    <button id="btn-image" class="active" onclick="setMode('image')">🖼 Image</button>
+    <button id="btn-video" onclick="setMode('video')">🎬 Video</button>
+    <button id="btn-edit"  onclick="setMode('edit')">✏️ Edit Photo</button>
   </div>
 </header>
 
 <main>
-  <div class="left-col">
-
-    <!-- MODEL TABS -->
+  <div>
     <div class="model-tabs" id="model-tabs"></div>
 
-    <!-- SUBJECT -->
     <div class="subject-wrap">
-      <label>Що зображати / сцена</label>
-      <textarea id="subject" placeholder="Наприклад: молода жінка в червоному пальто, стоїть під дощем на вулиці Парижа..." rows="3" oninput="buildPrompt()"></textarea>
+      <label class="field-label" id="subject-label">Subject / Scene Description</label>
+      <textarea id="subject" placeholder="Type in any language — auto-translated to English in the prompt..." rows="3" oninput="onSubjectInput()"></textarea>
+      <div class="translate-status" id="xlat-status"></div>
     </div>
 
-    <!-- CATEGORIES -->
+    <!-- References (hidden in edit mode) -->
+    <div class="ref-section" id="ref-section">
+      <div class="ref-header" onclick="document.getElementById('ref-section').classList.toggle('open')">
+        <div class="ref-header-left">
+          <span style="font-size:.9rem">📎</span>
+          <span class="ref-title">References &amp; Assets</span>
+          <span style="font-size:.7rem;color:var(--muted);margin-left:8px">composition · product · logo · style</span>
+        </div>
+        <span class="ref-arrow">▼</span>
+      </div>
+      <div class="ref-body">
+        <div class="ref-grid" id="ref-grid"></div>
+      </div>
+    </div>
+
     <div class="categories" id="categories"></div>
   </div>
 
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="prompt-card">
-      <div class="prompt-card-header">
-        <span>Готовий промт</span>
-        <span class="char-count" id="char-count">0 символів</span>
+      <div class="prompt-card-top">
+        <span id="prompt-label">Generated Prompt</span>
+        <span class="char-count" id="char-count">0 chars</span>
       </div>
-      <div id="prompt-output" class="empty">Оберіть параметри зліва — промт з'явиться тут...</div>
-      <div class="prompt-actions">
-        <button class="btn btn-copy" id="btn-copy" onclick="copyPrompt()">Копіювати</button>
-        <button class="btn btn-reset" onclick="resetAll()">Скинути</button>
+      <div id="prompt-out" class="empty">Select parameters on the left — your prompt will appear here...</div>
+      <div class="prompt-btns">
+        <button class="btn btn-copy" id="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+        <button class="btn btn-reset" onclick="resetAll()">Reset All</button>
       </div>
     </div>
-
     <div class="tips-card">
-      <h3>Поради для моделі</h3>
-      <div id="tips-container"></div>
+      <h3>Model Tips</h3>
+      <div id="tips-wrap"></div>
     </div>
   </div>
 </main>
 
-<div class="toast" id="toast">Скопійовано!</div>
+<div class="toast" id="toast">Copied to clipboard!</div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════
 
 const MODELS = [
-  {
-    id: 'universal', label: 'Universal', badge: null,
-    tip: '<strong>Universal</strong> — збалансований промт, що працює з більшістю моделей. Добре підходить коли не певні яку модель будете використовувати.'
-  },
-  {
-    id: 'nano-bano', label: 'Nano Bano 2', badge: 'new',
-    tip: '<strong>Nano Bano 2</strong> — добре розуміє структуровані описи через подвійні двокрапки <code>::</code>. Підтримує художні та стильові ключові слова.'
-  },
-  {
-    id: 'gpt-image', label: 'GPT Image 2', badge: null,
-    tip: '<strong>GPT Image 2</strong> — найкраще реагує на <em>природні речення</em>. Описуйте деталі послідовно, як в оповіданні. Уникайте зайвих тегів.'
-  },
-  {
-    id: 'kling', label: 'Kling', badge: 'video',
-    tip: '<strong>Kling</strong> — спеціалізується на відео. Обовʼязково вкажіть рух камери, динаміку сцени та темп. Перемкніться в режим Відео для кращого результату.'
-  },
-  {
-    id: 'midjourney', label: 'Midjourney', badge: null,
-    tip: '<strong>Midjourney</strong> — використовує суфікси <code>--ar</code>, <code>--v 6.1</code>, <code>--style raw</code>. Коми між елементами обов\'язкові. Не потребує артиклів.'
-  },
-  {
-    id: 'stable-diff', label: 'Stable Diffusion', badge: null,
-    tip: '<strong>Stable Diffusion</strong> — підтримує вагові теги <code>(keyword:1.3)</code>. Якість та деталізація на початку промту дають найкращий ефект.'
-  },
-  {
-    id: 'dalle3', label: 'DALL-E 3', badge: null,
-    tip: '<strong>DALL-E 3</strong> — розуміє природну мову чудово. Описуйте сцену повними реченнями. Уникайте слова "realistic photo" — додайте "photograph of".'
-  },
-  {
-    id: 'flux', label: 'Flux', badge: null,
-    tip: '<strong>Flux</strong> — гібрид тегів і природної мови. Добре реагує на деталі про освітлення та якість. Підтримує стилістичні суфікси.'
-  },
+  { id:'universal',   label:'Universal',        badge:null,
+    tip:'<strong>Universal</strong> — balanced structured prompt that works across most AI models. Good when unsure which model to use.' },
+  { id:'nano-bano',   label:'Nano Bano 2',       badge:'new',
+    tip:'<strong>Nano Bano 2</strong> — responds well to structured keyword blocks. Artistic and stylistic descriptors in sequence work best.' },
+  { id:'gpt-image',   label:'GPT Image 2',       badge:null,
+    tip:'<strong>GPT Image 2</strong> — best with natural language sentences. Describe details narratively. Full sentences outperform tag lists.' },
+  { id:'kling',       label:'Kling',             badge:'video',
+    tip:'<strong>Kling</strong> — specialized for video. Always specify camera movement and scene dynamics. Use <strong>Video</strong> mode for best results.' },
+  { id:'midjourney',  label:'Midjourney',        badge:null,
+    tip:'<strong>Midjourney</strong> — uses suffixes <code>--ar</code> <code>--v 6.1</code> <code>--style raw</code>. Comma-separated keywords. No articles needed.' },
+  { id:'stable-diff', label:'Stable Diffusion',  badge:null,
+    tip:'<strong>Stable Diffusion</strong> — supports weight tags <code>(keyword:1.3)</code>. Put quality markers first. Use img2img for photo editing.' },
+  { id:'dalle3',      label:'DALL-E 3',          badge:null,
+    tip:'<strong>DALL-E 3</strong> — understands natural language well. Use "a photograph of…" phrasing. Full descriptive sentences work best.' },
+  { id:'flux',        label:'Flux',              badge:null,
+    tip:'<strong>Flux</strong> — hybrid of tags and natural language. Lighting details and quality descriptors improve output significantly.' },
 ];
 
-const CATEGORIES = [
-  {
-    id: 'style', icon: '🎨', title: 'Стиль', hint: 'мульти-вибір', videoOnly: false,
-    options: ['Фотореалізм','Аніме','Манга','Олійний живопис','Акварель','Цифровий арт',
-      'Кінематографічний','Концепт-арт','Піксель-арт','3D рендер','Ілюстрація',
-      'Ретро / Вінтаж','Мінімалізм','Сюрреалізм','Поп-арт','Noir','Гіперреалізм','Line art']
-  },
-  {
-    id: 'lighting', icon: '💡', title: 'Освітлення', hint: null, videoOnly: false,
-    options: ['Золота година','Синя година','Природне денне','Студійне','Кінематографічне',
-      'Неонове','Контражур (backlit)','М\'яке розсіяне','Жорстке та різке','Драматичне',
-      'Свічки / вогонь','Боке','Вулична лампа','Місячне','Сонячні промені','Бічне']
-  },
-  {
-    id: 'lens', icon: '📷', title: "Об'єктив / Камера", hint: null, videoOnly: false,
-    options: ['24mm широкий','35mm','50mm стандарт','85mm портретний','135mm телефото',
-      '200mm+','Макро','Риб\'яче Oko','Tilt-shift','Кіно-об\'єктив','DSLR',
-      'Film grain 35mm','Середній формат','Старовинний фотоапарат','Drone / aerial']
-  },
-  {
-    id: 'mood', icon: '🌀', title: 'Настрій / Атмосфера', hint: null, videoOnly: false,
-    options: ['Епічний','Таємничий','Романтичний','Меланхолійний','Радісний',
-      'Напружений','Умиротворений','Містичний','Жахливий','Ностальгійний',
-      'Мрійливий','Самотній','Надія','Тривожний','Пригодницький','Медитативний']
-  },
-  {
-    id: 'palette', icon: '🎨', title: 'Колірна палітра', hint: null, videoOnly: false,
-    options: ['Тепла (помаранч/золото)','Холодна (синій/сталь)','Пастельна',
-      'Монохромна','Вібрантна / насичена','Земляні тони','Неонова',
-      'Чорно-біла','Дуотон','Лавандова','Сепія','Тропічна','Скандинавська']
-  },
-  {
-    id: 'composition', icon: '🖼', title: 'Композиція', hint: null, videoOnly: false,
-    options: ['Правило третин','Золотий перетин','Симетрія','Центральна',
-      'Від\'ємний простір','Лінії-провідники','Кадр у кадрі',
-      'Низький кут (worm\'s eye)','Вид зверху (bird\'s eye)','Нідерландський кут',
-      'Панорама','Крупний план','Середній план','Широкий план']
-  },
-  {
-    id: 'details', icon: '🔬', title: 'Деталі', hint: 'точність', videoOnly: false,
-    options: ['Ультрадеталізовано','Гіперреалістично','Чіткий фокус на суб\'єкті',
-      'Боке фон','Видимі текстури','Fine brushstrokes','Зернистість плівки',
-      'Глибина різкості','Відблиски та блики','Мікродеталі шкіри']
-  },
-  {
-    id: 'environment', icon: '🌍', title: 'Середовище', hint: null, videoOnly: false,
-    options: ['Міський / урбаністичний','Природний пейзаж','Студія','Ліс','Пустеля',
-      'Гори','Підводний','Космос','Фантастичний світ','Постапокаліпс',
-      'Японська вулиця','Середньовічний замок','Дощовий місто','Снігова рівнина',
-      'Тропічний пляж','Внутрішній інтер\'єр','Кафе / ресторан']
-  },
-  {
-    id: 'time', icon: '🕐', title: 'Час доби', hint: null, videoOnly: false,
-    options: ['Ранкова зоря','Ранок','Полудень','Час чаю (afternoon)','Захід сонця',
-      'Сутінки','Ніч','Пізня ніч','Опівніч','Золота година','Синя година']
-  },
-  {
-    id: 'era', icon: '⏳', title: 'Ера / Епоха', hint: 'час сеттинґу', videoOnly: false,
-    options: ['Сучасність','1990-ті','1980-ті','1970-ті','1960-ті','1950-ті',
-      'Вікторіанська','Середньовіччя','Стародавній світ','Майбутнє / sci-fi',
-      'Кіберпанк','Стімпанк','Ретрофутуризм']
-  },
-  {
-    id: 'quality', icon: '✨', title: 'Якість', hint: null, videoOnly: false,
-    options: ['8K','4K','RAW','Masterpiece','Highly detailed','Professional photography',
-      'Award-winning','Photorealistic render','Ultra HD','Studio quality','Film quality']
-  },
-  {
-    id: 'motion', icon: '🎬', title: 'Рух / Динаміка', hint: 'для відео', videoOnly: true,
-    options: ['Повільний рух (slow-mo)','Прискорена зйомка','Заморожений момент',
-      'Плавний рух','Вибух / splash','Розлітається','Легкий рух вітру','Дим та туман',
-      'Вода та хвилі','Падіння','Танець','Хода персонажа']
-  },
-  {
-    id: 'camera-move', icon: '🎥', title: 'Рух камери', hint: 'для відео', videoOnly: true,
-    options: ['Статична камера','Повільний зум (push in)','Відкатування (pull out)',
-      'Панорама зліва направо','Панорама справа наліво','Кружляння навколо (orbit)',
-      'Низький кут польоту','Аеро-спуск','Стедікам / стабілізована','Handheld / трясіння',
-      'Dolly zoom (vertigo)','FPV дрон']
-  },
-  {
-    id: 'video-pace', icon: '⚡', title: 'Темп / Тривалість', hint: 'для відео', videoOnly: true,
-    options: ['3 секунди','5 секунд','10 секунд','15 секунд',
-      'Повільний темп','Середній темп','Динамічний темп','Кінематографічний ритм']
-  },
+const CATS = [
+  // ── Image / Video categories ──────────────────────────────────────────
+  { id:'style', icon:'🎨', title:'Style', video:false, edit:false,
+    opts:['Photorealism','Anime','Manga','Oil Painting','Watercolor','Digital Art','Cinematic',
+      'Concept Art','Pixel Art','3D Render','Illustration','Retro / Vintage','Minimalism',
+      'Surrealism','Pop Art','Noir','Hyperrealism','Line Art','Impressionism'] },
+  { id:'lighting', icon:'💡', title:'Lighting', video:false, edit:false,
+    opts:['Golden Hour','Blue Hour','Natural Daylight','Studio','Cinematic','Neon',
+      'Backlit (Contre-jour)','Soft Diffused','Hard & Sharp','Dramatic','Candlelight / Fire',
+      'Bokeh Light','Street Lamp','Moonlight','Sun Rays','Side Light','Rim Light'] },
+  { id:'lens', icon:'📷', title:'Lens / Camera', video:false, edit:false,
+    opts:['24mm Wide','35mm','50mm Standard','85mm Portrait','135mm Telephoto','200mm+',
+      'Macro','Fisheye','Tilt-shift','Cinema Lens','DSLR','35mm Film Grain',
+      'Medium Format','Vintage Camera','Drone / Aerial'] },
+  { id:'mood', icon:'🌀', title:'Mood / Atmosphere', video:false, edit:false,
+    opts:['Epic','Mysterious','Romantic','Melancholic','Joyful','Tense','Peaceful',
+      'Mystical','Eerie / Horror','Nostalgic','Dreamy','Lonely','Hopeful',
+      'Anxious','Adventurous','Meditative','Serene','Intense'] },
+  { id:'palette', icon:'🎭', title:'Color Palette', video:false, edit:false,
+    opts:['Warm (Orange / Gold)','Cool (Blue / Steel)','Pastel','Monochrome',
+      'Vibrant / Saturated','Earth Tones','Neon','Black & White','Duotone',
+      'Lavender','Sepia','Tropical','Scandinavian','Deep Space Blues'] },
+  { id:'composition', icon:'🖼', title:'Composition', video:false, edit:false,
+    opts:['Rule of Thirds','Golden Ratio','Symmetry','Centered','Negative Space',
+      'Leading Lines','Frame within Frame','Low Angle (Worm\'s Eye)',
+      'High Angle (Bird\'s Eye)','Dutch Angle','Panoramic','Close-up',
+      'Medium Shot','Wide Shot','Over-the-shoulder'] },
+  { id:'details', icon:'🔬', title:'Details', video:false, edit:false,
+    opts:['Ultra-detailed','Hyper-realistic','Sharp Focus on Subject',
+      'Bokeh Background','Visible Textures','Fine Brushstrokes','Film Grain',
+      'Depth of Field','Lens Flares & Glints','Skin Micro-details',
+      'Fabric & Material Detail','Water Droplets'] },
+  { id:'environment', icon:'🌍', title:'Environment', video:false, edit:false,
+    opts:['Urban / City','Natural Landscape','Studio','Forest','Desert','Mountains',
+      'Underwater','Space','Fantasy World','Post-Apocalyptic','Japanese Street',
+      'Medieval Castle','Rainy City','Snowy Plains','Tropical Beach',
+      'Interior / Indoor','Cafe / Restaurant','Industrial'] },
+  { id:'time', icon:'🕐', title:'Time of Day', video:false, edit:false,
+    opts:['Dawn','Morning','Noon','Afternoon','Sunset','Twilight / Dusk',
+      'Night','Late Night','Midnight','Golden Hour','Blue Hour'] },
+  { id:'era', icon:'⏳', title:'Era / Period', video:false, edit:false,
+    opts:['Contemporary','1990s','1980s','1970s','1960s','1950s','Victorian',
+      'Medieval','Ancient World','Future / Sci-fi','Cyberpunk','Steampunk',
+      'Retro-futurism'] },
+  { id:'quality', icon:'✨', title:'Quality', video:false, edit:false,
+    opts:['8K','4K','RAW','Masterpiece','Highly Detailed','Professional Photography',
+      'Award-winning','Photorealistic Render','Ultra HD','Studio Quality',
+      'Film Quality','Sharp & Crisp'] },
+  // ── Video-only ────────────────────────────────────────────────────────
+  { id:'motion', icon:'🎬', title:'Motion / Dynamics', video:true, edit:false, badge:'video',
+    opts:['Slow Motion','Time-lapse','Frozen Moment','Smooth Movement',
+      'Explosion / Splash','Flying Apart','Gentle Wind Breeze','Smoke & Fog Drift',
+      'Water & Waves','Falling','Dancing','Character Walking','Crowd Movement'] },
+  { id:'cam-move', icon:'🎥', title:'Camera Movement', video:true, edit:false, badge:'video',
+    opts:['Static Camera','Slow Push In (Zoom)','Pull Out (Reveal)',
+      'Pan Left to Right','Pan Right to Left','Orbit / Circular',
+      'Low Altitude Flight','Aerial Descent','Steadicam / Stabilized',
+      'Handheld / Shaky','Dolly Zoom (Vertigo)','FPV Drone'] },
+  { id:'pace', icon:'⚡', title:'Pace / Duration', video:true, edit:false, badge:'video',
+    opts:['3 seconds','5 seconds','10 seconds','15 seconds',
+      'Slow Pace','Medium Pace','Dynamic Pace','Cinematic Rhythm'] },
+  // ── Edit-only ─────────────────────────────────────────────────────────
+  { id:'edit-type', icon:'✏️', title:'Edit Type', video:false, edit:true, badge:'edit',
+    opts:['Season Change','Time of Day Change','Weather Change',
+      'Style / Aesthetic Change','Color Grading','Background Replacement',
+      'Object Removal','Object Addition','Lighting Adjustment',
+      'Environment Change','Texture Change','Age / Era Change',
+      'Perspective Change','Mood Change'] },
+  { id:'edit-from', icon:'⬅️', title:'From — Current State', video:false, edit:true, badge:'edit',
+    opts:['Spring','Summer','Autumn','Winter',
+      'Morning','Noon','Evening','Night',
+      'Clear Sky','Overcast','Rainy','Snowy','Foggy','Stormy',
+      'Realistic / Natural','Vintage / Film','Black & White',
+      'Warm Tones','Cool Tones','Dark & Moody','Bright & Airy','Modern','Rustic'] },
+  { id:'edit-to', icon:'➡️', title:'To — Desired State', video:false, edit:true, badge:'edit',
+    opts:['Spring','Summer','Autumn','Winter',
+      'Morning','Noon','Evening','Night',
+      'Clear Sky','Overcast','Rainy','Snowy','Foggy','Stormy',
+      'Cyberpunk','Neon / Synthwave','Cinematic Film',
+      'Oil Painting','Watercolor','Fantasy / Magic','Sci-fi',
+      'Dark & Moody','Golden Hour','Dreamy Pastel','Noir','Anime'] },
+  { id:'intensity', icon:'🎚️', title:'Transformation Intensity', video:false, edit:true, badge:'edit',
+    opts:['Subtle (~20%)','Moderate (~50%)','Dramatic (~80%)','Complete Overhaul (100%)'] },
+  { id:'preserve', icon:'🔒', title:'Preserve — Keep Unchanged', video:false, edit:true, badge:'edit',
+    opts:['Original Composition','Subject / People','Facial Features',
+      'Product Shape & Details','Logo & Text','Proportions',
+      'Color Scheme','Lighting Direction','Textures',
+      'Background Elements','Camera Angle'] },
 ];
 
-// ─── STATE ──────────────────────────────────────────────────────────────────
+const REFS = [
+  { id:'ref-comp',    label:'📐 Composition Ref',
+    ph:'Describe what to borrow from this reference: framing, perspective, layout...' },
+  { id:'ref-prod',    label:'📦 Product / Object',
+    ph:'Product name + placement — e.g. "BioLite charging station, center foreground, fully lit"' },
+  { id:'ref-logo',    label:'🏷️ Logo / Text',
+    ph:'Logo name + placement — e.g. "TechBrand logo, bottom-right, white version, 8% width"' },
+  { id:'ref-style',   label:'🖌️ Style Reference',
+    ph:'What to take from this ref: color grading, mood, texture, lighting...' },
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
 
 let currentModel = 'universal';
 let currentMode  = 'image';
-const selections = {};  // { catId: Set of selected strings }
 
-CATEGORIES.forEach(c => { selections[c.id] = new Set(); });
+const sel = {};
+CATS.forEach(c => { sel[c.id] = new Set(); });
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
+const refState = {};
+REFS.forEach(r => { refState[r.id] = { name: '', desc: '' }; });
+
+let translatedSubject = '';
+let xlatTimer = null;
+let editAddl = '';
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
 
 function init() {
   renderModelTabs();
+  renderRefs();
   renderCategories();
   renderTips();
-  buildPrompt();
+  rebuild();
 }
 
 function renderModelTabs() {
-  const el = document.getElementById('model-tabs');
-  el.innerHTML = MODELS.map(m => `
-    <button class="model-tab ${m.id === currentModel ? 'active' : ''}"
-            onclick="setModel('${m.id}')">
-      ${m.label}
-      ${m.badge ? `<span class="badge">${m.badge}</span>` : ''}
-    </button>
-  `).join('');
+  document.getElementById('model-tabs').innerHTML = MODELS.map(m =>
+    `<button class="model-tab${m.id===currentModel?' active':''}" onclick="setModel('${m.id}')">
+       ${m.label}${m.badge?`<span class="badge">${m.badge}</span>`:''}
+     </button>`
+  ).join('');
+}
+
+function renderRefs() {
+  document.getElementById('ref-grid').innerHTML = REFS.map(r => `
+    <div class="ref-item">
+      <div class="ref-item-title">${r.label}</div>
+      <div class="upload-zone" id="${r.id}-zone">
+        <input type="file" accept="image/*" onchange="onRefUpload('${r.id}',this)">
+        <img  class="ref-thumb" id="${r.id}-thumb" src="" alt="">
+        <span class="ref-fname" id="${r.id}-fname"></span>
+        <span class="upload-hint" id="${r.id}-hint">Click to upload image</span>
+      </div>
+      <textarea class="ref-desc" id="${r.id}-desc" placeholder="${r.ph}" rows="2"
+        oninput="refState['${r.id}'].desc=this.value;rebuild()"></textarea>
+    </div>`).join('');
 }
 
 function renderCategories() {
-  const el = document.getElementById('categories');
-  el.innerHTML = CATEGORIES.map(cat => `
-    <div class="cat-card${cat.videoOnly ? ' video-only' : ''}" id="cat-${cat.id}">
+  document.getElementById('categories').innerHTML = CATS.map(cat => `
+    <div class="cat-card${cat.video?' video-only':''}${cat.edit?' edit-only':''}" id="cat-${cat.id}">
       <div class="cat-header">
         <span class="cat-icon">${cat.icon}</span>
         <span class="cat-title">${cat.title}</span>
-        ${cat.hint ? `<span class="cat-hint">${cat.hint}</span>` : ''}
+        ${cat.badge?`<span class="cat-badge">${cat.badge}</span>`:''}
       </div>
-      <div class="chips">
-        ${cat.options.map(opt => `
-          <button class="chip" data-cat="${cat.id}" data-val="${opt}"
-                  onclick="toggleChip('${cat.id}', this)">${opt}</button>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
+      <div class="chips">${cat.opts.map(o =>
+        `<button class="chip" onclick="toggleChip('${cat.id}',this)">${o}</button>`
+      ).join('')}</div>
+      ${cat.id==='preserve'
+        ? `<textarea class="extra-textarea" id="edit-addl"
+             placeholder="Additional edit instructions (optional)..."
+             oninput="editAddl=this.value;rebuild()"></textarea>`
+        : ''}
+    </div>`).join('');
 }
 
 function renderTips() {
-  const el = document.getElementById('tips-container');
-  el.innerHTML = MODELS.map(m => `
-    <div class="model-tip${m.id === currentModel ? ' active' : ''}" id="tip-${m.id}">
-      ${m.tip}
-    </div>
-  `).join('');
+  document.getElementById('tips-wrap').innerHTML = MODELS.map(m =>
+    `<div class="tip${m.id===currentModel?' on':''}" id="tip-${m.id}">${m.tip}</div>`
+  ).join('');
 }
 
-// ─── INTERACTION ─────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════
+// EVENT HANDLERS
+// ═══════════════════════════════════════════════════════════════════════
 
 function setModel(id) {
   currentModel = id;
-  document.querySelectorAll('.model-tab').forEach((b, i) => {
-    b.classList.toggle('active', MODELS[i].id === id);
-  });
-  document.querySelectorAll('.model-tip').forEach(el => {
-    el.classList.toggle('active', el.id === `tip-${id}`);
-  });
-  buildPrompt();
+  document.querySelectorAll('.model-tab').forEach((b,i) => b.classList.toggle('active', MODELS[i].id===id));
+  document.querySelectorAll('.tip').forEach(el => el.classList.toggle('on', el.id===`tip-${id}`));
+  rebuild();
 }
 
 function setMode(mode) {
   currentMode = mode;
-  document.getElementById('btn-image').classList.toggle('active', mode === 'image');
-  document.getElementById('btn-video').classList.toggle('active', mode === 'video');
-  document.body.classList.toggle('video-mode', mode === 'video');
-  buildPrompt();
+  ['image','video','edit'].forEach(m =>
+    document.getElementById(`btn-${m}`).classList.toggle('active', mode===m));
+  document.body.className = `mode-${mode}`;
+
+  const lbl = document.getElementById('subject-label');
+  const ta  = document.getElementById('subject');
+  if (mode === 'edit') {
+    lbl.textContent = 'Original Photo Description';
+    ta.placeholder  = 'Describe the original photo you want to edit...';
+  } else {
+    lbl.textContent = 'Subject / Scene Description';
+    ta.placeholder  = 'Type in any language — auto-translated to English in the prompt...';
+  }
+  rebuild();
 }
 
 function toggleChip(catId, btn) {
-  const val = btn.dataset.val;
-  const s = selections[catId];
-  if (s.has(val)) {
-    s.delete(val);
-    btn.classList.remove('selected');
-  } else {
-    s.add(val);
-    btn.classList.add('selected');
-  }
-  buildPrompt();
+  const v = btn.textContent.trim();
+  if (sel[catId].has(v)) { sel[catId].delete(v); btn.classList.remove('on'); }
+  else                   { sel[catId].add(v);    btn.classList.add('on'); }
+  rebuild();
+}
+
+function onRefUpload(id, input) {
+  const file = input.files[0];
+  if (!file) return;
+  refState[id].name = file.name;
+  const thumb = document.getElementById(`${id}-thumb`);
+  const fname = document.getElementById(`${id}-fname`);
+  const hint  = document.getElementById(`${id}-hint`);
+  const reader = new FileReader();
+  reader.onload = e => {
+    thumb.src = e.target.result;
+    thumb.classList.add('show');
+    fname.textContent = file.name;
+    fname.classList.add('show');
+    hint.style.display = 'none';
+    rebuild();
+  };
+  reader.readAsDataURL(file);
 }
 
 function resetAll() {
-  CATEGORIES.forEach(c => selections[c.id].clear());
-  document.querySelectorAll('.chip.selected').forEach(b => b.classList.remove('selected'));
+  CATS.forEach(c => sel[c.id].clear());
+  document.querySelectorAll('.chip.on').forEach(b => b.classList.remove('on'));
   document.getElementById('subject').value = '';
-  buildPrompt();
+  translatedSubject = '';
+  editAddl = '';
+  const addlEl = document.getElementById('edit-addl');
+  if (addlEl) addlEl.value = '';
+  document.getElementById('xlat-status').textContent = '';
+  document.getElementById('xlat-status').className = 'translate-status';
+  REFS.forEach(r => {
+    refState[r.id] = { name:'', desc:'' };
+    const thumb = document.getElementById(`${r.id}-thumb`);
+    const fname = document.getElementById(`${r.id}-fname`);
+    const hint  = document.getElementById(`${r.id}-hint`);
+    const desc  = document.getElementById(`${r.id}-desc`);
+    if (thumb) { thumb.src=''; thumb.classList.remove('show'); }
+    if (fname) { fname.textContent=''; fname.classList.remove('show'); }
+    if (hint)  hint.style.display = '';
+    if (desc)  desc.value = '';
+  });
+  rebuild();
 }
 
-// ─── PROMPT BUILDERS ─────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════
+// TRANSLATION
+// ═══════════════════════════════════════════════════════════════════════
 
-function get(id) { return [...selections[id]]; }
-function has(id) { return selections[id].size > 0; }
+function onSubjectInput() {
+  const raw = document.getElementById('subject').value.trim();
+  if (!raw || /^[\x00-\x7F\s]*$/.test(raw)) {
+    translatedSubject = raw;
+    document.getElementById('xlat-status').className = 'translate-status';
+    rebuild();
+    return;
+  }
+  clearTimeout(xlatTimer);
+  const st = document.getElementById('xlat-status');
+  st.textContent = '⟳ Translating...';
+  st.className = 'translate-status translating';
+  xlatTimer = setTimeout(() => doTranslate(raw), 750);
+}
 
-function buildPrompt() {
-  const subject = document.getElementById('subject').value.trim();
-  const data = {
-    subject,
-    style:      get('style'),
-    lighting:   get('lighting'),
-    lens:       get('lens'),
-    mood:       get('mood'),
-    palette:    get('palette'),
-    comp:       get('composition'),
-    details:    get('details'),
-    env:        get('environment'),
-    time:       get('time'),
-    era:        get('era'),
-    quality:    get('quality'),
-    motion:     get('motion'),
-    camMove:    get('camera-move'),
-    pace:       get('video-pace'),
+async function doTranslate(text) {
+  const st = document.getElementById('xlat-status');
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    translatedSubject = data[0].map(x => x[0]).join('').trim();
+    st.textContent = '✓ Translated to English';
+    st.className = 'translate-status done';
+  } catch {
+    translatedSubject = text;
+    st.textContent = '⚠ Translation unavailable — using original text';
+    st.className = 'translate-status error';
+  }
+  rebuild();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+
+function g(id) { return [...sel[id]]; }
+
+function getSubject() {
+  const raw = document.getElementById('subject').value.trim();
+  if (!raw) return '';
+  if (/^[\x00-\x7F\s]*$/.test(raw)) return raw;
+  return translatedSubject || raw;
+}
+
+function refsBlock() {
+  return REFS.flatMap(r => {
+    const d = refState[r.id];
+    if (!d.name && !d.desc) return [];
+    const lbl = r.label.replace(/^\S+\s/, '');
+    let line = `• ${lbl}:`;
+    if (d.name) line += ` [${d.name}]`;
+    if (d.desc) line += ` ${d.desc}`;
+    return [line];
+  });
+}
+
+function hasContent() {
+  return getSubject()
+    || CATS.some(c => sel[c.id].size > 0)
+    || REFS.some(r => refState[r.id].name || refState[r.id].desc);
+}
+
+// ── Build a structured line: "LABEL: val1, val2" ──
+// Returns [] if values empty.
+function row(label, vals) {
+  if (!vals || (Array.isArray(vals) ? !vals.length : !vals)) return [];
+  const v = Array.isArray(vals) ? vals.join(', ') : vals;
+  return [`${label}: ${v}`];
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// PROMPT BUILDERS
+// ═══════════════════════════════════════════════════════════════════════
+
+function rebuild() {
+  const out = document.getElementById('prompt-out');
+  if (!hasContent()) {
+    out.innerHTML = currentMode==='edit'
+      ? 'Select edit parameters on the left...'
+      : 'Select parameters on the left — your prompt will appear here...';
+    out.classList.add('empty');
+    out._raw = '';
+    document.getElementById('char-count').textContent = '0 chars';
+    return;
+  }
+
+  const d = {
+    subject: getSubject(),
+    style:   g('style'),    lighting: g('lighting'), lens:    g('lens'),
+    mood:    g('mood'),     palette:  g('palette'),  comp:    g('composition'),
+    details: g('details'),  env:      g('environment'), time: g('time'),
+    era:     g('era'),      quality:  g('quality'),
+    motion:  g('motion'),   camMove:  g('cam-move'), pace:    g('pace'),
+    eType:   g('edit-type'), eFrom:   g('edit-from'), eTo:    g('edit-to'),
+    intensity: g('intensity'), preserve: g('preserve'),
+    refs: refsBlock(), addl: editAddl,
   };
 
-  let prompt = '';
-  const isVideo = currentMode === 'video';
+  const isVid  = currentMode === 'video';
+  const isEdit = currentMode === 'edit';
 
-  switch (currentModel) {
-    case 'midjourney':   prompt = buildMidjourney(data, isVideo); break;
-    case 'stable-diff':  prompt = buildStableDiff(data, isVideo); break;
-    case 'gpt-image':    prompt = buildGPTImage(data, isVideo);   break;
-    case 'dalle3':       prompt = buildDALLE3(data, isVideo);     break;
-    case 'kling':        prompt = buildKling(data, isVideo);      break;
-    case 'flux':         prompt = buildFlux(data, isVideo);       break;
-    case 'nano-bano':    prompt = buildNanoBano(data, isVideo);   break;
-    default:             prompt = buildUniversal(data, isVideo);  break;
-  }
-
-  prompt = prompt.trim();
-
-  const outEl = document.getElementById('prompt-output');
-  if (!prompt) {
-    outEl.innerHTML = 'Оберіть параметри зліва — промт з\'явиться тут...';
-    outEl.classList.add('empty');
+  let lines;
+  if (isEdit) {
+    lines = buildEdit(d);
   } else {
-    outEl.innerHTML = highlightPrompt(prompt, currentModel);
-    outEl.classList.remove('empty');
+    const map = {
+      'midjourney':  buildMJ,
+      'stable-diff': buildSD,
+      'gpt-image':   buildGPT,
+      'dalle3':      buildDALLE,
+      'kling':       buildKling,
+      'flux':        buildFlux,
+      'nano-bano':   buildNano,
+    };
+    lines = (map[currentModel] || buildUniversal)(d, isVid);
   }
-  document.getElementById('char-count').textContent = `${prompt.length} символів`;
-  outEl._raw = prompt;
+
+  const raw = lines.join('\n');
+  out.innerHTML = colorize(lines);
+  out.classList.remove('empty');
+  out._raw = raw;
+  document.getElementById('char-count').textContent = `${raw.length} chars`;
 }
 
-// ── Universal ──
-function buildUniversal(d, isVideo) {
-  const parts = [];
-  if (d.subject) parts.push(d.subject);
-  if (d.style.length)    parts.push(d.style.join(', ') + ' style');
-  if (d.env.length)      parts.push(d.env.join(', ') + ' environment');
-  if (d.time.length)     parts.push(d.time.join(', '));
-  if (d.era.length)      parts.push(d.era.join(' '));
-  if (d.lighting.length) parts.push(d.lighting.join(', ') + ' lighting');
-  if (d.lens.length)     parts.push(d.lens.join(', ') + ' lens');
-  if (d.mood.length)     parts.push(d.mood.join(', ') + ' mood');
-  if (d.palette.length)  parts.push(d.palette.join(', ') + ' color palette');
-  if (d.comp.length)     parts.push(d.comp.join(', ') + ' composition');
-  if (d.details.length)  parts.push(d.details.join(', '));
-  if (isVideo) {
-    if (d.motion.length)  parts.push(d.motion.join(', '));
-    if (d.camMove.length) parts.push('camera: ' + d.camMove.join(', '));
-    if (d.pace.length)    parts.push(d.pace.join(', '));
+// ── Universal ──────────────────────────────────────────────────────────
+function buildUniversal(d, vid) {
+  const L = [];
+  if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
+  L.push(...row('STYLE', d.style));
+  L.push(...row('LIGHTING', d.lighting));
+  L.push(...row('LENS / CAMERA', d.lens));
+  L.push(...row('MOOD / ATMOSPHERE', d.mood));
+  L.push(...row('COLOR PALETTE', d.palette));
+  L.push(...row('COMPOSITION', d.comp));
+  L.push(...row('DETAILS', d.details));
+  L.push(...row('ENVIRONMENT', d.env));
+  L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('ERA / PERIOD', d.era));
+  if (vid) {
+    L.push(...row('MOTION / DYNAMICS', d.motion));
+    L.push(...row('CAMERA MOVEMENT', d.camMove));
+    L.push(...row('PACE / DURATION', d.pace));
   }
-  if (d.quality.length)  parts.push(d.quality.join(', '));
-  return parts.join(', ');
+  L.push(...row('QUALITY', d.quality));
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  return L;
 }
 
-// ── Midjourney ──
-function buildMidjourney(d, isVideo) {
-  const parts = [];
-  if (d.subject) parts.push(d.subject);
-  if (d.style.length)    parts.push(d.style.join(', '));
-  if (d.env.length)      parts.push(d.env.join(', '));
-  if (d.time.length)     parts.push(d.time.join(', '));
-  if (d.lighting.length) parts.push(d.lighting.join(', ') + ' lighting');
-  if (d.lens.length)     parts.push(d.lens.join(', '));
-  if (d.mood.length)     parts.push(d.mood.join(', ') + ' atmosphere');
-  if (d.palette.length)  parts.push(d.palette.join(', ') + ' palette');
-  if (d.comp.length)     parts.push(d.comp.join(', ') + ' composition');
-  if (d.details.length)  parts.push(d.details.join(', '));
-  if (isVideo && d.motion.length) parts.push(d.motion.join(', '));
-  const suffix = ['--ar 16:9', '--v 6.1'];
-  if (d.style.some(s => s.toLowerCase().includes('аніме') || s.toLowerCase().includes('anime'))) {
-    suffix.push('--niji 6');
-  } else {
-    suffix.push('--style raw');
+// ── Midjourney ─────────────────────────────────────────────────────────
+function buildMJ(d, vid) {
+  const L = [];
+  if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
+  L.push(...row('STYLE', d.style));
+  L.push(...row('ENVIRONMENT', d.env));
+  L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('ERA / PERIOD', d.era));
+  L.push(...row('LIGHTING', d.lighting));
+  L.push(...row('LENS / CAMERA', d.lens));
+  L.push(...row('MOOD / ATMOSPHERE', d.mood));
+  L.push(...row('COLOR PALETTE', d.palette));
+  L.push(...row('COMPOSITION', d.comp));
+  L.push(...row('DETAILS', d.details));
+  if (vid) { L.push(...row('MOTION', d.motion)); }
+  L.push(...row('QUALITY', d.quality));
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  const p = ['--ar 16:9', '--v 6.1'];
+  if (d.style.some(s => /anim|manga/i.test(s))) p.push('--niji 6');
+  else p.push('--style raw');
+  if (d.quality.some(q => /detail/i.test(q))) p.push('--q 2');
+  L.push('', 'PARAMS:', p.join(' '));
+  return L;
+}
+
+// ── Stable Diffusion ───────────────────────────────────────────────────
+function buildSD(d, vid) {
+  const L = [];
+  if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
+  const qTags = d.quality.length ? d.quality.map(q=>`(${q}:1.4)`).join(', ')
+    : '(masterpiece:1.4), (best quality:1.3)';
+  L.push(`QUALITY TAGS: ${qTags}`);
+  if (d.style.length)    L.push(`STYLE: ${d.style.map(s=>`(${s}:1.2)`).join(', ')}`);
+  L.push(...row('LIGHTING', d.lighting));
+  L.push(...row('LENS / CAMERA', d.lens));
+  L.push(...row('MOOD / ATMOSPHERE', d.mood));
+  L.push(...row('COLOR PALETTE', d.palette));
+  L.push(...row('COMPOSITION', d.comp));
+  if (d.details.length) L.push(`DETAILS: ${d.details.map(x=>`(${x}:1.3)`).join(', ')}`);
+  L.push(...row('ENVIRONMENT', d.env));
+  L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('ERA / PERIOD', d.era));
+  if (vid) { L.push(...row('MOTION', d.motion)); }
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  return L;
+}
+
+// ── GPT Image 2 ────────────────────────────────────────────────────────
+function buildGPT(d, vid) {
+  const L = [];
+  const sty = d.style.length ? d.style.join(' and ')+' style' : 'photorealistic style';
+  const subj = d.subject || 'a scene';
+  L.push('SUBJECT:', `A ${sty} ${vid?'video scene':'image'} of ${subj}.`, '');
+  if (d.env.length||d.time.length||d.era.length)
+    L.push('SETTING:', [...d.env,...d.time,...d.era].join(', ')+'.');
+  L.push(...row('LIGHTING', d.lighting.length ? [d.lighting.join(' and ')+' lighting'] : []));
+  L.push(...row('MOOD / ATMOSPHERE', d.mood.length ? [d.mood.join(' and ')+' atmosphere'] : []));
+  L.push(...row('COLOR PALETTE', d.palette));
+  L.push(...row('COMPOSITION', d.comp.length ? [d.comp.join(', ')+' composition'] : []));
+  L.push(...row('LENS / CAMERA', d.lens.length ? ['Shot with '+d.lens.join(', ')] : []));
+  L.push(...row('DETAILS', d.details));
+  if (vid) {
+    L.push(...row('MOTION', d.motion));
+    L.push(...row('CAMERA MOVEMENT', d.camMove));
+    L.push(...row('PACE', d.pace));
   }
-  if (d.quality.some(q => q.includes('detail'))) suffix.push('--q 2');
-  return parts.join(', ') + '\n\n' + suffix.join(' ');
+  L.push(...row('QUALITY', d.quality));
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  return L;
 }
 
-// ── Stable Diffusion ──
-function buildStableDiff(d, isVideo) {
-  const front = [];
-  if (d.quality.length) d.quality.forEach(q => front.push(`(${q}:1.4)`));
-  else front.push('(masterpiece:1.4)', '(best quality:1.3)');
-  if (d.details.length) d.details.forEach(det => front.push(`(${det}:1.3)`));
-  const main = [];
-  if (d.subject) main.push(d.subject);
-  if (d.style.length) d.style.forEach(s => main.push(`(${s} style:1.2)`));
-  if (d.env.length)   main.push(d.env.join(', '));
-  if (d.time.length)  main.push(d.time.join(', '));
-  if (d.lighting.length) main.push(d.lighting.join(', ') + ' lighting');
-  if (d.lens.length)  main.push(d.lens.join(', '));
-  if (d.mood.length)  main.push(d.mood.join(', '));
-  if (d.palette.length) main.push(d.palette.join(', ') + ' color scheme');
-  if (d.comp.length)  main.push(d.comp.join(', '));
-  if (isVideo && d.motion.length) main.push(d.motion.join(', '));
-  return [...front, ...main].join(', ');
+// ── DALL-E 3 ───────────────────────────────────────────────────────────
+function buildDALLE(d, vid) {
+  const L = [];
+  const sty  = d.style.length ? d.style.join(' and ') : 'photorealistic';
+  const subj = d.subject || 'a detailed scene';
+  const era  = d.era.length ? ', set in '+d.era.join(' and ') : '';
+  L.push('SUBJECT:', `A photograph of ${subj}. Rendered in ${sty} aesthetic${era}.`, '');
+  if (d.env.length)      L.push('ENVIRONMENT:', 'Set in '+d.env.join(', ')+'.');
+  if (d.time.length)     L.push('TIME OF DAY:', d.time.join(', ')+'.');
+  if (d.lighting.length) L.push('LIGHTING:', 'Illuminated with '+d.lighting.join(' and ')+' lighting.');
+  if (d.mood.length)     L.push('MOOD / ATMOSPHERE:', 'The atmosphere feels '+d.mood.join(' and ')+'.');
+  L.push(...row('COLOR PALETTE', d.palette));
+  if (d.lens.length)     L.push('LENS / CAMERA:', 'Captured using '+d.lens.join(', ')+'.');
+  if (d.comp.length)     L.push('COMPOSITION:', d.comp.join(', ')+' composition.');
+  L.push(...row('DETAILS', d.details));
+  L.push(...row('QUALITY', d.quality));
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  return L;
 }
 
-// ── GPT Image 2 ──
-function buildGPTImage(d, isVideo) {
-  let s = '';
-  const style = d.style.length ? d.style.join(' and ') + ' style' : 'photorealistic style';
-  const subject = d.subject || 'a scene';
-  s += `A ${style} ${isVideo ? 'video' : 'image'} of ${subject}.`;
-  if (d.env.length || d.time.length || d.era.length) {
-    const ctx = [...d.env, ...d.time, ...d.era].join(', ');
-    s += ` The setting is ${ctx}.`;
+// ── Kling ──────────────────────────────────────────────────────────────
+function buildKling(d, vid) {
+  const L = [];
+  if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
+  L.push(...row('ENVIRONMENT', d.env));
+  L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('ERA / PERIOD', d.era));
+  L.push(...row('VISUAL STYLE', d.style));
+  L.push(...row('LIGHTING', d.lighting));
+  L.push(...row('MOOD / ATMOSPHERE', d.mood));
+  L.push(...row('COLOR GRADE', d.palette));
+  L.push(...row('COMPOSITION', d.comp));
+  L.push(...row('MOTION / DYNAMICS', d.motion));
+  L.push(...row('CAMERA MOVEMENT', d.camMove));
+  L.push(...row('PACE / DURATION', d.pace));
+  L.push(...row('LENS / CAMERA', d.lens));
+  L.push(...row('DETAILS', d.details));
+  L.push(...row('QUALITY', d.quality));
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  return L;
+}
+
+// ── Flux ───────────────────────────────────────────────────────────────
+function buildFlux(d, vid) {
+  const L = [];
+  if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
+  L.push(...row('STYLE', d.style));
+  L.push(...row('ENVIRONMENT', d.env));
+  L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('ERA / PERIOD', d.era));
+  L.push(...row('LIGHTING', d.lighting));
+  L.push(...row('LENS / CAMERA', d.lens));
+  L.push(...row('MOOD / ATMOSPHERE', d.mood));
+  L.push(...row('COLOR PALETTE', d.palette));
+  L.push(...row('COMPOSITION', d.comp));
+  L.push(...row('DETAILS', d.details));
+  if (vid) {
+    L.push(...row('MOTION', d.motion));
+    L.push(...row('CAMERA MOVEMENT', d.camMove));
   }
-  if (d.lighting.length) s += ` Lighting: ${d.lighting.join(' and ')}.`;
-  if (d.mood.length)     s += ` The mood is ${d.mood.join(' and ')}.`;
-  if (d.palette.length)  s += ` Color palette: ${d.palette.join(', ')}.`;
-  if (d.comp.length)     s += ` Composition: ${d.comp.join(', ')}.`;
-  if (d.lens.length)     s += ` Shot with ${d.lens.join(', ')}.`;
-  if (d.details.length)  s += ` ${d.details.join(', ')}.`;
-  if (isVideo) {
-    if (d.motion.length)  s += ` Motion: ${d.motion.join(', ')}.`;
-    if (d.camMove.length) s += ` Camera movement: ${d.camMove.join(', ')}.`;
-    if (d.pace.length)    s += ` ${d.pace.join(', ')}.`;
+  L.push(...row('QUALITY', d.quality));
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  return L;
+}
+
+// ── Nano Bano 2 ────────────────────────────────────────────────────────
+function buildNano(d, vid) {
+  const L = [];
+  if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
+  if (d.style.length)    L.push('STYLE: ' + d.style.join(' + ') + ' aesthetic');
+  L.push(...row('ENVIRONMENT', d.env));
+  L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('ERA / PERIOD', d.era));
+  if (d.lighting.length) L.push('LIGHTING: ' + d.lighting.join(' & '));
+  if (d.mood.length)     L.push('MOOD / ATMOSPHERE: ' + d.mood.join(' & ') + ' atmosphere');
+  if (d.palette.length)  L.push('COLOR PALETTE: ' + d.palette.join(', ') + ' palette');
+  L.push(...row('COMPOSITION', d.comp));
+  L.push(...row('LENS / CAMERA', d.lens));
+  L.push(...row('DETAILS', d.details));
+  if (vid) {
+    L.push(...row('MOTION', d.motion));
+    L.push(...row('CAMERA MOVEMENT', d.camMove));
   }
-  if (d.quality.length)  s += ` ${d.quality.join(', ')}.`;
-  return s;
+  L.push(...row('QUALITY', d.quality));
+  if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
+  return L;
 }
 
-// ── DALL-E 3 ──
-function buildDALLE3(d, isVideo) {
-  const style = d.style.length ? d.style.join(' and ') : 'photorealistic';
-  const subject = d.subject || 'a detailed scene';
-  let s = `A photograph depicting ${subject}. Rendered in ${style} aesthetic`;
-  if (d.era.length) s += `, set in ${d.era.join(' and ')}`;
-  s += '.';
-  if (d.env.length) s += ` The environment is ${d.env.join(', ')}.`;
-  if (d.time.length) s += ` Time of day: ${d.time.join(', ')}.`;
-  if (d.lighting.length) s += ` Illuminated with ${d.lighting.join(' and ')} lighting.`;
-  if (d.mood.length) s += ` The atmosphere feels ${d.mood.join(' and ')}.`;
-  if (d.palette.length) s += ` The color palette is ${d.palette.join(' and ')}.`;
-  if (d.lens.length) s += ` Captured using ${d.lens.join(', ')}.`;
-  if (d.comp.length) s += ` ${d.comp.join(', ')} composition.`;
-  if (d.details.length) s += ` ${d.details.join(', ')}.`;
-  if (d.quality.length) s += ` ${d.quality.join(', ')}.`;
-  return s;
+// ── Edit Photo ─────────────────────────────────────────────────────────
+function buildEdit(d) {
+  const L = [];
+  L.push('━━━ PHOTO EDITING PROMPT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━', '');
+  if (d.subject) { L.push('ORIGINAL PHOTO:', d.subject, ''); }
+  if (d.eType.length) {
+    L.push('EDIT TYPE:');
+    d.eType.forEach(e => L.push(`• ${e}`));
+    L.push('');
+  }
+  if (d.eFrom.length)    L.push('FROM (CURRENT STATE): ' + d.eFrom.join(', '));
+  if (d.eTo.length)      L.push('TO (DESIRED STATE): '   + d.eTo.join(', '));
+  if (d.eFrom.length || d.eTo.length) L.push('');
+  if (d.intensity.length) { L.push('TRANSFORMATION INTENSITY: ' + d.intensity.join(', ')); L.push(''); }
+  if (d.preserve.length) {
+    L.push('PRESERVE — DO NOT CHANGE:');
+    d.preserve.forEach(p => L.push(`• ${p}`));
+    L.push('');
+  }
+  if (d.addl) { L.push('ADDITIONAL INSTRUCTIONS:', d.addl, ''); }
+
+  const suffixes = {
+    'midjourney':  '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUpload original image → use /blend or img2img\n--iw 0.5 --ar 16:9 --v 6.1',
+    'stable-diff': '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nMode: img2img   Denoising Strength: 0.5–0.75   CFG Scale: 7–12',
+    'gpt-image':   '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nAttach the original image to the chat and paste this prompt.',
+    'dalle3':      '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUse DALL-E 3 inpainting or the Variations workflow.',
+    'kling':       '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUse Kling Image-to-Video with the original image as reference.',
+    'flux':        '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nMode: Flux img2img / Redux   Strength: 0.6–0.8',
+  };
+  if (suffixes[currentModel]) L.push(suffixes[currentModel]);
+  return L;
 }
 
-// ── Kling ──
-function buildKling(d, isVideo) {
-  const parts = [];
-  if (d.subject) parts.push(d.subject);
-  if (d.env.length)      parts.push(d.env.join(', '));
-  if (d.time.length)     parts.push(d.time.join(', '));
-  if (d.era.length)      parts.push(d.era.join(', '));
-  if (d.style.length)    parts.push(d.style.join(', ') + ' visual style');
-  if (d.lighting.length) parts.push(d.lighting.join(', ') + ' lighting');
-  if (d.mood.length)     parts.push(d.mood.join(', ') + ' atmosphere');
-  if (d.palette.length)  parts.push(d.palette.join(', ') + ' color grade');
-  const sceneDesc = parts.join(', ');
-  const motionParts = [];
-  if (d.motion.length)  motionParts.push(d.motion.join(', '));
-  if (d.camMove.length) motionParts.push('Camera: ' + d.camMove.join(', '));
-  if (d.pace.length)    motionParts.push(d.pace.join(', '));
-  if (d.lens.length)    motionParts.push(d.lens.join(', '));
-  const qualParts = [];
-  if (d.details.length) qualParts.push(d.details.join(', '));
-  if (d.quality.length) qualParts.push(d.quality.join(', '));
-  const sections = [];
-  if (sceneDesc) sections.push(sceneDesc);
-  if (motionParts.length) sections.push(motionParts.join('. '));
-  if (qualParts.length)   sections.push(qualParts.join(', '));
-  return sections.join('.\n');
+// ═══════════════════════════════════════════════════════════════════════
+// COLORIZE OUTPUT
+// ═══════════════════════════════════════════════════════════════════════
+
+function colorize(lines) {
+  return lines.map(line => {
+    if (!line) return '';
+    const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    // Separator / edit header  ━━━ ... ━━━
+    if (/^━+/.test(line))
+      return `<span class="pe">${esc(line)}</span>`;
+
+    // Midjourney params line
+    if (/^--\w/.test(line.trim()))
+      return `<span class="pp">${esc(line)}</span>`;
+
+    // Bullet  •
+    if (line.startsWith('• '))
+      return `<span class="pb">${esc(line)}</span>`;
+
+    // LABEL: value  — split at first colon
+    const m = line.match(/^([A-Z][A-Z0-9 /&_]+:)(.*)/);
+    if (m) {
+      return `<span class="pl">${esc(m[1])}</span><span class="pv">${esc(m[2])}</span>`;
+    }
+
+    // Subject value (line after "SUBJECT:" label — plain, slightly brighter)
+    return `<span class="ps">${esc(line)}</span>`;
+  }).join('\n');
 }
 
-// ── Flux ──
-function buildFlux(d, isVideo) {
-  const parts = [];
-  if (d.subject) parts.push(d.subject);
-  if (d.style.length)    parts.push(d.style.join(', ') + ' style');
-  if (d.env.length)      parts.push(d.env.join(', '));
-  if (d.time.length)     parts.push(d.time.join(', '));
-  if (d.era.length)      parts.push(d.era.join(', '));
-  if (d.lighting.length) parts.push(d.lighting.join(' and ') + ' lighting');
-  if (d.lens.length)     parts.push(d.lens.join(', '));
-  if (d.mood.length)     parts.push(d.mood.join(', ') + ' mood');
-  if (d.palette.length)  parts.push(d.palette.join(', ') + ' color palette');
-  if (d.comp.length)     parts.push(d.comp.join(', '));
-  if (d.details.length)  parts.push(d.details.join(', '));
-  if (isVideo && d.motion.length)  parts.push(d.motion.join(', '));
-  if (isVideo && d.camMove.length) parts.push(d.camMove.join(', '));
-  if (d.quality.length)  parts.push(d.quality.join(', '));
-  return parts.join(', ');
-}
-
-// ── Nano Bano 2 ──
-function buildNanoBano(d, isVideo) {
-  const blocks = [];
-  if (d.subject)         blocks.push(d.subject);
-  if (d.style.length)    blocks.push(d.style.join(' + ') + ' aesthetic');
-  if (d.env.length)      blocks.push(d.env.join(', '));
-  if (d.time.length)     blocks.push(d.time.join(', '));
-  if (d.era.length)      blocks.push(d.era.join(', '));
-  if (d.lighting.length) blocks.push(d.lighting.join(' & ') + ' lighting');
-  if (d.mood.length)     blocks.push(d.mood.join(' & ') + ' atmosphere');
-  if (d.palette.length)  blocks.push(d.palette.join(', ') + ' palette');
-  if (d.comp.length)     blocks.push(d.comp.join(', '));
-  if (d.lens.length)     blocks.push(d.lens.join(', '));
-  if (d.details.length)  blocks.push(d.details.join(', '));
-  if (isVideo && d.motion.length)  blocks.push(d.motion.join(', '));
-  if (isVideo && d.camMove.length) blocks.push(d.camMove.join(', '));
-  if (d.quality.length)  blocks.push(d.quality.join(', '));
-  return blocks.join(' :: ');
-}
-
-// ─── HIGHLIGHT ───────────────────────────────────────────────────────────────
-
-function highlightPrompt(text) {
-  // Escape HTML
-  text = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-  const maps = [
-    { cat: 'style',       cls: 'hl-style'   },
-    { cat: 'lighting',    cls: 'hl-light'   },
-    { cat: 'lens',        cls: 'hl-lens'    },
-    { cat: 'mood',        cls: 'hl-mood'    },
-    { cat: 'palette',     cls: 'hl-palette' },
-    { cat: 'composition', cls: 'hl-comp'    },
-    { cat: 'details',     cls: 'hl-detail'  },
-    { cat: 'environment', cls: 'hl-env'     },
-    { cat: 'time',        cls: 'hl-time'    },
-    { cat: 'quality',     cls: 'hl-quality' },
-    { cat: 'motion',      cls: 'hl-motion'  },
-    { cat: 'camera-move', cls: 'hl-motion'  },
-    { cat: 'era',         cls: 'hl-extra'   },
-  ];
-
-  maps.forEach(({ cat, cls }) => {
-    selections[cat].forEach(val => {
-      const safeVal = val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      text = text.replace(new RegExp(safeVal, 'g'), `<span class="${cls}">${val}</span>`);
-    });
-  });
-
-  // Midjourney params
-  text = text.replace(/(--\w[\w.]*)/g, '<span style="color:#60a5fa">$1</span>');
-
-  return text;
-}
-
-// ─── COPY ─────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════
+// COPY
+// ═══════════════════════════════════════════════════════════════════════
 
 function copyPrompt() {
-  const raw = document.getElementById('prompt-output')._raw || '';
+  const raw = document.getElementById('prompt-out')._raw || '';
   if (!raw) return;
   navigator.clipboard.writeText(raw).then(() => {
     const btn = document.getElementById('btn-copy');
-    btn.textContent = '✓ Скопійовано';
+    btn.textContent = '✓ Copied!';
     btn.classList.add('copied');
-    showToast();
-    setTimeout(() => {
-      btn.textContent = 'Копіювати';
-      btn.classList.remove('copied');
-    }, 2000);
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+    setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
-function showToast() {
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-// ─── START ───────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════
 init();
 </script>
 </body>
