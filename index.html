@@ -282,6 +282,7 @@ const CATS = [
   { id:'palette', icon:'🎭', title:'Color Palette', video:false, edit:false, opts:[
     {l:'Warm (Orange / Gold)',  v:'warm color palette dominated by oranges, golds, ambers and ochres, sun-soaked harvest tones, hearth warmth and golden light'},
     {l:'Cool (Blue / Steel)',   v:'cool color palette of blues, steels, silvers and slate grays, cold and precise, clinical or winter atmospheric quality'},
+    {l:'Neutral',               v:'neutral balanced color palette, neither warm nor cool, natural whites and grays and balanced midtones, clean and unbiased color rendering, natural daylight color temperature'},
     {l:'Pastel',                v:'soft pastel color palette, desaturated gentle hues, baby pinks and mints and lavenders, tender and delicate aesthetic'},
     {l:'Monochrome',            v:'monochromatic single-hue color scheme, tonal variations of one color only, sophisticated unified visual harmony'},
     {l:'Vibrant / Saturated',   v:'highly vibrant and fully saturated colors, bold vivid hues at maximum intensity, energetic and eye-catching richness'},
@@ -312,6 +313,16 @@ const CATS = [
     {l:'Medium Shot',                 v:'standard medium shot framing from waist up, conversational and natural scale, classic storytelling composition'},
     {l:'Wide Shot',                   v:'full wide establishing shot, subject in full body within expansive environment, context-rich scene-setting composition'},
     {l:'Over-the-shoulder',           v:'over-the-shoulder framing with secondary character in foreground, primary subject in middle ground, conversational implied depth'},
+    {l:'Eye-Level Front',             v:'natural eye-level straight-on frontal view, camera at human standing height facing subject directly, neutral and relatable perspective'},
+    {l:'Eye-Level 3/4',               v:'natural eye-level three-quarter angle, camera at human standing height with subject turned 45 degrees, dynamic depth revealing both front and side'},
+    {l:'Eye-Level Side Profile',      v:'natural eye-level side profile, camera at human standing height facing the subject\'s 90-degree profile, clean lateral silhouette'},
+    {l:'Slightly Above Eye-Level',    v:'slightly elevated angle looking gently downward, common beauty and product photography perspective, flattering and clean'},
+    {l:'Slightly Below Eye-Level',    v:'slightly low angle looking gently upward, gives subject subtle authority and presence without full distortion'},
+    {l:'High 3/4 Angle',              v:'elevated three-quarter angle from above and to the side, dynamic product or character presentation perspective'},
+    {l:'Low 3/4 Angle',               v:'low three-quarter angle from below and to the side, dynamic slightly heroic perspective with environmental depth'},
+    {l:'45° Diagonal',                v:'45-degree diagonal composition, subject and elements arranged on diagonal axis across frame, dynamic visual tension'},
+    {l:'Flat Lay (Top-Down)',         v:'flat lay top-down overhead composition, objects arranged on flat surface and photographed from directly above, graphic and clean'},
+    {l:'Hero Shot',                   v:'hero shot composition, subject centrally positioned and powerfully framed against environment, dramatic and impactful presentation'},
   ]},
 
   { id:'details', icon:'🔬', title:'Details', video:false, edit:false, opts:[
@@ -362,6 +373,25 @@ const CATS = [
     {l:'Midnight',         v:'true midnight darkness, peak of night, the stillest and quietest hour, deepest shadows, haunted emptiness'},
     {l:'Golden Hour',      v:'magical golden hour, last or first direct sunlight of the day, warm amber rays, long soft shadows, the most beautiful light of day'},
     {l:'Blue Hour',        v:'enchanting blue hour, twenty minutes of perfect diffused blue light just before or after the sun crosses the horizon'},
+  ]},
+
+  { id:'weather', icon:'🌤', title:'Weather', video:false, edit:false, opts:[
+    {l:'Clear Blue Sky',     v:'clear blue sky with no clouds, direct bright sunlight, crisp clean atmosphere, high visibility and sharp shadows'},
+    {l:'Light Clouds',       v:'scattered light clouds, mostly sunny, soft intermittent shadows, pleasant open sky with depth'},
+    {l:'Overcast',           v:'fully overcast sky, complete cloud cover, soft diffused even light, no harsh shadows, muted atmospheric tones'},
+    {l:'Fog / Mist',         v:'atmospheric fog or mist, reduced visibility, soft diffused light without clear source, mysterious and ethereal atmosphere'},
+    {l:'Heavy Fog',          v:'thick dense fog, very limited visibility, objects fading into white haze at distance, profound mystery and isolation'},
+    {l:'Light Rain',         v:'light gentle rain, fine drizzle, wet surfaces beginning to reflect light, fresh petrichor atmosphere, soft rain streaks'},
+    {l:'Heavy Rain',         v:'heavy rain downpour, thick visible rain streaks, deep reflective puddles, dramatic saturated wet environment'},
+    {l:'Thunderstorm',       v:'dramatic thunderstorm, dark brooding storm clouds, lightning bolts, powerful and threatening atmosphere, extreme contrast'},
+    {l:'Snow',               v:'falling snow, individual snowflakes visible in air, white blanketed ground, peaceful hushed winter atmosphere'},
+    {l:'Blizzard',           v:'blizzard conditions, heavy driving snow, very low visibility, fierce wind and cold, white chaos'},
+    {l:'Haze / Smog',        v:'atmospheric urban haze or smog, reduced visibility, warm diffused light softening distance, layered depth in landscape'},
+    {l:'Rainbow',            v:'rainbow arcing across dramatic sky after rain, vibrant full spectrum of color, hope and wonder'},
+    {l:'Dramatic Clouds',    v:'dramatic epic storm clouds, towering cumulonimbus formations, god rays breaking through gaps, cinematic sky'},
+    {l:'Golden Sky',         v:'spectacular golden sunset or sunrise sky, warm orange and pink and purple clouds, breathtaking chromatic sky'},
+    {l:'Starry Night',       v:'clear starry night sky, Milky Way visible, countless stars reflected, astronomical and vast'},
+    {l:'Aurora',             v:'northern or southern lights aurora borealis, shimmering green and purple and pink curtains of light across the night sky'},
   ]},
 
   { id:'era', icon:'⏳', title:'Era / Period', video:false, edit:false, opts:[
@@ -730,6 +760,9 @@ function refsBlock() {
     const lbl = r.label.replace(/^\S+\s/, '');
     let line = `• ${lbl}:`;
     if (d.name) line += ` [${d.name}]`;
+    if (r.id === 'ref-comp') {
+      line += ` Use ONLY the object placement and spatial composition from this reference — do NOT copy any style, lighting, colors, color palette, mood, textures, or aesthetic.`;
+    }
     if (d.desc) line += ` ${d.desc}`;
     return [line];
   });
@@ -762,7 +795,7 @@ function rebuild() {
     style:   g('style'),   lighting: g('lighting'),  lens:    g('lens'),
     mood:    g('mood'),    palette:  g('palette'),    comp:    g('composition'),
     details: g('details'), env:      g('environment'),time:    g('time'),
-    era:     g('era'),     quality:  g('quality'),
+    weather: g('weather'), era:      g('era'),        quality: g('quality'),
     motion:  g('motion'),  camMove:  g('cam-move'),   pace:    g('pace'),
     eType:   g('edit-type'), eFrom:  g('edit-from'),  eTo:     g('edit-to'),
     intensity: g('intensity'), preserve: g('preserve'),
@@ -794,6 +827,7 @@ function buildUniversal(d, vid) {
   L.push(...row('DETAILS', d.details));
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('WEATHER', d.weather));
   L.push(...row('ERA / PERIOD', d.era));
   if (vid) { L.push(...row('MOTION / DYNAMICS', d.motion)); L.push(...row('CAMERA MOVEMENT', d.camMove)); L.push(...row('PACE / DURATION', d.pace)); }
   L.push(...row('QUALITY', d.quality));
@@ -807,6 +841,7 @@ function buildMJ(d, vid) {
   L.push(...row('STYLE', d.style));
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('WEATHER', d.weather));
   L.push(...row('ERA / PERIOD', d.era));
   L.push(...row('LIGHTING', d.lighting));
   L.push(...row('LENS / CAMERA', d.lens));
@@ -838,6 +873,7 @@ function buildSD(d, vid) {
   if (d.details.length) L.push(`DETAILS: ${d.details.map(x=>`(${x}:1.3)`).join(', ')}`);
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('WEATHER', d.weather));
   L.push(...row('ERA / PERIOD', d.era));
   if (vid) L.push(...row('MOTION', d.motion));
   if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
@@ -848,8 +884,8 @@ function buildGPT(d, vid) {
   const L = [];
   const sty = d.style.length ? d.style.join(' and ')+' style' : 'photorealistic style';
   L.push('SUBJECT:', `A ${sty} ${vid?'video scene':'image'} of ${d.subject||'a scene'}.`, '');
-  if (d.env.length||d.time.length||d.era.length)
-    L.push('SETTING:', [...d.env,...d.time,...d.era].join(', ')+'.');
+  if (d.env.length||d.time.length||d.weather.length||d.era.length)
+    L.push('SETTING:', [...d.env,...d.time,...d.weather,...d.era].join(', ')+'.');
   if (d.lighting.length) L.push('LIGHTING:', d.lighting.join(' and ')+' lighting.');
   if (d.mood.length)     L.push('MOOD / ATMOSPHERE:', d.mood.join(' and ')+'.');
   L.push(...row('COLOR PALETTE', d.palette));
@@ -869,6 +905,7 @@ function buildDALLE(d, vid) {
   L.push('SUBJECT:', `A photograph of ${d.subject||'a detailed scene'}. Rendered in ${sty} aesthetic${era}.`, '');
   if (d.env.length)      L.push('ENVIRONMENT:', 'Set in '+d.env.join(', ')+'.');
   if (d.time.length)     L.push('TIME OF DAY:', d.time.join(', ')+'.');
+  if (d.weather.length)  L.push('WEATHER:', d.weather.join(', ')+'.');
   if (d.lighting.length) L.push('LIGHTING:', 'Illuminated with '+d.lighting.join(' and ')+' lighting.');
   if (d.mood.length)     L.push('MOOD / ATMOSPHERE:', 'The atmosphere feels '+d.mood.join(' and ')+'.');
   L.push(...row('COLOR PALETTE', d.palette));
@@ -885,6 +922,7 @@ function buildKling(d, vid) {
   if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('WEATHER', d.weather));
   L.push(...row('ERA / PERIOD', d.era));
   L.push(...row('VISUAL STYLE', d.style));
   L.push(...row('LIGHTING', d.lighting));
@@ -907,6 +945,7 @@ function buildFlux(d, vid) {
   L.push(...row('STYLE', d.style));
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('WEATHER', d.weather));
   L.push(...row('ERA / PERIOD', d.era));
   L.push(...row('LIGHTING', d.lighting));
   L.push(...row('LENS / CAMERA', d.lens));
@@ -926,6 +965,7 @@ function buildNano(d, vid) {
   if (d.style.length)   L.push('STYLE: '+d.style.join(' + ')+' aesthetic');
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
+  L.push(...row('WEATHER', d.weather));
   L.push(...row('ERA / PERIOD', d.era));
   if (d.lighting.length) L.push('LIGHTING: '+d.lighting.join(' & '));
   if (d.mood.length)     L.push('MOOD / ATMOSPHERE: '+d.mood.join(' & ')+' atmosphere');
