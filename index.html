@@ -14,8 +14,6 @@
       --chip-bg: #1e1e32; --chip-on: #4c1d95; --chip-brd: #3b3b5c;
     }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-    /* HEADER */
     header {
       background: linear-gradient(135deg, #1a0533 0%, #0f0f2e 60%, #0a1628 100%);
       border-bottom: 1px solid var(--border);
@@ -27,19 +25,13 @@
     .mode-toggle { display: flex; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; gap: 2px; }
     .mode-toggle button { border: none; background: transparent; color: var(--muted); font-family: inherit; font-size: .8rem; font-weight: 500; padding: 7px 15px; border-radius: 7px; cursor: pointer; transition: all .2s; white-space: nowrap; }
     .mode-toggle button.active { background: var(--accent); color: #fff; }
-
-    /* LAYOUT */
     main { max-width: 1360px; margin: 0 auto; padding: 22px 20px 60px; display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
     @media (max-width: 1020px) { main { grid-template-columns: 1fr; } }
-
-    /* MODEL TABS */
     .model-tabs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
     .model-tab { border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-family: inherit; font-size: .76rem; font-weight: 500; padding: 6px 13px; border-radius: 8px; cursor: pointer; transition: all .2s; }
     .model-tab:hover { border-color: var(--accent); color: var(--text); }
     .model-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
     .model-tab .badge { font-size: .6rem; background: rgba(255,255,255,.18); padding: 1px 5px; border-radius: 4px; margin-left: 4px; }
-
-    /* FIELD */
     .field-label { display: block; font-size: .72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
     .subject-wrap { margin-bottom: 16px; }
     .subject-wrap textarea { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: inherit; font-size: .9rem; padding: 11px 13px; resize: vertical; min-height: 70px; outline: none; transition: border-color .2s; }
@@ -49,35 +41,25 @@
     .translate-status.translating { color: var(--teal); }
     .translate-status.done { color: var(--green); }
     .translate-status.error { color: var(--red); }
-
-    /* CATEGORIES */
     .categories { display: flex; flex-direction: column; gap: 11px; }
     .cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; transition: border-color .2s; }
     .cat-card:hover { border-color: #3d3d60; }
-    /* video-only: shown only in video mode */
     .cat-card.video-only { display: none; }
     body.mode-video .cat-card.video-only { display: block; }
-    /* edit-only: shown only in edit mode */
     .cat-card.edit-only { display: none; }
     body.mode-edit .cat-card.edit-only { display: block; }
-    /* hide non-edit cards in edit mode */
     body.mode-edit .cat-card:not(.edit-only) { display: none; }
-
     .cat-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .cat-icon { font-size: .9rem; }
     .cat-title { font-size: .74rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
     .cat-badge { font-size: .65rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 1px 7px; border-radius: 10px; margin-left: auto; }
-
     .chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .chip { border: 1px solid var(--chip-brd); background: var(--chip-bg); color: #a0aec0; font-family: inherit; font-size: .77rem; padding: 5px 11px; border-radius: 20px; cursor: pointer; transition: all .15s; user-select: none; }
     .chip:hover { border-color: var(--accent); color: var(--text); }
     .chip.on { background: var(--chip-on); border-color: #7c3aed; color: #d8b4fe; }
-
     .extra-textarea { width: 100%; background: var(--chip-bg); border: 1px solid var(--chip-brd); border-radius: 8px; color: var(--text); font-family: inherit; font-size: .8rem; padding: 9px 12px; resize: vertical; min-height: 58px; outline: none; margin-top: 10px; transition: border-color .2s; }
     .extra-textarea:focus { border-color: var(--accent); }
     .extra-textarea::placeholder { color: var(--muted); }
-
-    /* REFERENCES */
     .ref-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 11px; overflow: hidden; }
     body.mode-edit .ref-section { display: none; }
     .ref-header { display: flex; align-items: center; justify-content: space-between; padding: 13px 15px; cursor: pointer; user-select: none; }
@@ -102,18 +84,12 @@
     .ref-desc { width: 100%; background: var(--chip-bg); border: 1px solid var(--chip-brd); border-radius: 6px; color: var(--text); font-family: inherit; font-size: .75rem; padding: 7px 9px; resize: none; min-height: 46px; outline: none; transition: border-color .2s; }
     .ref-desc:focus { border-color: var(--accent); }
     .ref-desc::placeholder { color: var(--muted); }
-
-    /* SIDEBAR */
     .sidebar { display: flex; flex-direction: column; gap: 14px; }
     .prompt-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; position: sticky; top: 20px; }
     .prompt-card-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--border); background: var(--surface2); }
     .prompt-card-top span { font-size: .73rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
     .char-count { font-size: .7rem; color: var(--muted); }
-    #prompt-out {
-      font-family: 'JetBrains Mono', monospace; font-size: .73rem; line-height: 1.75;
-      color: #c4d0e8; padding: 14px 15px; min-height: 280px; max-height: 580px;
-      overflow-y: auto; white-space: pre-wrap; word-break: break-word;
-    }
+    #prompt-out { font-family: 'JetBrains Mono', monospace; font-size: .73rem; line-height: 1.75; color: #c4d0e8; padding: 14px 15px; min-height: 280px; max-height: 580px; overflow-y: auto; white-space: pre-wrap; word-break: break-word; }
     #prompt-out.empty { font-family: 'Inter', sans-serif; font-size: .85rem; color: var(--muted); font-style: italic; display: flex; align-items: center; justify-content: center; min-height: 280px; text-align: center; padding: 30px 20px; }
     .prompt-btns { display: flex; gap: 8px; padding: 11px 14px; border-top: 1px solid var(--border); background: var(--surface2); }
     .btn { flex: 1; border: none; border-radius: 8px; font-family: inherit; font-size: .79rem; font-weight: 600; padding: 9px 12px; cursor: pointer; transition: all .2s; }
@@ -122,25 +98,18 @@
     .btn-copy.copied { background: var(--green); }
     .btn-reset { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
     .btn-reset:hover { border-color: var(--red); color: var(--red); }
-
-    /* TIPS */
     .tips-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
     .tips-card h3 { font-size: .7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 9px; }
     .tip { font-size: .75rem; color: var(--muted); line-height: 1.65; display: none; }
     .tip.on { display: block; }
     .tip strong { color: #a78bfa; }
     .tip code { background: var(--surface2); padding: 1px 5px; border-radius: 3px; font-size: .7rem; color: #67e8f9; font-family: 'JetBrains Mono', monospace; }
-
-    /* PROMPT SYNTAX COLORS */
-    .pl { color: #818cf8; font-weight: 600; }   /* label  */
-    .pv { color: #e2e8f0; }                      /* value  */
-    .ps { color: #f0abfc; }                      /* subject value */
-    .pb { color: #34d399; }                      /* bullet */
-    .pp { color: #60a5fa; }                      /* params */
-    .pd { color: #94a3b8; }                      /* divider */
-    .pe { color: #f87171; }                      /* edit header */
-
-    /* TOAST */
+    .pl { color: #818cf8; font-weight: 600; }
+    .pv { color: #e2e8f0; }
+    .ps { color: #f0f9ff; }
+    .pb { color: #34d399; }
+    .pp { color: #60a5fa; }
+    .pe { color: #f87171; }
     .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #fff; font-size: .82rem; font-weight: 600; padding: 10px 18px; border-radius: 9px; transform: translateY(60px); opacity: 0; transition: all .3s cubic-bezier(.34,1.56,.64,1); pointer-events: none; z-index: 999; }
     .toast.show { transform: translateY(0); opacity: 1; }
   </style>
@@ -162,14 +131,11 @@
 <main>
   <div>
     <div class="model-tabs" id="model-tabs"></div>
-
     <div class="subject-wrap">
       <label class="field-label" id="subject-label">Subject / Scene Description</label>
       <textarea id="subject" placeholder="Type in any language — auto-translated to English in the prompt..." rows="3" oninput="onSubjectInput()"></textarea>
       <div class="translate-status" id="xlat-status"></div>
     </div>
-
-    <!-- References (hidden in edit mode) -->
     <div class="ref-section" id="ref-section">
       <div class="ref-header" onclick="document.getElementById('ref-section').classList.toggle('open')">
         <div class="ref-header-left">
@@ -183,10 +149,8 @@
         <div class="ref-grid" id="ref-grid"></div>
       </div>
     </div>
-
     <div class="categories" id="categories"></div>
   </div>
-
   <div class="sidebar">
     <div class="prompt-card">
       <div class="prompt-card-top">
@@ -205,14 +169,12 @@
     </div>
   </div>
 </main>
-
 <div class="toast" id="toast">Copied to clipboard!</div>
 
 <script>
 // ═══════════════════════════════════════════════════════════════════════
-// DATA
+// MODELS
 // ═══════════════════════════════════════════════════════════════════════
-
 const MODELS = [
   { id:'universal',   label:'Universal',        badge:null,
     tip:'<strong>Universal</strong> — balanced structured prompt that works across most AI models. Good when unsure which model to use.' },
@@ -232,120 +194,355 @@ const MODELS = [
     tip:'<strong>Flux</strong> — hybrid of tags and natural language. Lighting details and quality descriptors improve output significantly.' },
 ];
 
+// ═══════════════════════════════════════════════════════════════════════
+// CATEGORIES  — each option: { l: 'display label', v: 'full prompt text' }
+// ═══════════════════════════════════════════════════════════════════════
 const CATS = [
-  // ── Image / Video categories ──────────────────────────────────────────
-  { id:'style', icon:'🎨', title:'Style', video:false, edit:false,
-    opts:['Photorealism','Anime','Manga','Oil Painting','Watercolor','Digital Art','Cinematic',
-      'Concept Art','Pixel Art','3D Render','Illustration','Retro / Vintage','Minimalism',
-      'Surrealism','Pop Art','Noir','Hyperrealism','Line Art','Impressionism'] },
-  { id:'lighting', icon:'💡', title:'Lighting', video:false, edit:false,
-    opts:['Golden Hour','Blue Hour','Natural Daylight','Studio','Cinematic','Neon',
-      'Backlit (Contre-jour)','Soft Diffused','Hard & Sharp','Dramatic','Candlelight / Fire',
-      'Bokeh Light','Street Lamp','Moonlight','Sun Rays','Side Light','Rim Light'] },
-  { id:'lens', icon:'📷', title:'Lens / Camera', video:false, edit:false,
-    opts:['24mm Wide','35mm','50mm Standard','85mm Portrait','135mm Telephoto','200mm+',
-      'Macro','Fisheye','Tilt-shift','Cinema Lens','DSLR','35mm Film Grain',
-      'Medium Format','Vintage Camera','Drone / Aerial'] },
-  { id:'mood', icon:'🌀', title:'Mood / Atmosphere', video:false, edit:false,
-    opts:['Epic','Mysterious','Romantic','Melancholic','Joyful','Tense','Peaceful',
-      'Mystical','Eerie / Horror','Nostalgic','Dreamy','Lonely','Hopeful',
-      'Anxious','Adventurous','Meditative','Serene','Intense'] },
-  { id:'palette', icon:'🎭', title:'Color Palette', video:false, edit:false,
-    opts:['Warm (Orange / Gold)','Cool (Blue / Steel)','Pastel','Monochrome',
-      'Vibrant / Saturated','Earth Tones','Neon','Black & White','Duotone',
-      'Lavender','Sepia','Tropical','Scandinavian','Deep Space Blues'] },
-  { id:'composition', icon:'🖼', title:'Composition', video:false, edit:false,
-    opts:['Rule of Thirds','Golden Ratio','Symmetry','Centered','Negative Space',
-      'Leading Lines','Frame within Frame','Low Angle (Worm\'s Eye)',
-      'High Angle (Bird\'s Eye)','Dutch Angle','Panoramic','Close-up',
-      'Medium Shot','Wide Shot','Over-the-shoulder'] },
-  { id:'details', icon:'🔬', title:'Details', video:false, edit:false,
-    opts:['Ultra-detailed','Hyper-realistic','Sharp Focus on Subject',
-      'Bokeh Background','Visible Textures','Fine Brushstrokes','Film Grain',
-      'Depth of Field','Lens Flares & Glints','Skin Micro-details',
-      'Fabric & Material Detail','Water Droplets'] },
-  { id:'environment', icon:'🌍', title:'Environment', video:false, edit:false,
-    opts:['Urban / City','Natural Landscape','Studio','Forest','Desert','Mountains',
-      'Underwater','Space','Fantasy World','Post-Apocalyptic','Japanese Street',
-      'Medieval Castle','Rainy City','Snowy Plains','Tropical Beach',
-      'Interior / Indoor','Cafe / Restaurant','Industrial'] },
-  { id:'time', icon:'🕐', title:'Time of Day', video:false, edit:false,
-    opts:['Dawn','Morning','Noon','Afternoon','Sunset','Twilight / Dusk',
-      'Night','Late Night','Midnight','Golden Hour','Blue Hour'] },
-  { id:'era', icon:'⏳', title:'Era / Period', video:false, edit:false,
-    opts:['Contemporary','1990s','1980s','1970s','1960s','1950s','Victorian',
-      'Medieval','Ancient World','Future / Sci-fi','Cyberpunk','Steampunk',
-      'Retro-futurism'] },
-  { id:'quality', icon:'✨', title:'Quality', video:false, edit:false,
-    opts:['8K','4K','RAW','Masterpiece','Highly Detailed','Professional Photography',
-      'Award-winning','Photorealistic Render','Ultra HD','Studio Quality',
-      'Film Quality','Sharp & Crisp'] },
-  // ── Video-only ────────────────────────────────────────────────────────
-  { id:'motion', icon:'🎬', title:'Motion / Dynamics', video:true, edit:false, badge:'video',
-    opts:['Slow Motion','Time-lapse','Frozen Moment','Smooth Movement',
-      'Explosion / Splash','Flying Apart','Gentle Wind Breeze','Smoke & Fog Drift',
-      'Water & Waves','Falling','Dancing','Character Walking','Crowd Movement'] },
-  { id:'cam-move', icon:'🎥', title:'Camera Movement', video:true, edit:false, badge:'video',
-    opts:['Static Camera','Slow Push In (Zoom)','Pull Out (Reveal)',
-      'Pan Left to Right','Pan Right to Left','Orbit / Circular',
-      'Low Altitude Flight','Aerial Descent','Steadicam / Stabilized',
-      'Handheld / Shaky','Dolly Zoom (Vertigo)','FPV Drone'] },
-  { id:'pace', icon:'⚡', title:'Pace / Duration', video:true, edit:false, badge:'video',
-    opts:['3 seconds','5 seconds','10 seconds','15 seconds',
-      'Slow Pace','Medium Pace','Dynamic Pace','Cinematic Rhythm'] },
-  // ── Edit-only ─────────────────────────────────────────────────────────
-  { id:'edit-type', icon:'✏️', title:'Edit Type', video:false, edit:true, badge:'edit',
-    opts:['Season Change','Time of Day Change','Weather Change',
-      'Style / Aesthetic Change','Color Grading','Background Replacement',
-      'Object Removal','Object Addition','Lighting Adjustment',
-      'Environment Change','Texture Change','Age / Era Change',
-      'Perspective Change','Mood Change'] },
-  { id:'edit-from', icon:'⬅️', title:'From — Current State', video:false, edit:true, badge:'edit',
-    opts:['Spring','Summer','Autumn','Winter',
-      'Morning','Noon','Evening','Night',
-      'Clear Sky','Overcast','Rainy','Snowy','Foggy','Stormy',
-      'Realistic / Natural','Vintage / Film','Black & White',
-      'Warm Tones','Cool Tones','Dark & Moody','Bright & Airy','Modern','Rustic'] },
-  { id:'edit-to', icon:'➡️', title:'To — Desired State', video:false, edit:true, badge:'edit',
-    opts:['Spring','Summer','Autumn','Winter',
-      'Morning','Noon','Evening','Night',
-      'Clear Sky','Overcast','Rainy','Snowy','Foggy','Stormy',
-      'Cyberpunk','Neon / Synthwave','Cinematic Film',
-      'Oil Painting','Watercolor','Fantasy / Magic','Sci-fi',
-      'Dark & Moody','Golden Hour','Dreamy Pastel','Noir','Anime'] },
-  { id:'intensity', icon:'🎚️', title:'Transformation Intensity', video:false, edit:true, badge:'edit',
-    opts:['Subtle (~20%)','Moderate (~50%)','Dramatic (~80%)','Complete Overhaul (100%)'] },
-  { id:'preserve', icon:'🔒', title:'Preserve — Keep Unchanged', video:false, edit:true, badge:'edit',
-    opts:['Original Composition','Subject / People','Facial Features',
-      'Product Shape & Details','Logo & Text','Proportions',
-      'Color Scheme','Lighting Direction','Textures',
-      'Background Elements','Camera Angle'] },
+  { id:'style', icon:'🎨', title:'Style', video:false, edit:false, opts:[
+    {l:'Photorealism',     v:'ultra-realistic photographic rendering, indistinguishable from a real photograph, accurate textures and materials, true-to-life colors and proportions'},
+    {l:'Anime',            v:'Japanese anime animation style, clean cel-shaded lines, large expressive eyes, vibrant flat colors, stylized proportions'},
+    {l:'Manga',            v:'black and white Japanese manga illustration, bold confident ink lines, high contrast, screen tones, dynamic panel energy'},
+    {l:'Oil Painting',     v:'textured oil paint brushstrokes, rich impasto technique, layered pigments on canvas, classical painting aesthetic, canvas grain visible'},
+    {l:'Watercolor',       v:'transparent watercolor washes, soft bleeding edges, paper texture visible, delicate color gradients, spontaneous fluid marks'},
+    {l:'Digital Art',      v:'polished professional digital illustration, clean lines, smooth gradients, refined digital brushwork, concept art quality'},
+    {l:'Cinematic',        v:'cinematic widescreen aesthetic, film-grade color grading, movie still quality, dramatic depth of field, professional cinematography'},
+    {l:'Concept Art',      v:'professional concept art for film or games, detailed environment or character design, painted illustration with descriptive visual clarity'},
+    {l:'Pixel Art',        v:'retro pixel art aesthetic, 8-bit or 16-bit style, limited color palette, chunky visible pixels, nostalgic video game feel'},
+    {l:'3D Render',        v:'photorealistic 3D computer graphics, subsurface scattering, ray-traced lighting, smooth surfaces, Octane or Arnold render quality'},
+    {l:'Illustration',     v:'editorial-style illustration, graphic and clean, professional book or magazine quality, expressive hand-drawn aesthetic'},
+    {l:'Retro / Vintage',  v:'aged vintage aesthetic, film grain and dust, faded desaturated color palette, retro design sensibility, nostalgic character'},
+    {l:'Minimalism',       v:'minimalist composition, generous empty space, simple geometric forms, reduced color palette, elegant visual restraint'},
+    {l:'Surrealism',       v:'dreamlike surrealist imagery, impossible juxtapositions, Dalí-inspired visual logic, subconscious symbolism, metaphysical dreamscape'},
+    {l:'Pop Art',          v:'bold Pop Art style, flat bright colors, Ben-Day dot patterns, graphic outlines, Warhol or Lichtenstein aesthetic'},
+    {l:'Noir',             v:'film noir aesthetic, heavy shadows, venetian blind light patterns, moody cynical atmosphere, extreme chiaroscuro contrast'},
+    {l:'Hyperrealism',     v:'extreme hyperrealistic detail surpassing photography, every pore and texture and fiber rendered with obsessive surgical precision'},
+    {l:'Line Art',         v:'clean precise line art, confident single-weight or varied-weight ink lines, minimal shading, graphic architectural quality'},
+    {l:'Impressionism',    v:'loose visible brushstrokes in impressionist style, capturing light and movement over strict form, Monet or Renoir inspired palette'},
+  ]},
+
+  { id:'lighting', icon:'💡', title:'Lighting', video:false, edit:false, opts:[
+    {l:'Golden Hour',           v:'warm golden sunlight at low sun angle, long soft shadows, amber and honey tones, magical cinematic atmosphere just after sunrise or before sunset'},
+    {l:'Blue Hour',             v:'cool blue twilight light just before sunrise or after sunset, soft diffused illumination, deep blue sky gradients, tranquil melancholic tone'},
+    {l:'Natural Daylight',      v:'clean natural outdoor daylight, balanced exposure, soft diffused open-sky fill light, true-to-life colors, no artificial sources'},
+    {l:'Studio',                v:'controlled professional studio lighting, clean specular catch lights, perfect exposure, neutral background, product and portrait photography quality'},
+    {l:'Cinematic',             v:'professional film set lighting, motivated key light with subtle fill, dramatic color gel accents, movie-quality lighting design'},
+    {l:'Neon',                  v:'vibrant neon light, electric pinks and blues and greens, colored light spill on wet surfaces, nighttime urban glow, cyberpunk atmosphere'},
+    {l:'Backlit (Contre-jour)', v:'strong backlight source directly behind subject, glowing rim light, silhouette effect, dramatic halo glow, lens flare potential, ethereal luminosity'},
+    {l:'Soft Diffused',         v:'large soft diffused light source, no harsh shadows, smooth gentle gradients across surfaces, flattering beauty lighting quality'},
+    {l:'Hard & Sharp',          v:'small hard point light source, crisp sharp shadow edges, high contrast, dramatic chiaroscuro, strong directional single-source illumination'},
+    {l:'Dramatic',              v:'extreme high-contrast dramatic lighting, deep impenetrable blacks, isolated hot highlights, theatrical and intense atmosphere, Rembrandt-style shadow play'},
+    {l:'Candlelight / Fire',    v:'warm flickering candlelight or firelight, orange and amber glow, low-key intimate atmosphere, dancing light on surrounding surfaces'},
+    {l:'Bokeh Light',           v:'out-of-focus background light circles, creamy bokeh quality, shallow depth of field, fairy-light aesthetic, dreamy luminous background'},
+    {l:'Street Lamp',           v:'warm tungsten street lamp illumination, isolated pool of warm light in surrounding darkness, urban nighttime atmosphere, film noir quality'},
+    {l:'Moonlight',             v:'cool blue-white moonlight, soft directional night illumination, subtle long shadows, ethereal and mysterious nocturnal atmosphere'},
+    {l:'Sun Rays',              v:'visible god rays and crepuscular rays of sunlight, volumetric light shafts through atmosphere or foliage, dramatic and divine quality'},
+    {l:'Side Light',            v:'strong side light raking across subject, creating half-shadow, sculptural three-dimensional form definition, dramatic depth'},
+    {l:'Rim Light',             v:'bright rim light separating subject from background, glowing edge definition, professional portrait or product lighting separation technique'},
+  ]},
+
+  { id:'lens', icon:'📷', title:'Lens / Camera', video:false, edit:false, opts:[
+    {l:'24mm Wide',       v:'24mm wide-angle lens, expansive environmental context, slight edge perspective distortion, dramatic foreground-to-background depth'},
+    {l:'35mm',            v:'35mm lens, classic photojournalistic perspective, natural field of view close to human eye, versatile street photography focal length'},
+    {l:'50mm Standard',   v:'50mm standard lens, natural undistorted perspective perfectly matching human eye, honest and clean rendering of space'},
+    {l:'85mm Portrait',   v:'85mm portrait lens, flattering facial compression, creamy background separation, classic professional portrait focal length'},
+    {l:'135mm Telephoto', v:'135mm telephoto lens, strong background compression, clean subject isolation, painterly shallow depth of field'},
+    {l:'200mm+',          v:'super-telephoto focal length, extreme background compression, subject isolation across distance, wildlife and sports photography quality'},
+    {l:'Macro',           v:'extreme macro close-up lens, life-size or greater magnification, razor-thin depth of field, revealing microscopic detail and texture invisible to the naked eye'},
+    {l:'Fisheye',         v:'ultra-wide fisheye lens, 180-degree field of view, strong barrel distortion, dynamic circular perspective, extreme environmental depth'},
+    {l:'Tilt-shift',      v:'tilt-shift lens effect, selective tilted focus plane, miniaturization effect, architectural precision with dreamy foreground and background defocus'},
+    {l:'Cinema Lens',     v:'professional cinema anamorphic lens, characteristic oval bokeh, subtle horizontal lens flares, widescreen aspect ratio, film-grade optics'},
+    {l:'DSLR',            v:'full-frame DSLR camera rendering, professional photographic quality, natural dynamic range, optical lens character and color science'},
+    {l:'35mm Film Grain', v:'authentic 35mm film photography grain, subtle organic noise texture, slightly imperfect exposure, nostalgic analog film stock aesthetic'},
+    {l:'Medium Format',   v:'medium format camera quality, exceptional resolution and tonal richness, luminous smooth transitions, luxury fashion and editorial photography standard'},
+    {l:'Vintage Camera',  v:'vintage analog camera aesthetic, soft optical imperfections, color shift, natural vignette, aged film stock quality, nostalgic imperfect character'},
+    {l:'Drone / Aerial',  v:'drone aerial photography perspective, elevated bird\'s-eye viewpoint, sweeping landscape scale, liberated aerial composition'},
+  ]},
+
+  { id:'mood', icon:'🌀', title:'Mood / Atmosphere', video:false, edit:false, opts:[
+    {l:'Epic',          v:'epic grand scale, monumental and awe-inspiring, heroic atmosphere, legendary quality, sweeping and powerful emotional impact'},
+    {l:'Mysterious',    v:'mysterious and enigmatic atmosphere, hidden meaning, deep shadows and visual ambiguity, tension of the unknown, intriguing unanswered questions'},
+    {l:'Romantic',      v:'romantic and tender atmosphere, warm intimate feeling, love and longing, soft beauty, emotional connection between subject and viewer'},
+    {l:'Melancholic',   v:'melancholic and bittersweet mood, quiet sadness, reflective and introspective, gentle emotional weight, poetic solitude'},
+    {l:'Joyful',        v:'joyful and uplifting atmosphere, light bright energy, warm happiness, celebratory spirit, vibrant positive emotional charge'},
+    {l:'Tense',         v:'tense and suspenseful atmosphere, sense of imminent danger or anticipation, heightened alertness, thriller-like psychological charge'},
+    {l:'Peaceful',      v:'peaceful and serene atmosphere, calm stillness, harmonious quiet, restful and balanced, gentle tranquility undisturbed'},
+    {l:'Mystical',      v:'mystical and otherworldly atmosphere, sense of ancient magic, spiritual dimension, enchanted quality, sacred mystery beyond rational explanation'},
+    {l:'Eerie / Horror',v:'eerie unsettling horror atmosphere, creeping dread, uncanny wrongness, psychological unease, dark foreboding presence lurking'},
+    {l:'Nostalgic',     v:'warm nostalgic atmosphere, memory and longing for the past, familiar comfort tinged with gentle sadness, sepia-toned emotional quality'},
+    {l:'Dreamy',        v:'dreamy and ethereal atmosphere, blurred soft reality, floating oneiric quality, hypnagogic imagery, gentle unreality and wonder'},
+    {l:'Lonely',        v:'profound solitude and loneliness, isolation in vast empty space, existential quiet, one small figure against an indifferent world'},
+    {l:'Hopeful',       v:'hopeful and optimistic atmosphere, light breaking through darkness, dawn of new possibilities, uplifting forward-looking emotional tone'},
+    {l:'Anxious',       v:'anxious and uneasy atmosphere, psychological tension, hypervigilant unease, claustrophobic emotional pressure, something feels wrong'},
+    {l:'Adventurous',   v:'adventurous and exciting atmosphere, sense of discovery and bold exploration, forward momentum, thrill of the unknown horizon ahead'},
+    {l:'Meditative',    v:'meditative and contemplative atmosphere, deep inner stillness, spiritual centering, timeless present-moment quality, mind quieted'},
+    {l:'Serene',        v:'absolutely serene and undisturbed, perfect untouched stillness, pristine calm, not a single element out of place or troubled'},
+    {l:'Intense',       v:'intense and overwhelming emotional charge, everything saturated to maximum, visceral immediacy, nothing held back'},
+  ]},
+
+  { id:'palette', icon:'🎭', title:'Color Palette', video:false, edit:false, opts:[
+    {l:'Warm (Orange / Gold)',  v:'warm color palette dominated by oranges, golds, ambers and ochres, sun-soaked harvest tones, hearth warmth and golden light'},
+    {l:'Cool (Blue / Steel)',   v:'cool color palette of blues, steels, silvers and slate grays, cold and precise, clinical or winter atmospheric quality'},
+    {l:'Pastel',                v:'soft pastel color palette, desaturated gentle hues, baby pinks and mints and lavenders, tender and delicate aesthetic'},
+    {l:'Monochrome',            v:'monochromatic single-hue color scheme, tonal variations of one color only, sophisticated unified visual harmony'},
+    {l:'Vibrant / Saturated',   v:'highly vibrant and fully saturated colors, bold vivid hues at maximum intensity, energetic and eye-catching richness'},
+    {l:'Earth Tones',           v:'natural earth tone palette, sienna and umber and ochre and moss and clay, grounded organic warmth, nature-inspired colors'},
+    {l:'Neon',                  v:'electric neon color palette, ultra-bright synthetic colors, glowing hot pink and cyan and lime, urban night energy'},
+    {l:'Black & White',         v:'classic black and white tonal palette, full range from pure black to pure white, timeless graphic quality, all color removed'},
+    {l:'Duotone',               v:'duotone two-color palette, one color casting shadows and another illuminating highlights, graphic design aesthetic, bold contrast'},
+    {l:'Lavender',              v:'soft lavender and lilac color palette, dreamy purple tones, romantic and magical, twilight and dawn hues'},
+    {l:'Sepia',                 v:'warm sepia tone palette, aged brown-orange tones, nostalgic antique photographic quality, old world warmth'},
+    {l:'Tropical',              v:'vibrant tropical color palette, turquoise and coral and lush green and golden yellow, paradise beach aesthetic'},
+    {l:'Scandinavian',          v:'clean Scandinavian color palette, muted whites and grays and natural wood tones, minimalist Nordic aesthetic'},
+    {l:'Deep Space Blues',      v:'deep space color palette, midnight blues and indigos and blacks with brilliant star-point whites, cosmic and vast'},
+  ]},
+
+  { id:'composition', icon:'🖼', title:'Composition', video:false, edit:false, opts:[
+    {l:'Rule of Thirds',              v:'classic rule of thirds composition, subject placed at intersecting third lines, balanced asymmetry, natural professional framing'},
+    {l:'Golden Ratio',                v:'golden ratio spiral composition, naturally harmonious proportions following phi, organic visual flow, mathematically beautiful framing'},
+    {l:'Symmetry',                    v:'perfect bilateral symmetry, mirror-image balance on vertical axis, architectural or formal composition, elegant and ordered calm'},
+    {l:'Centered',                    v:'centered symmetrical composition, subject placed directly in center of frame, formal confrontational directness, powerful and iconic'},
+    {l:'Negative Space',              v:'generous negative space, subject isolated in open empty space, breathing room around subject, minimalist tension between subject and void'},
+    {l:'Leading Lines',               v:'strong leading lines guiding the viewer\'s eye toward the subject, perspective convergence, dynamic directional energy through frame'},
+    {l:'Frame within Frame',          v:'compositional frame within frame, architectural or natural elements forming inner frame around subject, layered compositional depth'},
+    {l:'Low Angle (Worm\'s Eye)',      v:'dramatic low angle worm\'s eye view looking upward, subject appears powerful and monumental, distorted heroic upward perspective'},
+    {l:'High Angle (Bird\'s Eye)',     v:'elevated bird\'s eye high angle looking down, overhead perspective, map-like flattened space, voyeuristic commanding viewpoint'},
+    {l:'Dutch Angle',                 v:'tilted Dutch angle camera roll, psychological unease or dynamic energy, off-kilter disorientation, thriller and tension aesthetic'},
+    {l:'Panoramic',                   v:'wide panoramic composition, extreme horizontal format, sweeping landscape or cityscape expanse, immersive environmental scale'},
+    {l:'Close-up',                    v:'intimate close-up framing, filling the frame with subject detail, personal and intense proximity, reveals texture and emotion'},
+    {l:'Medium Shot',                 v:'standard medium shot framing from waist up, conversational and natural scale, classic storytelling composition'},
+    {l:'Wide Shot',                   v:'full wide establishing shot, subject in full body within expansive environment, context-rich scene-setting composition'},
+    {l:'Over-the-shoulder',           v:'over-the-shoulder framing with secondary character in foreground, primary subject in middle ground, conversational implied depth'},
+  ]},
+
+  { id:'details', icon:'🔬', title:'Details', video:false, edit:false, opts:[
+    {l:'Ultra-detailed',           v:'obsessively ultra-detailed rendering, every surface covered in fine micro-detail, maximum information density at every scale'},
+    {l:'Hyper-realistic',          v:'hyper-realistic beyond photographic fidelity, every pore and fiber and imperfection rendered with surgical clinical precision'},
+    {l:'Sharp Focus on Subject',   v:'tack-sharp critical focus on the primary subject, every detail rendered with maximum optical clarity and precision'},
+    {l:'Bokeh Background',         v:'creamy smooth bokeh background blur, subject cleanly separated from beautifully defocused background, professional separation technique'},
+    {l:'Visible Textures',         v:'rich visible surface textures throughout, material properties clearly rendered, tactile quality you can almost physically feel'},
+    {l:'Fine Brushstrokes',        v:'fine delicate brushstroke details visible across surface, painterly marks and texture, hand-crafted artistic quality'},
+    {l:'Film Grain',               v:'authentic organic film grain texture, subtle noise giving genuine analog photographic character and warmth'},
+    {l:'Depth of Field',           v:'sophisticated depth of field, selective focus pulling viewer attention, foreground and background fall off naturally and beautifully'},
+    {l:'Lens Flares & Glints',     v:'beautiful optical lens flares and specular surface glints, anamorphic streak flares, starburst highlights on bright point sources'},
+    {l:'Skin Micro-details',       v:'extreme skin micro-detail, individual pores and fine hairs and subtle color variations rendered with clinical photographic precision'},
+    {l:'Fabric & Material Detail', v:'exquisite fabric and material surface detail, weave patterns, material sheen and translucency, tactile cloth and surface quality'},
+    {l:'Water Droplets',           v:'photorealistic water droplets on surfaces, each droplet perfectly rendered with refraction, caustics, and specular highlights'},
+  ]},
+
+  { id:'environment', icon:'🌍', title:'Environment', video:false, edit:false, opts:[
+    {l:'Urban / City',       v:'urban city environment, dense architectural backdrop, streets and buildings and infrastructure, metropolitan energy and scale'},
+    {l:'Natural Landscape',  v:'natural landscape environment, open sky and terrain, untouched nature free of human presence, raw geological beauty'},
+    {l:'Studio',             v:'clean controlled studio environment, neutral background, no environmental distractions, isolated subject in perfect controlled space'},
+    {l:'Forest',             v:'dense forest environment, dappled light filtering through leaf canopy, rich undergrowth, ancient trees, woodland atmosphere'},
+    {l:'Desert',             v:'expansive desert environment, arid sandy or rocky terrain, harsh direct sun, vast open emptiness, heat shimmer on horizon'},
+    {l:'Mountains',          v:'dramatic mountain environment, high altitude rocky peaks, alpine meadows or permanent snowfields, imposing geological scale'},
+    {l:'Underwater',         v:'underwater aquatic environment, blue-green water column, light refraction and caustic patterns from surface above, marine life'},
+    {l:'Space',              v:'outer space environment, infinite black void, distant star fields, colorful nebulae and galaxies, zero gravity silence'},
+    {l:'Fantasy World',      v:'epic fantasy world environment, magical impossible architecture, enchanted nature, mythological landscape with wonder at every scale'},
+    {l:'Post-Apocalyptic',   v:'post-apocalyptic ruined environment, collapsed civilization, overgrown decay reclaiming structures, ash-grey sky, survival atmosphere'},
+    {l:'Japanese Street',    v:'atmospheric Japanese urban street, paper lanterns and neon signs, narrow alley, izakaya bars and ancient temples coexisting'},
+    {l:'Medieval Castle',    v:'grand medieval castle environment, stone battlements and towers, moat and drawbridge, feudal historical atmosphere and scale'},
+    {l:'Rainy City',         v:'rain-soaked city environment, wet reflective streets, glowing puddle reflections, visible rain streaks, grey atmospheric sky'},
+    {l:'Snowy Plains',       v:'vast snowy plains environment, white blanketed landscape, frozen stillness, breath-visible cold, polar silence and isolation'},
+    {l:'Tropical Beach',     v:'tropical beach paradise environment, turquoise water, white sand, palm trees, lush vegetation, warm ocean light'},
+    {l:'Interior / Indoor',  v:'richly detailed interior environment, architectural details, furniture and objects, warm ambient indoor lighting and atmosphere'},
+    {l:'Cafe / Restaurant',  v:'cozy cafe or restaurant interior, warm ambient lighting, tables and chairs, coffee and conversation atmosphere'},
+    {l:'Industrial',         v:'gritty industrial environment, exposed metal and concrete, pipes and heavy machinery, raw utilitarian aesthetic'},
+  ]},
+
+  { id:'time', icon:'🕐', title:'Time of Day', video:false, edit:false, opts:[
+    {l:'Dawn',             v:'pre-dawn twilight, first pale light appearing before sunrise, dark blue sky fading to orange on the horizon, bird song beginning'},
+    {l:'Morning',          v:'fresh morning light, gentle low sun, dew still present on surfaces, beginning-of-day clarity and freshness in the air'},
+    {l:'Noon',             v:'harsh overhead noon sun, minimal shadows pointing directly downward, flat bright light, peak-day intensity and heat'},
+    {l:'Afternoon',        v:'warm afternoon light, sun past its peak, relaxed comfortable illumination, golden quality beginning to develop'},
+    {l:'Sunset',           v:'dramatic sunset with fiery horizon, sun touching or below the horizon, spectacular sky colors from deep red to violet, day ending'},
+    {l:'Twilight / Dusk',  v:'blue hour twilight after sunset, city lights beginning to emerge, deep blue sky, transitional magic between day and night'},
+    {l:'Night',            v:'full night darkness, artificial light sources only, deep shadows, stars or cloudy sky, nocturnal urban or natural atmosphere'},
+    {l:'Late Night',       v:'late night quiet, sparse pedestrians, empty streets, late-night urban silence, exhausted city winding down toward sleep'},
+    {l:'Midnight',         v:'true midnight darkness, peak of night, the stillest and quietest hour, deepest shadows, haunted emptiness'},
+    {l:'Golden Hour',      v:'magical golden hour, last or first direct sunlight of the day, warm amber rays, long soft shadows, the most beautiful light of day'},
+    {l:'Blue Hour',        v:'enchanting blue hour, twenty minutes of perfect diffused blue light just before or after the sun crosses the horizon'},
+  ]},
+
+  { id:'era', icon:'⏳', title:'Era / Period', video:false, edit:false, opts:[
+    {l:'Contemporary',    v:'contemporary modern setting, present day 2020s, current technology and aesthetics, modern architecture and fashion'},
+    {l:'1990s',           v:'1990s era aesthetic, early internet and grunge and rave culture, VHS aesthetic quality, nineties fashion and technology'},
+    {l:'1980s',           v:'1980s retro aesthetic, synthwave era, neon and chrome surfaces, Cold War atmosphere, VCR culture and shoulder pads'},
+    {l:'1970s',           v:'1970s era aesthetic, warm earth tones, polyester and disco era, analog grain, counterculture and funk atmosphere'},
+    {l:'1960s',           v:'1960s era aesthetic, mod fashion, psychedelic color, space age optimism, Woodstock and civil rights atmosphere'},
+    {l:'1950s',           v:'1950s era aesthetic, post-war American optimism, chrome automobiles, diners, Norman Rockwell Americana, black-and-white TV era'},
+    {l:'Victorian',       v:'Victorian era setting 1837–1901, elaborate Gothic and Neo-Classical architecture, steam and coal industry, gaslit cobblestone streets'},
+    {l:'Medieval',        v:'medieval period setting 5th to 15th century, castles and feudal society, knights and peasants, pre-industrial handcraft world'},
+    {l:'Ancient World',   v:'ancient world setting, pre-medieval civilizations, Roman or Greek or Egyptian or Mesopotamian grandeur and mythology'},
+    {l:'Future / Sci-fi', v:'distant future science fiction setting, advanced beyond-current technology, space travel and alien worlds, civilizations spanning galaxies'},
+    {l:'Cyberpunk',       v:'cyberpunk future dystopia, mega-city neon and decay, corporate domination, augmented humans, rain-soaked dark future streets'},
+    {l:'Steampunk',       v:'Victorian steampunk aesthetic, steam-powered machinery, clockwork and brass, airships and goggles, industrial fantasy world'},
+    {l:'Retro-futurism',  v:'retro-futurist aesthetic, mid-century vision of the future, space age optimism, Googie architecture, flying cars as imagined in the 1950s'},
+  ]},
+
+  { id:'quality', icon:'✨', title:'Quality', video:false, edit:false, opts:[
+    {l:'8K',                       v:'8K ultra-high resolution, enormous pixel density, breathtaking fine detail visible at any zoom level'},
+    {l:'4K',                       v:'4K high resolution, crisp detailed imagery, broadcast and cinema standard quality'},
+    {l:'RAW',                      v:'RAW unprocessed photographic quality, maximum dynamic range, uncompressed detail, pure professional photography standard'},
+    {l:'Masterpiece',              v:'masterpiece quality, exceptional artistic achievement, museum or gallery worthy, the finest possible execution of craft'},
+    {l:'Highly Detailed',          v:'highly detailed rendering, rich information at every scale, dense visual complexity, rewarding extended close inspection'},
+    {l:'Professional Photography', v:'professional photography quality, technically perfect exposure, composition and focus, editorial or advertising campaign standard'},
+    {l:'Award-winning',            v:'award-winning image quality, international competition photography standard, exceptional artistic and technical merit'},
+    {l:'Photorealistic Render',    v:'photorealistic computer render, indistinguishable from photography, physically-based rendering, real-world light simulation'},
+    {l:'Ultra HD',                 v:'ultra high definition resolution, maximum sharpness and clarity, premium large-format display quality'},
+    {l:'Studio Quality',           v:'professional studio production quality, controlled technical excellence, commercial photography or film standard'},
+    {l:'Film Quality',             v:'motion picture film quality, cinematic color science, anamorphic character, professional cinematography standard'},
+    {l:'Sharp & Crisp',            v:'tack-sharp and crisp imagery, perfect critical focus, no motion blur or lens softness, maximum optical clarity'},
+  ]},
+
+  // VIDEO ONLY
+  { id:'motion', icon:'🎬', title:'Motion / Dynamics', video:true, edit:false, badge:'video', opts:[
+    {l:'Slow Motion',          v:'dramatic slow motion footage, time stretched to reveal fine movement detail, graceful and balletic temporal dilation'},
+    {l:'Time-lapse',           v:'accelerated time-lapse footage, rapid movement of clouds or crowd or light, compressed time revealing hidden patterns'},
+    {l:'Frozen Moment',        v:'single frozen split-second peak action moment, suspended animation quality, perfect instantaneous capture'},
+    {l:'Smooth Movement',      v:'smooth fluid organic movement, naturally flowing continuous motion, graceful and uninterrupted kinetic quality'},
+    {l:'Explosion / Splash',   v:'explosive energetic burst of particles or liquid, dramatic outward expansion, kinetic energy violently unleashed'},
+    {l:'Flying Apart',         v:'objects flying apart in slow motion, fragments suspended mid-air, explosive disassembly frozen in time'},
+    {l:'Gentle Wind Breeze',   v:'gentle breeze movement, fabric and hair and leaves responding to soft wind, natural organic rhythmic motion'},
+    {l:'Smoke & Fog Drift',    v:'slow drifting smoke or fog movement, ethereal wisps curling through air, atmospheric particle flow'},
+    {l:'Water & Waves',        v:'fluid water movement, waves and ripples and splashes, liquid dynamics with realistic surface tension and light'},
+    {l:'Falling',              v:'graceful falling movement, subject descending through space, weightless drift or accelerating gravitational drop'},
+    {l:'Dancing',              v:'expressive dance movement, rhythmic body motion, flowing choreography, kinetic joy in motion'},
+    {l:'Character Walking',    v:'confident walking movement, natural gait cycle, purposeful forward motion, character locomotion'},
+    {l:'Crowd Movement',       v:'organic crowd movement, many bodies flowing through space, collective human kinetics, swarm behavior and flow'},
+  ]},
+  { id:'cam-move', icon:'🎥', title:'Camera Movement', video:true, edit:false, badge:'video', opts:[
+    {l:'Static Camera',             v:'completely static locked-off camera on tripod, no movement whatsoever, pure subject motion against perfectly stable frame'},
+    {l:'Slow Push In',              v:'slow deliberate push-in dolly or zoom toward subject, gradually building intimacy and rising tension'},
+    {l:'Pull Out (Reveal)',         v:'slow pull-out dolly or zoom away from subject, revealing greater environment and context in a cinematic reveal'},
+    {l:'Pan Left to Right',         v:'smooth horizontal pan from left to right, following action or sweeping across landscape'},
+    {l:'Pan Right to Left',         v:'smooth horizontal pan from right to left, cinematic reverse direction sweep across scene'},
+    {l:'Orbit / Circular',          v:'smooth orbital camera movement circling the subject in 360 degrees, heroic subject presentation reveal'},
+    {l:'Low Altitude Flight',       v:'low-altitude flight path following terrain contours, dramatic ground-skimming velocity, immersive kinetic energy'},
+    {l:'Aerial Descent',            v:'aerial descent from great height toward ground, falling perspective, altitude loss revealing scale below'},
+    {l:'Steadicam / Stabilized',    v:'smooth Steadicam stabilized movement, floating effortless camera motion, following subject without any shake'},
+    {l:'Handheld / Shaky',          v:'authentic handheld camera movement, organic subtle shake, documentary realism, verite immediacy and urgency'},
+    {l:'Dolly Zoom (Vertigo)',       v:'Hitchcock dolly zoom effect, background stretches as foreground maintains size, psychological vertigo sensation'},
+    {l:'FPV Drone',                 v:'FPV racing drone camera movement, aggressive velocity, tight banking turns, immersive first-person flight perspective'},
+  ]},
+  { id:'pace', icon:'⚡', title:'Pace / Duration', video:true, edit:false, badge:'video', opts:[
+    {l:'3 seconds',         v:'compact 3-second clip, punchy and immediate, social media format, rapid single-moment impact'},
+    {l:'5 seconds',         v:'5-second clip, single clear action or reveal, ideal for loop or short-form social content'},
+    {l:'10 seconds',        v:'10-second clip, enough time to establish scene and complete a single motion beat'},
+    {l:'15 seconds',        v:'15-second clip, short-form content standard, space for scene setup and development'},
+    {l:'Slow Pace',         v:'slow meditative pacing, unhurried rhythm, space to breathe, contemplative tempo'},
+    {l:'Medium Pace',       v:'moderate natural pacing, standard narrative rhythm, accessible and comfortable viewing tempo'},
+    {l:'Dynamic Pace',      v:'fast dynamic energetic pacing, rapid motion and cutting energy, exciting high-energy tempo'},
+    {l:'Cinematic Rhythm',  v:'deliberate cinematic rhythmic pacing, tension and release, professional film language timing'},
+  ]},
+
+  // EDIT ONLY
+  { id:'edit-type', icon:'✏️', title:'Edit Type', video:false, edit:true, badge:'edit', opts:[
+    {l:'Season Change',            v:'change the season of the entire scene, alter foliage, ground cover, sky and atmospheric conditions accordingly'},
+    {l:'Time of Day Change',       v:'change the time of day, alter lighting direction and color, sky, shadows and ambient color temperature'},
+    {l:'Weather Change',           v:'change the weather conditions, alter sky, precipitation, atmospheric haze, ground reflections and lighting'},
+    {l:'Style / Aesthetic Change', v:'transform the visual style and artistic aesthetic while preserving core subject and composition'},
+    {l:'Color Grading',            v:'apply professional color grading, adjust hue saturation luminance curves to achieve a specific cinematic look'},
+    {l:'Background Replacement',   v:'replace the entire background environment while seamlessly preserving the subject, match lighting and perspective'},
+    {l:'Object Removal',           v:'cleanly remove specified objects from the scene, fill with plausible background, make the removal imperceptible'},
+    {l:'Object Addition',          v:'add new specified objects into the scene, match lighting perspective and scale, integrate seamlessly'},
+    {l:'Lighting Adjustment',      v:'adjust and rework the lighting setup, change direction intensity and color of light sources, alter shadow quality'},
+    {l:'Environment Change',       v:'change the entire surrounding environment, transport the subject to a completely different setting'},
+    {l:'Texture Change',           v:'change surface textures and material properties, alter how surfaces look and feel without changing geometry'},
+    {l:'Age / Era Change',         v:'change the temporal period, adjust clothing technology architecture and aesthetic for a different era'},
+    {l:'Perspective Change',       v:'change the camera angle or perspective, recompose the scene from a different viewpoint'},
+    {l:'Mood Change',              v:'shift the overall emotional atmosphere and mood, adjust color tone lighting and environment accordingly'},
+  ]},
+  { id:'edit-from', icon:'⬅️', title:'From — Current State', video:false, edit:true, badge:'edit', opts:[
+    {l:'Spring',             v:'spring season with fresh green growth and blossoms'},
+    {l:'Summer',             v:'summer season with full lush foliage and bright direct sunlight'},
+    {l:'Autumn',             v:'autumn fall season with orange red and yellow foliage and harvest warmth'},
+    {l:'Winter',             v:'winter season with snow cover and bare trees and cold blue light'},
+    {l:'Morning',            v:'morning time of day with fresh early light and dew'},
+    {l:'Noon',               v:'noon with harsh overhead midday light and minimal shadows'},
+    {l:'Evening',            v:'evening with warm low sun and long golden shadows'},
+    {l:'Night',              v:'night with darkness and artificial light sources'},
+    {l:'Clear Sky',          v:'clear blue sky with direct bright sunlight and sharp shadows'},
+    {l:'Overcast',           v:'overcast cloudy sky with diffused soft even light'},
+    {l:'Rainy',              v:'rainy wet conditions with puddles and wet reflective surfaces'},
+    {l:'Snowy',              v:'snowy conditions with white surfaces and soft diffused winter light'},
+    {l:'Foggy',              v:'foggy misty conditions with reduced visibility and diffused light'},
+    {l:'Stormy',             v:'stormy dramatic sky with dark clouds and turbulent atmosphere'},
+    {l:'Realistic / Natural',v:'realistic natural color rendering with no stylistic treatment'},
+    {l:'Vintage / Film',     v:'vintage film aesthetic with warm faded tones and grain'},
+    {l:'Black & White',      v:'black and white monochrome with all color removed'},
+    {l:'Warm Tones',         v:'warm amber and orange color temperature'},
+    {l:'Cool Tones',         v:'cool blue and teal color temperature'},
+    {l:'Dark & Moody',       v:'dark and moody low-key atmosphere with deep shadows'},
+    {l:'Bright & Airy',      v:'bright and airy with clean whites and open feeling'},
+    {l:'Modern',             v:'clean contemporary modern aesthetic'},
+    {l:'Rustic',             v:'rustic and weathered aesthetic with natural aged materials'},
+  ]},
+  { id:'edit-to', icon:'➡️', title:'To — Desired State', video:false, edit:true, badge:'edit', opts:[
+    {l:'Spring',           v:'transform to lush spring with fresh growth, blossoms, soft morning light, vibrant greens'},
+    {l:'Summer',           v:'transform to warm summer with full foliage, bright long days, vibrant energy'},
+    {l:'Autumn',           v:'transform to golden autumn with orange and red foliage, crisp air, harvest warmth'},
+    {l:'Winter',           v:'transform to winter with snow-covered ground, bare trees, cold blue light, frozen stillness'},
+    {l:'Morning',          v:'transform lighting to fresh morning quality, gentle low sun, dew, clean beginning-of-day light'},
+    {l:'Noon',             v:'transform to harsh overhead noon sun, flat bright light, peak-day intensity'},
+    {l:'Evening',          v:'transform to warm evening light, long golden shadows, day winding toward dusk'},
+    {l:'Night',            v:'transform to full night with darkness, artificial light sources, nocturnal atmosphere'},
+    {l:'Clear Sky',        v:'transform to clear blue sky with direct bright sunlight and sharp shadows'},
+    {l:'Overcast',         v:'transform to overcast sky with soft diffused even lighting'},
+    {l:'Rainy',            v:'transform to rain-soaked conditions with wet reflective surfaces and grey sky'},
+    {l:'Snowy',            v:'transform to snowy winter conditions with white surfaces and cold diffused light'},
+    {l:'Foggy',            v:'transform to thick atmospheric fog with reduced visibility and diffused mystery'},
+    {l:'Stormy',           v:'transform to dramatic stormy sky with dark clouds and turbulent threatening atmosphere'},
+    {l:'Cyberpunk',        v:'transform to cyberpunk dystopia, neon-lit mega-city darkness, rain-soaked tech noir, corporate decay aesthetic'},
+    {l:'Neon / Synthwave', v:'transform to neon synthwave aesthetic, electric pinks and purples and blues, 80s retro-futurist glow'},
+    {l:'Cinematic Film',   v:'transform to cinematic film look, movie-quality color grading, anamorphic character, professional film aesthetic'},
+    {l:'Oil Painting',     v:'transform to oil painting aesthetic with visible paint texture and brushstrokes, classical painted quality'},
+    {l:'Watercolor',       v:'transform to watercolor illustration with transparent washes and soft bleeding edges on paper texture'},
+    {l:'Fantasy / Magic',  v:'transform to magical fantasy aesthetic with ethereal glow, impossible beauty, enchanted otherworldly quality'},
+    {l:'Sci-fi',           v:'transform to science fiction aesthetic with futuristic technology, advanced materials, cosmic scale'},
+    {l:'Dark & Moody',     v:'transform to dark and moody low-key atmosphere with deep shadows and dramatic contrast'},
+    {l:'Golden Hour',      v:'replace existing lighting with warm golden hour sun quality, amber rays, long soft shadows'},
+    {l:'Dreamy Pastel',    v:'transform to dreamy pastel aesthetic with soft desaturated hues, hazy tender soft-focus quality'},
+    {l:'Noir',             v:'transform to film noir black-and-white with strong shadow contrast and classic noir atmosphere'},
+    {l:'Anime',            v:'transform to anime visual style with Japanese animation aesthetic, cel-shading and stylized proportions'},
+  ]},
+  { id:'intensity', icon:'🎚️', title:'Transformation Intensity', video:false, edit:true, badge:'edit', opts:[
+    {l:'Subtle (~20%)',            v:'subtle 20% transformation, minimal barely perceptible changes, natural gradual adjustment preserving original character'},
+    {l:'Moderate (~50%)',          v:'moderate 50% transformation, clearly visible change while retaining strong original character, balanced blend of old and new'},
+    {l:'Dramatic (~80%)',          v:'dramatic 80% transformation, strong visible change, original barely recognizable beneath new treatment'},
+    {l:'Complete Overhaul (100%)', v:'complete 100% style overhaul, total transformation, original image serves only as structural and positional reference'},
+  ]},
+  { id:'preserve', icon:'🔒', title:'Preserve — Keep Unchanged', video:false, edit:true, badge:'edit', opts:[
+    {l:'Original Composition',    v:'preserve the original composition, framing and spatial layout exactly as in the source image'},
+    {l:'Subject / People',        v:'preserve the subject or people in the image, their position size and general appearance'},
+    {l:'Facial Features',         v:'preserve all facial features exactly, all identity-critical details must remain completely unchanged'},
+    {l:'Product Shape & Details', v:'preserve the product\'s exact shape, form factor, and all identifying design details and markings'},
+    {l:'Logo & Text',             v:'preserve all logos and text elements exactly, legibility and positioning must remain unchanged'},
+    {l:'Proportions',             v:'preserve all spatial proportions and relative sizes of all elements within the frame'},
+    {l:'Color Scheme',            v:'preserve the existing color scheme and overall palette of the original image'},
+    {l:'Lighting Direction',      v:'preserve the existing direction and quality of the main light source'},
+    {l:'Textures',                v:'preserve existing surface textures and material qualities throughout'},
+    {l:'Background Elements',     v:'preserve existing background elements and environmental details'},
+    {l:'Camera Angle',            v:'preserve the original camera angle, viewpoint and perspective exactly'},
+  ]},
 ];
 
 const REFS = [
-  { id:'ref-comp',    label:'📐 Composition Ref',
-    ph:'Describe what to borrow from this reference: framing, perspective, layout...' },
-  { id:'ref-prod',    label:'📦 Product / Object',
-    ph:'Product name + placement — e.g. "BioLite charging station, center foreground, fully lit"' },
-  { id:'ref-logo',    label:'🏷️ Logo / Text',
-    ph:'Logo name + placement — e.g. "TechBrand logo, bottom-right, white version, 8% width"' },
-  { id:'ref-style',   label:'🖌️ Style Reference',
-    ph:'What to take from this ref: color grading, mood, texture, lighting...' },
+  { id:'ref-comp',  label:'📐 Composition Ref', ph:'Describe what to borrow: framing, perspective, layout...' },
+  { id:'ref-prod',  label:'📦 Product / Object', ph:'Product name + placement — e.g. "BioLite charging station, center foreground, fully lit"' },
+  { id:'ref-logo',  label:'🏷️ Logo / Text',      ph:'Logo name + placement — e.g. "TechBrand logo, bottom-right, white version, 8% width"' },
+  { id:'ref-style', label:'🖌️ Style Reference',  ph:'What to take: color grading, mood, texture, lighting...' },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════
-// STATE
+// STATE  —  sel uses Map(label → fullValue) so chips show short name
 // ═══════════════════════════════════════════════════════════════════════
-
 let currentModel = 'universal';
 let currentMode  = 'image';
-
 const sel = {};
-CATS.forEach(c => { sel[c.id] = new Set(); });
-
+CATS.forEach(c => { sel[c.id] = new Map(); });
 const refState = {};
-REFS.forEach(r => { refState[r.id] = { name: '', desc: '' }; });
-
+REFS.forEach(r => { refState[r.id] = { name:'', desc:'' }; });
 let translatedSubject = '';
 let xlatTimer = null;
 let editAddl = '';
@@ -353,7 +550,6 @@ let editAddl = '';
 // ═══════════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════════
-
 function init() {
   renderModelTabs();
   renderRefs();
@@ -366,15 +562,14 @@ function renderModelTabs() {
   document.getElementById('model-tabs').innerHTML = MODELS.map(m =>
     `<button class="model-tab${m.id===currentModel?' active':''}" onclick="setModel('${m.id}')">
        ${m.label}${m.badge?`<span class="badge">${m.badge}</span>`:''}
-     </button>`
-  ).join('');
+     </button>`).join('');
 }
 
 function renderRefs() {
   document.getElementById('ref-grid').innerHTML = REFS.map(r => `
     <div class="ref-item">
       <div class="ref-item-title">${r.label}</div>
-      <div class="upload-zone" id="${r.id}-zone">
+      <div class="upload-zone">
         <input type="file" accept="image/*" onchange="onRefUpload('${r.id}',this)">
         <img  class="ref-thumb" id="${r.id}-thumb" src="" alt="">
         <span class="ref-fname" id="${r.id}-fname"></span>
@@ -385,6 +580,8 @@ function renderRefs() {
     </div>`).join('');
 }
 
+function escAttr(s) { return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
 function renderCategories() {
   document.getElementById('categories').innerHTML = CATS.map(cat => `
     <div class="cat-card${cat.video?' video-only':''}${cat.edit?' edit-only':''}" id="cat-${cat.id}">
@@ -394,7 +591,7 @@ function renderCategories() {
         ${cat.badge?`<span class="cat-badge">${cat.badge}</span>`:''}
       </div>
       <div class="chips">${cat.opts.map(o =>
-        `<button class="chip" onclick="toggleChip('${cat.id}',this)">${o}</button>`
+        `<button class="chip" data-v="${escAttr(o.v)}" onclick="toggleChip('${cat.id}',this)">${o.l}</button>`
       ).join('')}</div>
       ${cat.id==='preserve'
         ? `<textarea class="extra-textarea" id="edit-addl"
@@ -406,14 +603,12 @@ function renderCategories() {
 
 function renderTips() {
   document.getElementById('tips-wrap').innerHTML = MODELS.map(m =>
-    `<div class="tip${m.id===currentModel?' on':''}" id="tip-${m.id}">${m.tip}</div>`
-  ).join('');
+    `<div class="tip${m.id===currentModel?' on':''}" id="tip-${m.id}">${m.tip}</div>`).join('');
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// EVENT HANDLERS
+// EVENTS
 // ═══════════════════════════════════════════════════════════════════════
-
 function setModel(id) {
   currentModel = id;
   document.querySelectorAll('.model-tab').forEach((b,i) => b.classList.toggle('active', MODELS[i].id===id));
@@ -423,10 +618,8 @@ function setModel(id) {
 
 function setMode(mode) {
   currentMode = mode;
-  ['image','video','edit'].forEach(m =>
-    document.getElementById(`btn-${m}`).classList.toggle('active', mode===m));
+  ['image','video','edit'].forEach(m => document.getElementById(`btn-${m}`).classList.toggle('active', mode===m));
   document.body.className = `mode-${mode}`;
-
   const lbl = document.getElementById('subject-label');
   const ta  = document.getElementById('subject');
   if (mode === 'edit') {
@@ -440,9 +633,10 @@ function setMode(mode) {
 }
 
 function toggleChip(catId, btn) {
-  const v = btn.textContent.trim();
-  if (sel[catId].has(v)) { sel[catId].delete(v); btn.classList.remove('on'); }
-  else                   { sel[catId].add(v);    btn.classList.add('on'); }
+  const label = btn.textContent.trim();
+  const value = btn.dataset.v;
+  if (sel[catId].has(label)) { sel[catId].delete(label); btn.classList.remove('on'); }
+  else                       { sel[catId].set(label, value); btn.classList.add('on'); }
   rebuild();
 }
 
@@ -455,10 +649,8 @@ function onRefUpload(id, input) {
   const hint  = document.getElementById(`${id}-hint`);
   const reader = new FileReader();
   reader.onload = e => {
-    thumb.src = e.target.result;
-    thumb.classList.add('show');
-    fname.textContent = file.name;
-    fname.classList.add('show');
+    thumb.src = e.target.result; thumb.classList.add('show');
+    fname.textContent = file.name; fname.classList.add('show');
     hint.style.display = 'none';
     rebuild();
   };
@@ -469,8 +661,7 @@ function resetAll() {
   CATS.forEach(c => sel[c.id].clear());
   document.querySelectorAll('.chip.on').forEach(b => b.classList.remove('on'));
   document.getElementById('subject').value = '';
-  translatedSubject = '';
-  editAddl = '';
+  translatedSubject = ''; editAddl = '';
   const addlEl = document.getElementById('edit-addl');
   if (addlEl) addlEl.value = '';
   document.getElementById('xlat-status').textContent = '';
@@ -492,19 +683,16 @@ function resetAll() {
 // ═══════════════════════════════════════════════════════════════════════
 // TRANSLATION
 // ═══════════════════════════════════════════════════════════════════════
-
 function onSubjectInput() {
   const raw = document.getElementById('subject').value.trim();
   if (!raw || /^[\x00-\x7F\s]*$/.test(raw)) {
     translatedSubject = raw;
     document.getElementById('xlat-status').className = 'translate-status';
-    rebuild();
-    return;
+    rebuild(); return;
   }
   clearTimeout(xlatTimer);
   const st = document.getElementById('xlat-status');
-  st.textContent = '⟳ Translating...';
-  st.className = 'translate-status translating';
+  st.textContent = '⟳ Translating...'; st.className = 'translate-status translating';
   xlatTimer = setTimeout(() => doTranslate(raw), 750);
 }
 
@@ -512,15 +700,12 @@ async function doTranslate(text) {
   const st = document.getElementById('xlat-status');
   try {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text)}`;
-    const res  = await fetch(url);
-    const data = await res.json();
+    const data = await (await fetch(url)).json();
     translatedSubject = data[0].map(x => x[0]).join('').trim();
-    st.textContent = '✓ Translated to English';
-    st.className = 'translate-status done';
+    st.textContent = '✓ Translated to English'; st.className = 'translate-status done';
   } catch {
     translatedSubject = text;
-    st.textContent = '⚠ Translation unavailable — using original text';
-    st.className = 'translate-status error';
+    st.textContent = '⚠ Translation unavailable — using original text'; st.className = 'translate-status error';
   }
   rebuild();
 }
@@ -528,8 +713,8 @@ async function doTranslate(text) {
 // ═══════════════════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════════════════
-
-function g(id) { return [...sel[id]]; }
+// Returns full prompt values (not display labels) for a category
+function g(id) { return [...sel[id].values()]; }
 
 function getSubject() {
   const raw = document.getElementById('subject').value.trim();
@@ -551,74 +736,52 @@ function refsBlock() {
 }
 
 function hasContent() {
-  return getSubject()
-    || CATS.some(c => sel[c.id].size > 0)
+  return getSubject() || CATS.some(c => sel[c.id].size > 0)
     || REFS.some(r => refState[r.id].name || refState[r.id].desc);
 }
 
-// ── Build a structured line: "LABEL: val1, val2" ──
-// Returns [] if values empty.
 function row(label, vals) {
   if (!vals || (Array.isArray(vals) ? !vals.length : !vals)) return [];
-  const v = Array.isArray(vals) ? vals.join(', ') : vals;
-  return [`${label}: ${v}`];
+  return [`${label}: ${Array.isArray(vals) ? vals.join(', ') : vals}`];
 }
 
 // ═══════════════════════════════════════════════════════════════════════
 // PROMPT BUILDERS
 // ═══════════════════════════════════════════════════════════════════════
-
 function rebuild() {
   const out = document.getElementById('prompt-out');
   if (!hasContent()) {
     out.innerHTML = currentMode==='edit'
       ? 'Select edit parameters on the left...'
       : 'Select parameters on the left — your prompt will appear here...';
-    out.classList.add('empty');
-    out._raw = '';
-    document.getElementById('char-count').textContent = '0 chars';
-    return;
+    out.classList.add('empty'); out._raw = '';
+    document.getElementById('char-count').textContent = '0 chars'; return;
   }
-
   const d = {
     subject: getSubject(),
-    style:   g('style'),    lighting: g('lighting'), lens:    g('lens'),
-    mood:    g('mood'),     palette:  g('palette'),  comp:    g('composition'),
-    details: g('details'),  env:      g('environment'), time: g('time'),
-    era:     g('era'),      quality:  g('quality'),
-    motion:  g('motion'),   camMove:  g('cam-move'), pace:    g('pace'),
-    eType:   g('edit-type'), eFrom:   g('edit-from'), eTo:    g('edit-to'),
+    style:   g('style'),   lighting: g('lighting'),  lens:    g('lens'),
+    mood:    g('mood'),    palette:  g('palette'),    comp:    g('composition'),
+    details: g('details'), env:      g('environment'),time:    g('time'),
+    era:     g('era'),     quality:  g('quality'),
+    motion:  g('motion'),  camMove:  g('cam-move'),   pace:    g('pace'),
+    eType:   g('edit-type'), eFrom:  g('edit-from'),  eTo:     g('edit-to'),
     intensity: g('intensity'), preserve: g('preserve'),
     refs: refsBlock(), addl: editAddl,
   };
-
-  const isVid  = currentMode === 'video';
-  const isEdit = currentMode === 'edit';
-
+  const isVid = currentMode==='video', isEdit = currentMode==='edit';
   let lines;
-  if (isEdit) {
-    lines = buildEdit(d);
-  } else {
-    const map = {
-      'midjourney':  buildMJ,
-      'stable-diff': buildSD,
-      'gpt-image':   buildGPT,
-      'dalle3':      buildDALLE,
-      'kling':       buildKling,
-      'flux':        buildFlux,
-      'nano-bano':   buildNano,
-    };
-    lines = (map[currentModel] || buildUniversal)(d, isVid);
+  if (isEdit) { lines = buildEdit(d); }
+  else {
+    const map = { 'midjourney':buildMJ,'stable-diff':buildSD,'gpt-image':buildGPT,
+                  'dalle3':buildDALLE,'kling':buildKling,'flux':buildFlux,'nano-bano':buildNano };
+    lines = (map[currentModel]||buildUniversal)(d, isVid);
   }
-
   const raw = lines.join('\n');
   out.innerHTML = colorize(lines);
-  out.classList.remove('empty');
-  out._raw = raw;
+  out.classList.remove('empty'); out._raw = raw;
   document.getElementById('char-count').textContent = `${raw.length} chars`;
 }
 
-// ── Universal ──────────────────────────────────────────────────────────
 function buildUniversal(d, vid) {
   const L = [];
   if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
@@ -632,17 +795,12 @@ function buildUniversal(d, vid) {
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
   L.push(...row('ERA / PERIOD', d.era));
-  if (vid) {
-    L.push(...row('MOTION / DYNAMICS', d.motion));
-    L.push(...row('CAMERA MOVEMENT', d.camMove));
-    L.push(...row('PACE / DURATION', d.pace));
-  }
+  if (vid) { L.push(...row('MOTION / DYNAMICS', d.motion)); L.push(...row('CAMERA MOVEMENT', d.camMove)); L.push(...row('PACE / DURATION', d.pace)); }
   L.push(...row('QUALITY', d.quality));
   if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
   return L;
 }
 
-// ── Midjourney ─────────────────────────────────────────────────────────
 function buildMJ(d, vid) {
   const L = [];
   if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
@@ -656,25 +814,22 @@ function buildMJ(d, vid) {
   L.push(...row('COLOR PALETTE', d.palette));
   L.push(...row('COMPOSITION', d.comp));
   L.push(...row('DETAILS', d.details));
-  if (vid) { L.push(...row('MOTION', d.motion)); }
+  if (vid) L.push(...row('MOTION', d.motion));
   L.push(...row('QUALITY', d.quality));
   if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
-  const p = ['--ar 16:9', '--v 6.1'];
-  if (d.style.some(s => /anim|manga/i.test(s))) p.push('--niji 6');
-  else p.push('--style raw');
+  const p = ['--ar 16:9','--v 6.1'];
+  if (d.style.some(s => /anim|manga/i.test(s))) p.push('--niji 6'); else p.push('--style raw');
   if (d.quality.some(q => /detail/i.test(q))) p.push('--q 2');
   L.push('', 'PARAMS:', p.join(' '));
   return L;
 }
 
-// ── Stable Diffusion ───────────────────────────────────────────────────
 function buildSD(d, vid) {
   const L = [];
   if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
-  const qTags = d.quality.length ? d.quality.map(q=>`(${q}:1.4)`).join(', ')
-    : '(masterpiece:1.4), (best quality:1.3)';
+  const qTags = d.quality.length ? d.quality.map(q=>`(${q}:1.4)`).join(', ') : '(masterpiece:1.4), (best quality:1.3)';
   L.push(`QUALITY TAGS: ${qTags}`);
-  if (d.style.length)    L.push(`STYLE: ${d.style.map(s=>`(${s}:1.2)`).join(', ')}`);
+  if (d.style.length) L.push(`STYLE: ${d.style.map(s=>`(${s}:1.2)`).join(', ')}`);
   L.push(...row('LIGHTING', d.lighting));
   L.push(...row('LENS / CAMERA', d.lens));
   L.push(...row('MOOD / ATMOSPHERE', d.mood));
@@ -684,42 +839,34 @@ function buildSD(d, vid) {
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
   L.push(...row('ERA / PERIOD', d.era));
-  if (vid) { L.push(...row('MOTION', d.motion)); }
+  if (vid) L.push(...row('MOTION', d.motion));
   if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
   return L;
 }
 
-// ── GPT Image 2 ────────────────────────────────────────────────────────
 function buildGPT(d, vid) {
   const L = [];
   const sty = d.style.length ? d.style.join(' and ')+' style' : 'photorealistic style';
-  const subj = d.subject || 'a scene';
-  L.push('SUBJECT:', `A ${sty} ${vid?'video scene':'image'} of ${subj}.`, '');
+  L.push('SUBJECT:', `A ${sty} ${vid?'video scene':'image'} of ${d.subject||'a scene'}.`, '');
   if (d.env.length||d.time.length||d.era.length)
     L.push('SETTING:', [...d.env,...d.time,...d.era].join(', ')+'.');
-  L.push(...row('LIGHTING', d.lighting.length ? [d.lighting.join(' and ')+' lighting'] : []));
-  L.push(...row('MOOD / ATMOSPHERE', d.mood.length ? [d.mood.join(' and ')+' atmosphere'] : []));
+  if (d.lighting.length) L.push('LIGHTING:', d.lighting.join(' and ')+' lighting.');
+  if (d.mood.length)     L.push('MOOD / ATMOSPHERE:', d.mood.join(' and ')+'.');
   L.push(...row('COLOR PALETTE', d.palette));
-  L.push(...row('COMPOSITION', d.comp.length ? [d.comp.join(', ')+' composition'] : []));
-  L.push(...row('LENS / CAMERA', d.lens.length ? ['Shot with '+d.lens.join(', ')] : []));
+  if (d.comp.length)     L.push('COMPOSITION:', d.comp.join(', ')+' composition.');
+  if (d.lens.length)     L.push('LENS / CAMERA:', 'Shot with '+d.lens.join(', ')+'.');
   L.push(...row('DETAILS', d.details));
-  if (vid) {
-    L.push(...row('MOTION', d.motion));
-    L.push(...row('CAMERA MOVEMENT', d.camMove));
-    L.push(...row('PACE', d.pace));
-  }
+  if (vid) { L.push(...row('MOTION', d.motion)); L.push(...row('CAMERA MOVEMENT', d.camMove)); L.push(...row('PACE', d.pace)); }
   L.push(...row('QUALITY', d.quality));
   if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
   return L;
 }
 
-// ── DALL-E 3 ───────────────────────────────────────────────────────────
 function buildDALLE(d, vid) {
   const L = [];
-  const sty  = d.style.length ? d.style.join(' and ') : 'photorealistic';
-  const subj = d.subject || 'a detailed scene';
-  const era  = d.era.length ? ', set in '+d.era.join(' and ') : '';
-  L.push('SUBJECT:', `A photograph of ${subj}. Rendered in ${sty} aesthetic${era}.`, '');
+  const sty = d.style.length ? d.style.join(' and ') : 'photorealistic';
+  const era = d.era.length ? ', set in '+d.era.join(' and ') : '';
+  L.push('SUBJECT:', `A photograph of ${d.subject||'a detailed scene'}. Rendered in ${sty} aesthetic${era}.`, '');
   if (d.env.length)      L.push('ENVIRONMENT:', 'Set in '+d.env.join(', ')+'.');
   if (d.time.length)     L.push('TIME OF DAY:', d.time.join(', ')+'.');
   if (d.lighting.length) L.push('LIGHTING:', 'Illuminated with '+d.lighting.join(' and ')+' lighting.');
@@ -733,7 +880,6 @@ function buildDALLE(d, vid) {
   return L;
 }
 
-// ── Kling ──────────────────────────────────────────────────────────────
 function buildKling(d, vid) {
   const L = [];
   if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
@@ -755,7 +901,6 @@ function buildKling(d, vid) {
   return L;
 }
 
-// ── Flux ───────────────────────────────────────────────────────────────
 function buildFlux(d, vid) {
   const L = [];
   if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
@@ -769,99 +914,65 @@ function buildFlux(d, vid) {
   L.push(...row('COLOR PALETTE', d.palette));
   L.push(...row('COMPOSITION', d.comp));
   L.push(...row('DETAILS', d.details));
-  if (vid) {
-    L.push(...row('MOTION', d.motion));
-    L.push(...row('CAMERA MOVEMENT', d.camMove));
-  }
+  if (vid) { L.push(...row('MOTION', d.motion)); L.push(...row('CAMERA MOVEMENT', d.camMove)); }
   L.push(...row('QUALITY', d.quality));
   if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
   return L;
 }
 
-// ── Nano Bano 2 ────────────────────────────────────────────────────────
 function buildNano(d, vid) {
   const L = [];
   if (d.subject) { L.push('SUBJECT:', d.subject, ''); }
-  if (d.style.length)    L.push('STYLE: ' + d.style.join(' + ') + ' aesthetic');
+  if (d.style.length)   L.push('STYLE: '+d.style.join(' + ')+' aesthetic');
   L.push(...row('ENVIRONMENT', d.env));
   L.push(...row('TIME OF DAY', d.time));
   L.push(...row('ERA / PERIOD', d.era));
-  if (d.lighting.length) L.push('LIGHTING: ' + d.lighting.join(' & '));
-  if (d.mood.length)     L.push('MOOD / ATMOSPHERE: ' + d.mood.join(' & ') + ' atmosphere');
-  if (d.palette.length)  L.push('COLOR PALETTE: ' + d.palette.join(', ') + ' palette');
+  if (d.lighting.length) L.push('LIGHTING: '+d.lighting.join(' & '));
+  if (d.mood.length)     L.push('MOOD / ATMOSPHERE: '+d.mood.join(' & ')+' atmosphere');
+  if (d.palette.length)  L.push('COLOR PALETTE: '+d.palette.join(', ')+' palette');
   L.push(...row('COMPOSITION', d.comp));
   L.push(...row('LENS / CAMERA', d.lens));
   L.push(...row('DETAILS', d.details));
-  if (vid) {
-    L.push(...row('MOTION', d.motion));
-    L.push(...row('CAMERA MOVEMENT', d.camMove));
-  }
+  if (vid) { L.push(...row('MOTION', d.motion)); L.push(...row('CAMERA MOVEMENT', d.camMove)); }
   L.push(...row('QUALITY', d.quality));
   if (d.refs.length) { L.push('', 'REFERENCES:'); d.refs.forEach(r => L.push(r)); }
   return L;
 }
 
-// ── Edit Photo ─────────────────────────────────────────────────────────
 function buildEdit(d) {
-  const L = [];
-  L.push('━━━ PHOTO EDITING PROMPT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━', '');
+  const L = ['━━━ PHOTO EDITING PROMPT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━', ''];
   if (d.subject) { L.push('ORIGINAL PHOTO:', d.subject, ''); }
-  if (d.eType.length) {
-    L.push('EDIT TYPE:');
-    d.eType.forEach(e => L.push(`• ${e}`));
-    L.push('');
-  }
-  if (d.eFrom.length)    L.push('FROM (CURRENT STATE): ' + d.eFrom.join(', '));
-  if (d.eTo.length)      L.push('TO (DESIRED STATE): '   + d.eTo.join(', '));
-  if (d.eFrom.length || d.eTo.length) L.push('');
-  if (d.intensity.length) { L.push('TRANSFORMATION INTENSITY: ' + d.intensity.join(', ')); L.push(''); }
-  if (d.preserve.length) {
-    L.push('PRESERVE — DO NOT CHANGE:');
-    d.preserve.forEach(p => L.push(`• ${p}`));
-    L.push('');
-  }
+  if (d.eType.length) { L.push('EDIT TYPE:'); d.eType.forEach(e => L.push(`• ${e}`)); L.push(''); }
+  if (d.eFrom.length) L.push('FROM (CURRENT STATE): '+d.eFrom.join(', '));
+  if (d.eTo.length)   L.push('TO (DESIRED STATE): '+d.eTo.join(', '));
+  if (d.eFrom.length||d.eTo.length) L.push('');
+  if (d.intensity.length) { L.push('TRANSFORMATION INTENSITY: '+d.intensity.join(', ')); L.push(''); }
+  if (d.preserve.length) { L.push('PRESERVE — DO NOT CHANGE:'); d.preserve.forEach(p => L.push(`• ${p}`)); L.push(''); }
   if (d.addl) { L.push('ADDITIONAL INSTRUCTIONS:', d.addl, ''); }
-
-  const suffixes = {
-    'midjourney':  '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUpload original image → use /blend or img2img\n--iw 0.5 --ar 16:9 --v 6.1',
-    'stable-diff': '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nMode: img2img   Denoising Strength: 0.5–0.75   CFG Scale: 7–12',
-    'gpt-image':   '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nAttach the original image to the chat and paste this prompt.',
-    'dalle3':      '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUse DALL-E 3 inpainting or the Variations workflow.',
-    'kling':       '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUse Kling Image-to-Video with the original image as reference.',
-    'flux':        '━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nMode: Flux img2img / Redux   Strength: 0.6–0.8',
+  const sfx = {
+    'midjourney': 'Upload original image → use /blend or img2img\n--iw 0.5 --ar 16:9 --v 6.1',
+    'stable-diff':'Mode: img2img   Denoising Strength: 0.5–0.75   CFG Scale: 7–12',
+    'gpt-image':  'Attach the original image to the chat and paste this prompt.',
+    'dalle3':     'Use DALL-E 3 inpainting or the Variations workflow.',
+    'kling':      'Use Kling Image-to-Video with the original image as reference.',
+    'flux':       'Mode: Flux img2img / Redux   Strength: 0.6–0.8',
   };
-  if (suffixes[currentModel]) L.push(suffixes[currentModel]);
+  if (sfx[currentModel]) { L.push('━━━ WORKFLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'); L.push(sfx[currentModel]); }
   return L;
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// COLORIZE OUTPUT
+// COLORIZE
 // ═══════════════════════════════════════════════════════════════════════
-
 function colorize(lines) {
   return lines.map(line => {
     if (!line) return '';
     const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-    // Separator / edit header  ━━━ ... ━━━
-    if (/^━+/.test(line))
-      return `<span class="pe">${esc(line)}</span>`;
-
-    // Midjourney params line
-    if (/^--\w/.test(line.trim()))
-      return `<span class="pp">${esc(line)}</span>`;
-
-    // Bullet  •
-    if (line.startsWith('• '))
-      return `<span class="pb">${esc(line)}</span>`;
-
-    // LABEL: value  — split at first colon
+    if (/^━+/.test(line)) return `<span class="pe">${esc(line)}</span>`;
+    if (/^--\w/.test(line.trim())) return `<span class="pp">${esc(line)}</span>`;
+    if (line.startsWith('• ')) return `<span class="pb">${esc(line)}</span>`;
     const m = line.match(/^([A-Z][A-Z0-9 /&_]+:)(.*)/);
-    if (m) {
-      return `<span class="pl">${esc(m[1])}</span><span class="pv">${esc(m[2])}</span>`;
-    }
-
-    // Subject value (line after "SUBJECT:" label — plain, slightly brighter)
+    if (m) return `<span class="pl">${esc(m[1])}</span><span class="pv">${esc(m[2])}</span>`;
     return `<span class="ps">${esc(line)}</span>`;
   }).join('\n');
 }
@@ -869,22 +980,18 @@ function colorize(lines) {
 // ═══════════════════════════════════════════════════════════════════════
 // COPY
 // ═══════════════════════════════════════════════════════════════════════
-
 function copyPrompt() {
   const raw = document.getElementById('prompt-out')._raw || '';
   if (!raw) return;
   navigator.clipboard.writeText(raw).then(() => {
     const btn = document.getElementById('btn-copy');
-    btn.textContent = '✓ Copied!';
-    btn.classList.add('copied');
+    btn.textContent = '✓ Copied!'; btn.classList.add('copied');
     const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
+    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200);
     setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════════
 init();
 </script>
 </body>
