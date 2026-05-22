@@ -112,6 +112,17 @@
     .pe { color: #f87171; }
     .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #fff; font-size: .82rem; font-weight: 600; padding: 10px 18px; border-radius: 9px; transform: translateY(60px); opacity: 0; transition: all .3s cubic-bezier(.34,1.56,.64,1); pointer-events: none; z-index: 999; }
     .toast.show { transform: translateY(0); opacity: 1; }
+    .subcat { margin-bottom: 10px; }
+    .subcat:last-child { margin-bottom: 0; }
+    .subcat-label { font-size: .67rem; font-weight: 600; color: #4d5468; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; padding-left: 2px; }
+    .chip-more { border-color: #a78bfa; color: #a78bfa; }
+    .chip-more:hover { background: rgba(167,139,250,.12); color: #c4b5fd; }
+    .chips-more { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .chips-more.hidden { display: none; }
+    .btn-edit-toggle { border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: .85rem; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; padding: 0; }
+    .btn-edit-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-edit-toggle.active { border-color: var(--accent); color: var(--accent); background: rgba(124,58,237,.15); }
+    #prompt-edit { font-family: 'JetBrains Mono',monospace; font-size:.73rem; line-height:1.75; color:var(--text); background:transparent; border:none; padding:14px 15px; width:100%; min-height:280px; max-height:580px; overflow-y:auto; resize:none; outline:none; display:none; }
   </style>
 </head>
 <body>
@@ -155,9 +166,13 @@
     <div class="prompt-card">
       <div class="prompt-card-top">
         <span id="prompt-label">Generated Prompt</span>
-        <span class="char-count" id="char-count">0 chars</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn-edit-toggle" id="btn-edit-toggle" onclick="toggleEditMode()" title="Manually edit the prompt">✏️</button>
+          <span class="char-count" id="char-count">0 chars</span>
+        </div>
       </div>
       <div id="prompt-out" class="empty">Select parameters on the left — your prompt will appear here...</div>
+      <textarea id="prompt-edit" placeholder="Edit your prompt manually here..." oninput="document.getElementById('char-count').textContent=this.value.length+' chars'"></textarea>
       <div class="prompt-btns">
         <button class="btn btn-copy" id="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
         <button class="btn btn-reset" onclick="resetAll()">Reset All</button>
@@ -198,8 +213,9 @@ const MODELS = [
 // CATEGORIES  — each option: { l: 'display label', v: 'full prompt text' }
 // ═══════════════════════════════════════════════════════════════════════
 const CATS = [
-  { id:'style', icon:'🎨', title:'Style', video:false, edit:false, opts:[
+  { id:'style', icon:'🎨', title:'Style', video:false, edit:false, pinCount:2, opts:[
     {l:'Photorealism',     v:'ultra-realistic photographic rendering, indistinguishable from a real photograph, accurate textures and materials, true-to-life colors and proportions'},
+    {l:'3D Render',        v:'photorealistic 3D computer graphics, subsurface scattering, ray-traced lighting, smooth surfaces, Octane or Arnold render quality'},
     {l:'Anime',            v:'Japanese anime animation style, clean cel-shaded lines, large expressive eyes, vibrant flat colors, stylized proportions'},
     {l:'Manga',            v:'black and white Japanese manga illustration, bold confident ink lines, high contrast, screen tones, dynamic panel energy'},
     {l:'Oil Painting',     v:'textured oil paint brushstrokes, rich impasto technique, layered pigments on canvas, classical painting aesthetic, canvas grain visible'},
@@ -208,7 +224,6 @@ const CATS = [
     {l:'Cinematic',        v:'cinematic widescreen aesthetic, film-grade color grading, movie still quality, dramatic depth of field, professional cinematography'},
     {l:'Concept Art',      v:'professional concept art for film or games, detailed environment or character design, painted illustration with descriptive visual clarity'},
     {l:'Pixel Art',        v:'retro pixel art aesthetic, 8-bit or 16-bit style, limited color palette, chunky visible pixels, nostalgic video game feel'},
-    {l:'3D Render',        v:'photorealistic 3D computer graphics, subsurface scattering, ray-traced lighting, smooth surfaces, Octane or Arnold render quality'},
     {l:'Illustration',     v:'editorial-style illustration, graphic and clean, professional book or magazine quality, expressive hand-drawn aesthetic'},
     {l:'Retro / Vintage',  v:'aged vintage aesthetic, film grain and dust, faded desaturated color palette, retro design sensibility, nostalgic character'},
     {l:'Minimalism',       v:'minimalist composition, generous empty space, simple geometric forms, reduced color palette, elegant visual restraint'},
@@ -220,24 +235,30 @@ const CATS = [
     {l:'Impressionism',    v:'loose visible brushstrokes in impressionist style, capturing light and movement over strict form, Monet or Renoir inspired palette'},
   ]},
 
-  { id:'lighting', icon:'💡', title:'Lighting', video:false, edit:false, opts:[
-    {l:'Golden Hour',           v:'warm golden sunlight at low sun angle, long soft shadows, amber and honey tones, magical cinematic atmosphere just after sunrise or before sunset'},
-    {l:'Blue Hour',             v:'cool blue twilight light just before sunrise or after sunset, soft diffused illumination, deep blue sky gradients, tranquil melancholic tone'},
-    {l:'Natural Daylight',      v:'clean natural outdoor daylight, balanced exposure, soft diffused open-sky fill light, true-to-life colors, no artificial sources'},
-    {l:'Studio',                v:'controlled professional studio lighting, clean specular catch lights, perfect exposure, neutral background, product and portrait photography quality'},
-    {l:'Cinematic',             v:'professional film set lighting, motivated key light with subtle fill, dramatic color gel accents, movie-quality lighting design'},
-    {l:'Neon',                  v:'vibrant neon light, electric pinks and blues and greens, colored light spill on wet surfaces, nighttime urban glow, cyberpunk atmosphere'},
-    {l:'Backlit (Contre-jour)', v:'strong backlight source directly behind subject, glowing rim light, silhouette effect, dramatic halo glow, lens flare potential, ethereal luminosity'},
-    {l:'Soft Diffused',         v:'large soft diffused light source, no harsh shadows, smooth gentle gradients across surfaces, flattering beauty lighting quality'},
-    {l:'Hard & Sharp',          v:'small hard point light source, crisp sharp shadow edges, high contrast, dramatic chiaroscuro, strong directional single-source illumination'},
-    {l:'Dramatic',              v:'extreme high-contrast dramatic lighting, deep impenetrable blacks, isolated hot highlights, theatrical and intense atmosphere, Rembrandt-style shadow play'},
-    {l:'Candlelight / Fire',    v:'warm flickering candlelight or firelight, orange and amber glow, low-key intimate atmosphere, dancing light on surrounding surfaces'},
-    {l:'Bokeh Light',           v:'out-of-focus background light circles, creamy bokeh quality, shallow depth of field, fairy-light aesthetic, dreamy luminous background'},
-    {l:'Street Lamp',           v:'warm tungsten street lamp illumination, isolated pool of warm light in surrounding darkness, urban nighttime atmosphere, film noir quality'},
-    {l:'Moonlight',             v:'cool blue-white moonlight, soft directional night illumination, subtle long shadows, ethereal and mysterious nocturnal atmosphere'},
-    {l:'Sun Rays',              v:'visible god rays and crepuscular rays of sunlight, volumetric light shafts through atmosphere or foliage, dramatic and divine quality'},
-    {l:'Side Light',            v:'strong side light raking across subject, creating half-shadow, sculptural three-dimensional form definition, dramatic depth'},
-    {l:'Rim Light',             v:'bright rim light separating subject from background, glowing edge definition, professional portrait or product lighting separation technique'},
+  { id:'lighting', icon:'💡', title:'Lighting', video:false, edit:false, groups:[
+    { sub:'Time & Light Source', opts:[
+      {l:'Golden Hour',        v:'warm golden sunlight at low sun angle, long soft shadows, amber and honey tones, magical cinematic atmosphere just after sunrise or before sunset'},
+      {l:'Blue Hour',          v:'cool blue twilight light just before sunrise or after sunset, soft diffused illumination, deep blue sky gradients, tranquil melancholic tone'},
+      {l:'Natural Daylight',   v:'clean natural outdoor daylight, balanced exposure, soft diffused open-sky fill light, true-to-life colors, no artificial sources'},
+      {l:'Studio',             v:'controlled professional studio lighting, clean specular catch lights, perfect exposure, neutral background, product and portrait photography quality'},
+      {l:'Neon',               v:'vibrant neon light, electric pinks and blues and greens, colored light spill on wet surfaces, nighttime urban glow, cyberpunk atmosphere'},
+      {l:'Candlelight / Fire', v:'warm flickering candlelight or firelight, orange and amber glow, low-key intimate atmosphere, dancing light on surrounding surfaces'},
+      {l:'Street Lamp',        v:'warm tungsten street lamp illumination, isolated pool of warm light in surrounding darkness, urban nighttime atmosphere, film noir quality'},
+      {l:'Moonlight',          v:'cool blue-white moonlight, soft directional night illumination, subtle long shadows, ethereal and mysterious nocturnal atmosphere'},
+      {l:'Sun Rays',           v:'visible god rays and crepuscular rays of sunlight, volumetric light shafts through atmosphere or foliage, dramatic and divine quality'},
+      {l:'Bokeh Light',        v:'out-of-focus background light circles, creamy bokeh quality, shallow depth of field, fairy-light aesthetic, dreamy luminous background'},
+    ]},
+    { sub:'Direction', opts:[
+      {l:'Backlit (Contre-jour)', v:'strong backlight source directly behind subject, glowing rim light, silhouette effect, dramatic halo glow, lens flare potential, ethereal luminosity'},
+      {l:'Side Light',            v:'strong side light raking across subject, creating half-shadow, sculptural three-dimensional form definition, dramatic depth'},
+      {l:'Rim Light',             v:'bright rim light separating subject from background, glowing edge definition, professional portrait or product lighting separation technique'},
+    ]},
+    { sub:'Character & Effects', opts:[
+      {l:'Soft Diffused', v:'large soft diffused light source, no harsh shadows, smooth gentle gradients across surfaces, flattering beauty lighting quality'},
+      {l:'Hard & Sharp',  v:'small hard point light source, crisp sharp shadow edges, high contrast, dramatic chiaroscuro, strong directional single-source illumination'},
+      {l:'Dramatic',      v:'extreme high-contrast dramatic lighting, deep impenetrable blacks, isolated hot highlights, theatrical and intense atmosphere, Rembrandt-style shadow play'},
+      {l:'Cinematic',     v:'professional film set lighting, motivated key light with subtle fill, dramatic color gel accents, movie-quality lighting design'},
+    ]},
   ]},
 
   { id:'lens', icon:'📷', title:'Lens / Camera', video:false, edit:false, opts:[
@@ -259,19 +280,19 @@ const CATS = [
   ]},
 
   { id:'mood', icon:'🌀', title:'Mood / Atmosphere', video:false, edit:false, opts:[
+    {l:'Peaceful',      v:'peaceful and serene atmosphere, calm stillness, harmonious quiet, restful and balanced, gentle tranquility undisturbed'},
+    {l:'Hopeful',       v:'hopeful and optimistic atmosphere, light breaking through darkness, dawn of new possibilities, uplifting forward-looking emotional tone'},
+    {l:'Joyful',        v:'joyful and uplifting atmosphere, light bright energy, warm happiness, celebratory spirit, vibrant positive emotional charge'},
     {l:'Epic',          v:'epic grand scale, monumental and awe-inspiring, heroic atmosphere, legendary quality, sweeping and powerful emotional impact'},
     {l:'Mysterious',    v:'mysterious and enigmatic atmosphere, hidden meaning, deep shadows and visual ambiguity, tension of the unknown, intriguing unanswered questions'},
     {l:'Romantic',      v:'romantic and tender atmosphere, warm intimate feeling, love and longing, soft beauty, emotional connection between subject and viewer'},
     {l:'Melancholic',   v:'melancholic and bittersweet mood, quiet sadness, reflective and introspective, gentle emotional weight, poetic solitude'},
-    {l:'Joyful',        v:'joyful and uplifting atmosphere, light bright energy, warm happiness, celebratory spirit, vibrant positive emotional charge'},
     {l:'Tense',         v:'tense and suspenseful atmosphere, sense of imminent danger or anticipation, heightened alertness, thriller-like psychological charge'},
-    {l:'Peaceful',      v:'peaceful and serene atmosphere, calm stillness, harmonious quiet, restful and balanced, gentle tranquility undisturbed'},
     {l:'Mystical',      v:'mystical and otherworldly atmosphere, sense of ancient magic, spiritual dimension, enchanted quality, sacred mystery beyond rational explanation'},
     {l:'Eerie / Horror',v:'eerie unsettling horror atmosphere, creeping dread, uncanny wrongness, psychological unease, dark foreboding presence lurking'},
     {l:'Nostalgic',     v:'warm nostalgic atmosphere, memory and longing for the past, familiar comfort tinged with gentle sadness, sepia-toned emotional quality'},
     {l:'Dreamy',        v:'dreamy and ethereal atmosphere, blurred soft reality, floating oneiric quality, hypnagogic imagery, gentle unreality and wonder'},
     {l:'Lonely',        v:'profound solitude and loneliness, isolation in vast empty space, existential quiet, one small figure against an indifferent world'},
-    {l:'Hopeful',       v:'hopeful and optimistic atmosphere, light breaking through darkness, dawn of new possibilities, uplifting forward-looking emotional tone'},
     {l:'Anxious',       v:'anxious and uneasy atmosphere, psychological tension, hypervigilant unease, claustrophobic emotional pressure, something feels wrong'},
     {l:'Adventurous',   v:'adventurous and exciting atmosphere, sense of discovery and bold exploration, forward momentum, thrill of the unknown horizon ahead'},
     {l:'Meditative',    v:'meditative and contemplative atmosphere, deep inner stillness, spiritual centering, timeless present-moment quality, mind quieted'},
@@ -297,32 +318,38 @@ const CATS = [
     {l:'Deep Space Blues',      v:'deep space color palette, midnight blues and indigos and blacks with brilliant star-point whites, cosmic and vast'},
   ]},
 
-  { id:'composition', icon:'🖼', title:'Composition', video:false, edit:false, opts:[
-    {l:'Rule of Thirds',              v:'classic rule of thirds composition, subject placed at intersecting third lines, balanced asymmetry, natural professional framing'},
-    {l:'Golden Ratio',                v:'golden ratio spiral composition, naturally harmonious proportions following phi, organic visual flow, mathematically beautiful framing'},
-    {l:'Symmetry',                    v:'perfect bilateral symmetry, mirror-image balance on vertical axis, architectural or formal composition, elegant and ordered calm'},
-    {l:'Centered',                    v:'centered symmetrical composition, subject placed directly in center of frame, formal confrontational directness, powerful and iconic'},
-    {l:'Negative Space',              v:'generous negative space, subject isolated in open empty space, breathing room around subject, minimalist tension between subject and void'},
-    {l:'Leading Lines',               v:'strong leading lines guiding the viewer\'s eye toward the subject, perspective convergence, dynamic directional energy through frame'},
-    {l:'Frame within Frame',          v:'compositional frame within frame, architectural or natural elements forming inner frame around subject, layered compositional depth'},
-    {l:'Low Angle (Worm\'s Eye)',      v:'dramatic low angle worm\'s eye view looking upward, subject appears powerful and monumental, distorted heroic upward perspective'},
-    {l:'High Angle (Bird\'s Eye)',     v:'elevated bird\'s eye high angle looking down, overhead perspective, map-like flattened space, voyeuristic commanding viewpoint'},
-    {l:'Dutch Angle',                 v:'tilted Dutch angle camera roll, psychological unease or dynamic energy, off-kilter disorientation, thriller and tension aesthetic'},
-    {l:'Panoramic',                   v:'wide panoramic composition, extreme horizontal format, sweeping landscape or cityscape expanse, immersive environmental scale'},
-    {l:'Close-up',                    v:'intimate close-up framing, filling the frame with subject detail, personal and intense proximity, reveals texture and emotion'},
-    {l:'Medium Shot',                 v:'standard medium shot framing from waist up, conversational and natural scale, classic storytelling composition'},
-    {l:'Wide Shot',                   v:'full wide establishing shot, subject in full body within expansive environment, context-rich scene-setting composition'},
-    {l:'Over-the-shoulder',           v:'over-the-shoulder framing with secondary character in foreground, primary subject in middle ground, conversational implied depth'},
-    {l:'Eye-Level Front',             v:'natural eye-level straight-on frontal view, camera at human standing height facing subject directly, neutral and relatable perspective'},
-    {l:'Eye-Level 3/4',               v:'natural eye-level three-quarter angle, camera at human standing height with subject turned 45 degrees, dynamic depth revealing both front and side'},
-    {l:'Eye-Level Side Profile',      v:'natural eye-level side profile, camera at human standing height facing the subject\'s 90-degree profile, clean lateral silhouette'},
-    {l:'Slightly Above Eye-Level',    v:'slightly elevated angle looking gently downward, common beauty and product photography perspective, flattering and clean'},
-    {l:'Slightly Below Eye-Level',    v:'slightly low angle looking gently upward, gives subject subtle authority and presence without full distortion'},
-    {l:'High 3/4 Angle',              v:'elevated three-quarter angle from above and to the side, dynamic product or character presentation perspective'},
-    {l:'Low 3/4 Angle',               v:'low three-quarter angle from below and to the side, dynamic slightly heroic perspective with environmental depth'},
-    {l:'45° Diagonal',                v:'45-degree diagonal composition, subject and elements arranged on diagonal axis across frame, dynamic visual tension'},
-    {l:'Flat Lay (Top-Down)',         v:'flat lay top-down overhead composition, objects arranged on flat surface and photographed from directly above, graphic and clean'},
-    {l:'Hero Shot',                   v:'hero shot composition, subject centrally positioned and powerfully framed against environment, dramatic and impactful presentation'},
+  { id:'composition', icon:'🖼', title:'Composition', video:false, edit:false, groups:[
+    { sub:'Framing & Structure', opts:[
+      {l:'Rule of Thirds',     v:'classic rule of thirds composition, subject placed at intersecting third lines, balanced asymmetry, natural professional framing'},
+      {l:'Golden Ratio',       v:'golden ratio spiral composition, naturally harmonious proportions following phi, organic visual flow, mathematically beautiful framing'},
+      {l:'Symmetry',           v:'perfect bilateral symmetry, mirror-image balance on vertical axis, architectural or formal composition, elegant and ordered calm'},
+      {l:'Centered',           v:'centered symmetrical composition, subject placed directly in center of frame, formal confrontational directness, powerful and iconic'},
+      {l:'Negative Space',     v:'generous negative space, subject isolated in open empty space, breathing room around subject, minimalist tension between subject and void'},
+      {l:'Leading Lines',      v:'strong leading lines guiding the viewer\'s eye toward the subject, perspective convergence, dynamic directional energy through frame'},
+      {l:'Frame within Frame', v:'compositional frame within frame, architectural or natural elements forming inner frame around subject, layered compositional depth'},
+      {l:'45° Diagonal',       v:'45-degree diagonal composition, subject and elements arranged on diagonal axis across frame, dynamic visual tension'},
+      {l:'Flat Lay (Top-Down)',v:'flat lay top-down overhead composition, objects arranged on flat surface and photographed from directly above, graphic and clean'},
+      {l:'Hero Shot',          v:'hero shot composition, subject centrally positioned and powerfully framed against environment, dramatic and impactful presentation'},
+    ]},
+    { sub:'Camera Angle', opts:[
+      {l:'Eye-Level Front',          v:'natural eye-level straight-on frontal view, camera at human standing height facing subject directly, neutral and relatable perspective'},
+      {l:'Eye-Level 3/4',            v:'natural eye-level three-quarter angle, camera at human standing height with subject turned 45 degrees, dynamic depth revealing both front and side'},
+      {l:'Eye-Level Side Profile',   v:'natural eye-level side profile, camera at human standing height facing the subject\'s 90-degree profile, clean lateral silhouette'},
+      {l:'Slightly Above Eye-Level', v:'slightly elevated angle looking gently downward, common beauty and product photography perspective, flattering and clean'},
+      {l:'Slightly Below Eye-Level', v:'slightly low angle looking gently upward, gives subject subtle authority and presence without full distortion'},
+      {l:'High 3/4 Angle',           v:'elevated three-quarter angle from above and to the side, dynamic product or character presentation perspective'},
+      {l:'Low 3/4 Angle',            v:'low three-quarter angle from below and to the side, dynamic slightly heroic perspective with environmental depth'},
+      {l:'Low Angle (Worm\'s Eye)',   v:'dramatic low angle worm\'s eye view looking upward, subject appears powerful and monumental, distorted heroic upward perspective'},
+      {l:'High Angle (Bird\'s Eye)',  v:'elevated bird\'s eye high angle looking down, overhead perspective, map-like flattened space, voyeuristic commanding viewpoint'},
+      {l:'Dutch Angle',              v:'tilted Dutch angle camera roll, psychological unease or dynamic energy, off-kilter disorientation, thriller and tension aesthetic'},
+      {l:'Panoramic',                v:'wide panoramic composition, extreme horizontal format, sweeping landscape or cityscape expanse, immersive environmental scale'},
+    ]},
+    { sub:'Shot Size', opts:[
+      {l:'Close-up',           v:'intimate close-up framing, filling the frame with subject detail, personal and intense proximity, reveals texture and emotion'},
+      {l:'Medium Shot',        v:'standard medium shot framing from waist up, conversational and natural scale, classic storytelling composition'},
+      {l:'Wide Shot',          v:'full wide establishing shot, subject in full body within expansive environment, context-rich scene-setting composition'},
+      {l:'Over-the-shoulder',  v:'over-the-shoulder framing with secondary character in foreground, primary subject in middle ground, conversational implied depth'},
+    ]},
   ]},
 
   { id:'details', icon:'🔬', title:'Details', video:false, edit:false, opts:[
@@ -394,8 +421,9 @@ const CATS = [
     {l:'Aurora',             v:'northern or southern lights aurora borealis, shimmering green and purple and pink curtains of light across the night sky'},
   ]},
 
-  { id:'era', icon:'⏳', title:'Era / Period', video:false, edit:false, opts:[
+  { id:'era', icon:'⏳', title:'Era / Period', video:false, edit:false, pinCount:2, opts:[
     {l:'Contemporary',    v:'contemporary modern setting, present day 2020s, current technology and aesthetics, modern architecture and fashion'},
+    {l:'Cyberpunk',       v:'cyberpunk future dystopia, mega-city neon and decay, corporate domination, augmented humans, rain-soaked dark future streets'},
     {l:'1990s',           v:'1990s era aesthetic, early internet and grunge and rave culture, VHS aesthetic quality, nineties fashion and technology'},
     {l:'1980s',           v:'1980s retro aesthetic, synthwave era, neon and chrome surfaces, Cold War atmosphere, VCR culture and shoulder pads'},
     {l:'1970s',           v:'1970s era aesthetic, warm earth tones, polyester and disco era, analog grain, counterculture and funk atmosphere'},
@@ -405,7 +433,6 @@ const CATS = [
     {l:'Medieval',        v:'medieval period setting 5th to 15th century, castles and feudal society, knights and peasants, pre-industrial handcraft world'},
     {l:'Ancient World',   v:'ancient world setting, pre-medieval civilizations, Roman or Greek or Egyptian or Mesopotamian grandeur and mythology'},
     {l:'Future / Sci-fi', v:'distant future science fiction setting, advanced beyond-current technology, space travel and alien worlds, civilizations spanning galaxies'},
-    {l:'Cyberpunk',       v:'cyberpunk future dystopia, mega-city neon and decay, corporate domination, augmented humans, rain-soaked dark future streets'},
     {l:'Steampunk',       v:'Victorian steampunk aesthetic, steam-powered machinery, clockwork and brass, airships and goggles, industrial fantasy world'},
     {l:'Retro-futurism',  v:'retro-futurist aesthetic, mid-century vision of the future, space age optimism, Googie architecture, flying cars as imagined in the 1950s'},
   ]},
@@ -576,6 +603,7 @@ REFS.forEach(r => { refState[r.id] = { name:'', desc:'' }; });
 let translatedSubject = '';
 let xlatTimer = null;
 let editAddl = '';
+let manualEdit = false;
 
 // ═══════════════════════════════════════════════════════════════════════
 // INIT
@@ -613,22 +641,53 @@ function renderRefs() {
 function escAttr(s) { return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 function renderCategories() {
-  document.getElementById('categories').innerHTML = CATS.map(cat => `
-    <div class="cat-card${cat.video?' video-only':''}${cat.edit?' edit-only':''}" id="cat-${cat.id}">
+  document.getElementById('categories').innerHTML = CATS.map(cat => {
+    let chipsHtml;
+    if (cat.groups) {
+      chipsHtml = cat.groups.map(grp => `
+        <div class="subcat">
+          <div class="subcat-label">${grp.sub}</div>
+          <div class="chips">${grp.opts.map(o =>
+            `<button class="chip" data-v="${escAttr(o.v)}" onclick="toggleChip('${cat.id}',this)">${o.l}</button>`
+          ).join('')}</div>
+        </div>`).join('');
+    } else if (cat.pinCount) {
+      const pinned = cat.opts.slice(0, cat.pinCount);
+      const more   = cat.opts.slice(cat.pinCount);
+      chipsHtml = `
+        <div class="chips">
+          ${pinned.map(o => `<button class="chip" data-v="${escAttr(o.v)}" onclick="toggleChip('${cat.id}',this)">${o.l}</button>`).join('')}
+          <button class="chip chip-more" onclick="toggleMore('${cat.id}')">More ▼</button>
+        </div>
+        <div class="chips chips-more hidden" id="chips-${cat.id}-more">
+          ${more.map(o => `<button class="chip" data-v="${escAttr(o.v)}" onclick="toggleChip('${cat.id}',this)">${o.l}</button>`).join('')}
+        </div>`;
+    } else {
+      chipsHtml = `<div class="chips">${cat.opts.map(o =>
+        `<button class="chip" data-v="${escAttr(o.v)}" onclick="toggleChip('${cat.id}',this)">${o.l}</button>`
+      ).join('')}</div>`;
+    }
+    return `<div class="cat-card${cat.video?' video-only':''}${cat.edit?' edit-only':''}" id="cat-${cat.id}">
       <div class="cat-header">
         <span class="cat-icon">${cat.icon}</span>
         <span class="cat-title">${cat.title}</span>
         ${cat.badge?`<span class="cat-badge">${cat.badge}</span>`:''}
       </div>
-      <div class="chips">${cat.opts.map(o =>
-        `<button class="chip" data-v="${escAttr(o.v)}" onclick="toggleChip('${cat.id}',this)">${o.l}</button>`
-      ).join('')}</div>
+      ${chipsHtml}
       ${cat.id==='preserve'
         ? `<textarea class="extra-textarea" id="edit-addl"
              placeholder="Additional edit instructions (optional)..."
              oninput="editAddl=this.value;rebuild()"></textarea>`
         : ''}
-    </div>`).join('');
+    </div>`;
+  }).join('');
+}
+
+function toggleMore(catId) {
+  const el  = document.getElementById(`chips-${catId}-more`);
+  const btn = document.querySelector(`#cat-${catId} .chip-more`);
+  el.classList.toggle('hidden');
+  btn.textContent = el.classList.contains('hidden') ? 'More ▼' : 'Less ▲';
 }
 
 function renderTips() {
@@ -688,6 +747,13 @@ function onRefUpload(id, input) {
 }
 
 function resetAll() {
+  if (manualEdit) {
+    document.getElementById('prompt-edit').style.display = 'none';
+    document.getElementById('prompt-out').style.display = '';
+    document.getElementById('btn-edit-toggle').classList.remove('active');
+    document.getElementById('btn-edit-toggle').title = 'Manually edit the prompt';
+    manualEdit = false;
+  }
   CATS.forEach(c => sel[c.id].clear());
   document.querySelectorAll('.chip.on').forEach(b => b.classList.remove('on'));
   document.getElementById('subject').value = '';
@@ -782,6 +848,7 @@ function row(label, vals) {
 // PROMPT BUILDERS
 // ═══════════════════════════════════════════════════════════════════════
 function rebuild() {
+  if (manualEdit) return;
   const out = document.getElementById('prompt-out');
   if (!hasContent()) {
     out.innerHTML = currentMode==='edit'
@@ -1020,8 +1087,32 @@ function colorize(lines) {
 // ═══════════════════════════════════════════════════════════════════════
 // COPY
 // ═══════════════════════════════════════════════════════════════════════
+function toggleEditMode() {
+  const out = document.getElementById('prompt-out');
+  const ta  = document.getElementById('prompt-edit');
+  const btn = document.getElementById('btn-edit-toggle');
+  if (!manualEdit) {
+    ta.value = out._raw || '';
+    out.style.display = 'none';
+    ta.style.display  = 'block';
+    btn.classList.add('active');
+    btn.title = 'Back to auto-generate';
+    document.getElementById('char-count').textContent = ta.value.length + ' chars';
+    manualEdit = true;
+  } else {
+    ta.style.display  = 'none';
+    out.style.display = '';
+    btn.classList.remove('active');
+    btn.title = 'Manually edit the prompt';
+    manualEdit = false;
+    rebuild();
+  }
+}
+
 function copyPrompt() {
-  const raw = document.getElementById('prompt-out')._raw || '';
+  const ta  = document.getElementById('prompt-edit');
+  const out = document.getElementById('prompt-out');
+  const raw = manualEdit ? ta.value : (out._raw || '');
   if (!raw) return;
   navigator.clipboard.writeText(raw).then(() => {
     const btn = document.getElementById('btn-copy');
