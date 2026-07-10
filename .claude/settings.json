@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Worksection__get_my_assignments",
+      "mcp__Worksection__list_tasks",
+      "mcp__Worksection__list_comments",
+      "mcp__Worksection__get_project",
+      "mcp__Worksection__get_task",
+      "mcp__Worksection__list_projects",
+      "mcp__Worksection__list_users",
+      "Write",
+      "Edit"
+    ]
+  }
+}
