@@ -128,34 +128,6 @@ def main():
             f"</a>"
         )
 
-    # --- clickable task list under the chart (same order as the chart) ---
-    list_items = []
-    for t in tasks:
-        cls = urgency_class(t["days_left"])
-        overdue_cls = " overdue" if t["overdue"] else ""
-        shadow_cls = " shadow" if t["shadow"] else ""
-        dl_label = t["deadline"].strftime("%d.%m")
-        if t["overdue"]:
-            dl_label += f" · протерміновано на {abs(t['days_left'])} дн."
-        elif t["from_comment"]:
-            dl_label += " · з коментаря"
-        label = ("@ " if t["shadow"] else "") + t["title"]
-        list_items.append(
-            f'<li><a class="list-row{shadow_cls}" href="{esc(t["url"])}" target="_blank" rel="noopener">'
-            f'<span class="dot {cls}{overdue_cls}" aria-hidden="true"></span>'
-            f'<span class="list-title">{esc(label)}</span>'
-            f'<span class="list-date">{dl_label}</span>'
-            f'<span class="ext-icon" aria-hidden="true">&#8599;</span>'
-            f"</a></li>"
-        )
-    tasklist_html = (
-        '<section class="task-list"><h2>Список задач (з посиланнями на Worksection)</h2><ul>'
-        + "".join(list_items)
-        + "</ul></section>"
-        if list_items
-        else ""
-    )
-
     # --- no-deadline list ---
     nodl_html = ""
     if no_deadline:
@@ -383,51 +355,6 @@ def main():
     border-radius: 6px;
   }}
   .no-deadline a:hover {{ background: var(--row-hover); }}
-  .task-list h2, .no-deadline h2 {{
-    font-size: 1rem;
-    margin: 0 0 8px;
-  }}
-  .task-list ul {{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }}
-  .list-row {{
-    color: var(--text-primary);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13.5px;
-    padding: 7px 10px;
-    margin: 0 -10px;
-    border-radius: 8px;
-  }}
-  .list-row:hover, .list-row:focus-visible {{
-    background: var(--row-hover);
-    outline: none;
-  }}
-  .list-row.shadow .list-title {{ color: var(--shadow-text); }}
-  .dot {{
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex: 0 0 auto;
-  }}
-  .dot.critical {{ background: var(--critical); }}
-  .dot.warning {{ background: var(--warning-fill); }}
-  .dot.good {{ background: var(--good); }}
-  .dot.overdue {{ box-shadow: 0 0 0 3px var(--critical) inset; }}
-  .list-title {{ flex: 1 1 auto; }}
-  .list-date {{
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }}
 </style>
 <div class="page">
   <header class="head">
@@ -450,8 +377,6 @@ def main():
     <span class="item"><span class="today-dot"></span>сьогодні</span>
     <span class="item"><span class="at">@</span> тебе тегнули в коментарях (тіньова задача)</span>
   </div>
-
-  {tasklist_html}
 
   {nodl_html}
 </div>
