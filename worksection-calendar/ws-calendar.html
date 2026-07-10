@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Календар задач · Worksection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1417;
+    --surface:#141f24;
+    --surface-2:#18262c;
+    --line:#243740;
+    --line-soft:#1c2a30;
+    --text:#e7eff1;
+    --muted:#7f97a1;
+    --muted-dim:#5d747e;
+    --signal:#37d0b8;        /* teal — сигнал/сьогодні/акцент */
+    --signal-dim:#1e6a60;
+    --warn:#f0b429;          /* прострочено */
+    --high:#ec6a5a;          /* високий пріоритет */
+    --done:#4b6069;
+    --radius:10px;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --display:'Space Grotesk',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    font-size:14px;
+    line-height:1.4;
+  }
+  .app{max-width:1180px;margin:0 auto;padding:22px 20px 60px;min-height:100%}
+
+  /* ---------- Top bar ---------- */
+  .topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+  .brand{display:flex;flex-direction:column;gap:3px}
+  .brand .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--signal)}
+  .brand h1{font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-.01em;margin:0}
+  .brand h1 span{color:var(--muted-dim);font-weight:500}
+
+  .stats{display:flex;gap:10px}
+  .stat{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:9px 14px;min-width:78px}
+  .stat .n{font-family:var(--mono);font-size:20px;font-weight:600;line-height:1}
+  .stat .l{font-size:10.5px;color:var(--muted);margin-top:5px;letter-spacing:.02em}
+  .stat.warn .n{color:var(--warn)}
+  .stat.sig .n{color:var(--signal)}
+
+  /* ---------- Controls ---------- */
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+  .nav{display:flex;align-items:center;gap:8px}
+  .period{font-family:var(--display);font-weight:600;font-size:16px;min-width:172px;text-transform:capitalize}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+
+  button,select{font-family:var(--body);color:var(--text);cursor:pointer}
+  .btn{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;transition:border-color .15s,background .15s}
+  .btn:hover{border-color:var(--signal-dim);background:var(--surface-2)}
+  .btn.icon{padding:7px 10px;line-height:1}
+  .btn.today{color:var(--signal);border-color:var(--signal-dim)}
+  .seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button{background:transparent;border:0;padding:7px 14px;font-size:13px;color:var(--muted)}
+  .seg button.on{background:var(--signal-dim);color:#eafffb}
+  select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;color:var(--muted)}
+  select:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-offset:1px}
+
+  /* ---------- Month grid ---------- */
+  .weekhead{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+  .weekhead div{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-dim);padding-left:4px}
+  .weekhead div.we{color:var(--high)}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cell{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);min-height:118px;padding:7px 7px 9px;display:flex;flex-direction:column;gap:4px;overflow:hidden}
+  .cell.out{background:transparent;border-color:transparent}
+  .cell.out .dnum{color:var(--muted-dim);opacity:.5}
+  .cell.today{border-color:var(--signal);box-shadow:inset 0 0 0 1px var(--signal-dim)}
+  .cell .dnum{font-family:var(--mono);font-size:12.5px;color:var(--muted);align-self:flex-start}
+  .cell.today .dnum{color:var(--signal);font-weight:600}
+  .cell .dnum .wd{display:none}
+
+  .chip{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line-soft);border-left:3px solid var(--done);border-radius:6px;padding:4px 7px;font-size:12px;cursor:pointer;transition:border-color .12s,transform .06s}
+  .chip:hover{border-color:var(--signal-dim);transform:translateX(1px)}
+  .chip .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chip.p-high{border-left-color:var(--high)}
+  .chip.p-normal{border-left-color:var(--signal)}
+  .chip.p-low{border-left-color:var(--done)}
+  .chip.overdue{border-left-color:var(--warn)}
+  .chip.done{opacity:.5}
+  .chip.done .t{text-decoration:line-through}
+  .more{font-size:11px;color:var(--muted-dim);font-family:var(--mono);padding-left:4px}
+
+  /* ---------- List / agenda view ---------- */
+  .agenda{display:flex;flex-direction:column;gap:2px}
+  .agenda .daygroup{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:14px 0;border-top:1px solid var(--line-soft)}
+  .agenda .daygroup:first-child{border-top:0}
+  .agenda .dlabel{font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:2px}
+  .agenda .dlabel .big{display:block;font-family:var(--display);font-size:22px;color:var(--text);line-height:1.1}
+  .agenda .dlabel.today .big{color:var(--signal)}
+  .agenda .dlabel.od .big{color:var(--warn)}
+  .rows{display:flex;flex-direction:column;gap:6px}
+  .row{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line-soft);border-left:3px solid var(--done);border-radius:8px;padding:10px 13px;cursor:pointer;transition:border-color .12s}
+  .row:hover{border-color:var(--signal-dim)}
+  .row.p-high{border-left-color:var(--high)}
+  .row.p-normal{border-left-color:var(--signal)}
+  .row.overdue{border-left-color:var(--warn)}
+  .row.done{opacity:.55}
+  .row.done .rt{text-decoration:line-through}
+  .rt{font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rmeta{display:flex;gap:8px;align-items:center;flex-shrink:0}
+  .tag{font-family:var(--mono);font-size:10.5px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-soft);border-radius:5px;padding:3px 7px;white-space:nowrap}
+  .tag.od{color:var(--warn);border-color:var(--warn)}
+  .empty{color:var(--muted-dim);text-align:center;padding:60px 0;font-size:14px}
+
+  /* ---------- Detail modal ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(6,10,12,.68);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .overlay.show{display:flex}
+  .modal{background:var(--surface);border:1px solid var(--line);border-radius:14px;max-width:460px;width:100%;padding:22px 22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .modal .mid{font-family:var(--mono);font-size:11px;color:var(--signal);letter-spacing:.05em}
+  .modal h2{font-family:var(--display);font-size:19px;margin:8px 0 16px;line-height:1.25}
+  .kv{display:grid;grid-template-columns:96px 1fr;gap:9px 12px;font-size:13px}
+  .kv dt{color:var(--muted)}
+  .kv dd{margin:0}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid var(--line)}
+  .pill.high{color:var(--high);border-color:var(--high)}
+  .pill.normal{color:var(--signal);border-color:var(--signal-dim)}
+  .pill.low{color:var(--muted)}
+  .pill.st-active{color:var(--signal)}
+  .pill.st-done{color:var(--done)}
+  .pill.st-paused{color:var(--warn)}
+  .modal .foot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--line-soft)}
+  .modal .foot a{color:var(--signal);text-decoration:none;font-size:13px;font-weight:500}
+  .modal .foot a:hover{text-decoration:underline}
+  .x{background:transparent;border:0;color:var(--muted);font-size:20px;line-height:1;padding:2px 6px}
+  .x:hover{color:var(--text)}
+
+  .foot-note{margin-top:34px;padding-top:16px;border-top:1px solid var(--line-soft);color:var(--muted-dim);font-size:12px;line-height:1.6}
+  .foot-note code{font-family:var(--mono);color:var(--muted);background:var(--surface);padding:1px 6px;border-radius:4px;border:1px solid var(--line-soft)}
+
+  @media (max-width:720px){
+    .cell{min-height:auto}
+    .grid,.weekhead{gap:4px}
+    .weekhead div{font-size:9px}
+    .cell .chip .t{font-size:11px}
+    .agenda .daygroup{grid-template-columns:64px 1fr;gap:10px}
+    .stats{width:100%}
+    .period{min-width:0}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="kicker">Ecofactor · Worksection</span>
+      <h1>Мій календар <span>задач</span></h1>
+    </div>
+    <div class="stats">
+      <div class="stat warn"><div class="n" id="st-overdue">0</div><div class="l">прострочено</div></div>
+      <div class="stat sig"><div class="n" id="st-week">0</div><div class="l">цей тиждень</div></div>
+      <div class="stat"><div class="n" id="st-open">0</div><div class="l">активних</div></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="nav">
+      <button class="btn icon" id="prev" aria-label="Попередній">‹</button>
+      <button class="btn today" id="today">Сьогодні</button>
+      <button class="btn icon" id="next" aria-label="Наступний">›</button>
+      <span class="period" id="period"></span>
+    </div>
+    <div class="filters">
+      <div class="seg" role="tablist">
+        <button id="v-month" class="on">Місяць</button>
+        <button id="v-list">Список</button>
+      </div>
+      <select id="f-project"><option value="">Всі проєкти</option></select>
+      <select id="f-status">
+        <option value="open">Активні + прострочені</option>
+        <option value="all">Усі статуси</option>
+        <option value="active">Тільки активні</option>
+        <option value="done">Виконані</option>
+      </select>
+      <select id="f-priority">
+        <option value="">Будь-який пріоритет</option>
+        <option value="high">Високий</option>
+        <option value="normal">Звичайний</option>
+        <option value="low">Низький</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="view"></div>
+
+  <p class="foot-note">
+    Це автономна локальна тулка — календар читає <code>tasks.json</code> поруч із цим файлом.
+    Файл оновлюється скриптом <code>collect_tasks.py</code>, який тягне ваші задачі з Worksection.
+    Нічого не залишає ваш комп'ютер, крім запиту безпосередньо до Worksection.
+  </p>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <span class="mid" id="m-id"></span>
+      <button class="x" id="m-close" aria-label="Закрити">×</button>
+    </div>
+    <h2 id="m-name"></h2>
+    <dl class="kv">
+      <dt>Проєкт</dt><dd id="m-project"></dd>
+      <dt>Статус</dt><dd id="m-status"></dd>
+      <dt>Пріоритет</dt><dd id="m-priority"></dd>
+      <dt>Виконавець</dt><dd id="m-assignee"></dd>
+      <dt>Термін</dt><dd id="m-dates"></dd>
+    </dl>
+    <div class="foot">
+      <span id="m-left" style="font-family:var(--mono);font-size:12px;color:var(--muted)"></span>
+      <a id="m-url" href="#" target="_blank" rel="noopener">Відкрити в Worksection →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   ЖИВІ ДАНІ. Задачі завантажуються з локального tasks.json, який генерує
+   collect_tasks.py з Worksection. Формат елемента:
+   { id, name, project, status, priority, assignee, dateStart, dateEnd, url }
+   ========================================================================== */
+let TASKS = [];
+
+/* ==========================================================================
+   ЛОГІКА
+   ========================================================================== */
+const MONTHS=['січень','лютий','березень','квітень','травень','червень','липень','серпень','вересень','жовтень','листопад','грудень'];
+const MONTHS_GEN=['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+const WD=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
+const PRIO={high:'Високий',normal:'Звичайний',low:'Низький'};
+const STAT={active:'Активна',done:'Виконана',paused:'На паузі'};
+
+const today=new Date(); today.setHours(0,0,0,0);
+const key=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');};
+const todayKey=key(today);
+const parse=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+
+let view='month';
+let cursor=new Date(today.getFullYear(),today.getMonth(),1);
+
+const projSel=document.getElementById('f-project');
+function initProjectFilter(){
+  projSel.innerHTML='<option value="">Всі проєкти</option>';
+  [...new Set(TASKS.map(t=>t.project))].sort().forEach(p=>{
+    const o=document.createElement('option');o.value=p;o.textContent=p;projSel.appendChild(o);
+  });
+}
+
+async function loadTasks(){
+  try{
+    const res=await fetch('./tasks.json',{cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    TASKS=await res.json();
+  }catch(err){
+    document.getElementById('view').innerHTML=
+      '<div class="empty">Не вдалося завантажити tasks.json ('+esc(String(err.message||err))+').<br>'+
+      'Якщо відкрили файл напряму (file://) — запустіть локальний сервер: <code>python -m http.server</code> у цій теці, '+
+      'і відкрийте http://localhost:8000/ws-calendar.html.<br>'+
+      'Якщо сервер вже запущено — спершу виконайте <code>python collect_tasks.py</code>, щоб створити tasks.json.</div>';
+    return;
+  }
+  initProjectFilter();
+  render();
+}
+
+function filtered(){
+  const fp=projSel.value, fs=document.getElementById('f-status').value, fpr=document.getElementById('f-priority').value;
+  return TASKS.filter(t=>{
+    if(fp && t.project!==fp) return false;
+    if(fpr && t.priority!==fpr) return false;
+    if(fs==='active' && t.status!=='active') return false;
+    if(fs==='done' && t.status!=='done') return false;
+    if(fs==='open' && t.status==='done') return false;
+    return true;
+  });
+}
+const isOverdue=t=>t.status==='active' && t.dateEnd<todayKey;
+
+function updateStats(){
+  const open=TASKS.filter(t=>t.status==='active');
+  document.getElementById('st-overdue').textContent=open.filter(isOverdue).length;
+  document.getElementById('st-open').textContent=open.length;
+  // this week = Mon..Sun containing today
+  const dow=(today.getDay()+6)%7;
+  const mon=new Date(today);mon.setDate(today.getDate()-dow);
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  const mk=key(mon),sk=key(sun);
+  document.getElementById('st-week').textContent=open.filter(t=>t.dateEnd>=mk&&t.dateEnd<=sk).length;
+}
+
+function render(){
+  document.getElementById('v-month').classList.toggle('on',view==='month');
+  document.getElementById('v-list').classList.toggle('on',view==='list');
+  updateStats();
+  view==='month'?renderMonth():renderList();
+}
+
+function renderMonth(){
+  document.getElementById('period').textContent=`${MONTHS[cursor.getMonth()]} ${cursor.getFullYear()}`;
+  const data=filtered();
+  const byDay={};
+  data.forEach(t=>{(byDay[t.dateEnd]=byDay[t.dateEnd]||[]).push(t);});
+
+  const first=new Date(cursor.getFullYear(),cursor.getMonth(),1);
+  const offset=(first.getDay()+6)%7;
+  const start=new Date(first);start.setDate(first.getDate()-offset);
+  const cells=Math.ceil((offset+new Date(cursor.getFullYear(),cursor.getMonth()+1,0).getDate())/7)*7;
+
+  let html='<div class="weekhead">'+WD.map((w,i)=>`<div class="${i>4?'we':''}">${w}</div>`).join('')+'</div><div class="grid">';
+  for(let i=0;i<cells;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    const dk=key(d);
+    const out=d.getMonth()!==cursor.getMonth();
+    const isToday=dk===todayKey;
+    const items=(byDay[dk]||[]).sort((a,b)=>(b.priority==='high')-(a.priority==='high'));
+    let chips='';
+    items.slice(0,3).forEach(t=>{
+      chips+=`<div class="chip p-${t.priority} ${t.status==='done'?'done':''} ${isOverdue(t)?'overdue':''}" data-id="${t.id}"><span class="t">${esc(t.name)}</span></div>`;
+    });
+    if(items.length>3) chips+=`<span class="more">+${items.length-3} ще</span>`;
+    html+=`<div class="cell ${out?'out':''} ${isToday?'today':''}"><span class="dnum">${d.getDate()}</span>${chips}</div>`;
+  }
+  html+='</div>';
+  document.getElementById('view').innerHTML=html;
+  bindChips();
+}
+
+function renderList(){
+  const m=cursor.getMonth(),y=cursor.getFullYear();
+  document.getElementById('period').textContent=`${MONTHS[m]} ${y}`;
+  // upcoming within the viewed month + any overdue if viewing current month
+  let data=filtered().filter(t=>{const d=parse(t.dateEnd);return d.getMonth()===m&&d.getFullYear()===y;});
+  data.sort((a,b)=>a.dateEnd<b.dateEnd?-1:a.dateEnd>b.dateEnd?1:0);
+  if(!data.length){document.getElementById('view').innerHTML='<div class="empty">У цьому місяці задач за обраними фільтрами немає.</div>';return;}
+
+  const groups={};
+  data.forEach(t=>{(groups[t.dateEnd]=groups[t.dateEnd]||[]).push(t);});
+  let html='<div class="agenda">';
+  Object.keys(groups).sort().forEach(dk=>{
+    const d=parse(dk);
+    const od=dk<todayKey, isT=dk===todayKey;
+    const rows=groups[dk].map(t=>{
+      const overdue=isOverdue(t);
+      const tags=[`<span class="tag">${esc(t.project)}</span>`];
+      if(overdue) tags.unshift('<span class="tag od">прострочено</span>');
+      return `<div class="row p-${t.priority} ${t.status==='done'?'done':''} ${overdue?'overdue':''}" data-id="${t.id}">
+        <span class="rt">${esc(t.name)}</span><span class="rmeta">${tags.join('')}</span></div>`;
+    }).join('');
+    html+=`<div class="daygroup"><div class="dlabel ${isT?'today':''} ${od?'od':''}">
+      <span class="big">${d.getDate()}</span>${WD[(d.getDay()+6)%7]}, ${MONTHS_GEN[d.getMonth()]}</div>
+      <div class="rows">${rows}</div></div>`;
+  });
+  html+='</div>';
+  document.getElementById('view').innerHTML=html;
+  bindChips();
+}
+
+function bindChips(){
+  document.querySelectorAll('[data-id]').forEach(el=>el.addEventListener('click',()=>openTask(el.dataset.id)));
+}
+
+function openTask(id){
+  const t=TASKS.find(x=>x.id===id);if(!t)return;
+  document.getElementById('m-id').textContent=t.id;
+  document.getElementById('m-name').textContent=t.name;
+  document.getElementById('m-project').textContent=t.project;
+  document.getElementById('m-status').innerHTML=`<span class="pill st-${t.status}">${STAT[t.status]}</span>`;
+  document.getElementById('m-priority').innerHTML=`<span class="pill ${t.priority}">${PRIO[t.priority]}</span>`;
+  document.getElementById('m-assignee').textContent=t.assignee;
+  const ds=parse(t.dateStart),de=parse(t.dateEnd);
+  const fmt=d=>`${d.getDate()} ${MONTHS_GEN[d.getMonth()]}`;
+  document.getElementById('m-dates').textContent = t.dateStart===t.dateEnd?fmt(de):`${fmt(ds)} — ${fmt(de)}`;
+  const diff=Math.round((de-today)/86400000);
+  let left = diff<0?`прострочено на ${Math.abs(diff)} дн.`:diff===0?'дедлайн сьогодні':`залишилось ${diff} дн.`;
+  if(t.status==='done') left='виконано';
+  const leftEl=document.getElementById('m-left');leftEl.textContent=left;
+  leftEl.style.color = (t.status!=='done'&&diff<0)?'var(--warn)':diff===0?'var(--signal)':'var(--muted)';
+  const url=t.url||`https://eco9830.worksection.com/task/${t.id.replace(/\D/g,'')}/`;
+  document.getElementById('m-url').href=url;
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal(){document.getElementById('overlay').classList.remove('show');}
+
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+// events
+document.getElementById('prev').onclick=()=>{cursor.setMonth(cursor.getMonth()-1);render();};
+document.getElementById('next').onclick=()=>{cursor.setMonth(cursor.getMonth()+1);render();};
+document.getElementById('today').onclick=()=>{cursor=new Date(today.getFullYear(),today.getMonth(),1);render();};
+document.getElementById('v-month').onclick=()=>{view='month';render();};
+document.getElementById('v-list').onclick=()=>{view='list';render();};
+['f-project','f-status','f-priority'].forEach(id=>document.getElementById(id).onchange=render);
+document.getElementById('m-close').onclick=closeModal;
+document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')closeModal();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+loadTasks();
+</script>
+</body>
+</html>
