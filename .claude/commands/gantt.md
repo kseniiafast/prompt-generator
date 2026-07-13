@@ -14,19 +14,20 @@ argument-hint: [період: тиждень | 2 тижні | весь липе�
 - `get_my_assignments(open_only=true, limit=200)`
 
 **Тіньові задачі** (тегнули в коментарях, виконавець інший) — шукати ЛИШЕ в
-проєктах `International exhibitions` (project_id 405788) та `Events`
-(project_id 376382):
-1. `list_tasks(project_id=405788, open_only=true, limit=500)` та
-   `list_tasks(project_id=376382, open_only=true, limit=500)`.
-2. Для кожної задачі з цих двох списків, де `user_to` НЕ дорівнює
+проєктах `International exhibitions` (project_id 405788), `Events`
+(project_id 376382) та `LinkedIn Management` (project_id 376166):
+1. `list_tasks(project_id=405788, open_only=true, limit=500)`,
+   `list_tasks(project_id=376382, open_only=true, limit=500)` та
+   `list_tasks(project_id=376166, open_only=true, limit=500)`.
+2. Для кожної задачі з цих трьох списків, де `user_to` НЕ дорівнює
    `Kseniia.Fast@ecofactortech.com` (без урахування регістру) — виклич
    `list_comments(task_id=...)`.
 3. Якщо в тексті будь-якого коментаря є згадка (без урахування регістру):
    `"Kseniia Fast"`, `"Ксені"`, або email користувача — це тіньова задача.
    Познач її маркером `@` перед назвою.
-4. Якщо project_id вказаний в назвах проєктів змінився/перейменувався,
-   підтвердь через `list_projects` (шукай назви "International exhibitions" і
-   "Events") перед тим, як здатися.
+4. Якщо якийсь із цих project_id змінився/перейменувався, підтвердь через
+   `list_projects` (шукай назви "International exhibitions", "Events" і
+   "LinkedIn Management") перед тим, як здатися.
 
 **Дедуплікація:** прибери дублі за `id` задачі (мої задачі мають пріоритет
 над тіньовими, якщо id співпадає).
