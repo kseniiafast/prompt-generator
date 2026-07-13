@@ -9,7 +9,11 @@
       "mcp__Worksection__list_projects",
       "mcp__Worksection__list_users",
       "Write",
-      "Edit"
+      "Edit",
+      "Read",
+      "Artifact",
+      "Bash(python3 .claude/scripts/gantt_render.py:*)",
+      "Bash(python3 .claude/scripts/gantt_render_html.py:*)"
     ]
   }
 }
