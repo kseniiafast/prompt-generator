@@ -98,10 +98,10 @@ def main():
     label_w = 430
     chart_left = label_w + 20
     chart_right_margin = 60
-    top_margin = 90
+    top_margin = 116
     bottom_legend_h = 90
     n_rows = max(len(tasks), 1)
-    chart_w = 900
+    chart_w = max(900, (span_days + 1) * 30)
     width = chart_left + chart_w + chart_right_margin
     height = top_margin + n_rows * row_h + bottom_legend_h + (
         26 * len(no_deadline) + (40 if no_deadline else 0)
@@ -127,8 +127,7 @@ def main():
         subtitle += f"  ·  Період: {esc(period_label)}"
     svg.append(f'<text x="24" y="58" font-size="13" fill="{INK_SECONDARY}">{subtitle}</text>')
 
-    # Date axis ticks (weekly-ish, at most ~8 ticks)
-    tick_step = max(1, span_days // 8)
+    # Date axis ticks — every single day
     d = 0
     while d <= span_days:
         tx = x_for(d)
@@ -138,10 +137,11 @@ def main():
             f'y2="{top_margin + n_rows * row_h}" stroke="{GRIDLINE}" stroke-width="1"/>'
         )
         svg.append(
-            f'<text x="{tx:.1f}" y="{top_margin - 16}" font-size="11" fill="{INK_MUTED}" '
-            f'text-anchor="middle">{tick_date.strftime("%d.%m")}</text>'
+            f'<text x="0" y="0" font-size="10" fill="{INK_MUTED}" text-anchor="start" '
+            f'transform="translate({tx:.1f},{top_margin - 14}) rotate(-60)">'
+            f'{tick_date.strftime("%d.%m")}</text>'
         )
-        d += tick_step
+        d += 1
 
     # Rows
     for i, t in enumerate(tasks):

@@ -14,11 +14,12 @@ import sys
 import datetime as dt
 
 LABEL_W = 300
-TRACK_W = 820
 DATE_W = 150
 ROW_H = 44
-TOP_PAD = 74
+TOP_PAD = 100
 CHART_PAD_BOTTOM = 34
+DAY_W = 30
+MIN_TRACK_W = 820
 
 
 def esc(s):
@@ -68,6 +69,7 @@ def main():
 
     max_deadline = max((t["deadline"] for t in tasks), default=today)
     span_days = max((max_deadline - today).days, 1)
+    TRACK_W = max(MIN_TRACK_W, (span_days + 1) * DAY_W)
 
     def px_for(days_from_today):
         return (days_from_today / span_days) * TRACK_W
@@ -75,8 +77,7 @@ def main():
     chart_h = TOP_PAD + len(tasks) * ROW_H + CHART_PAD_BOTTOM
     total_w = LABEL_W + TRACK_W + DATE_W + 40
 
-    # --- gridlines / today line / date ticks ---
-    tick_step = max(1, span_days // 8)
+    # --- gridlines / today line / date ticks — every single day ---
     ticks_html = []
     d = 0
     while d <= span_days:
@@ -85,10 +86,10 @@ def main():
         ticks_html.append(
             f'<div class="gridline" style="left:{x:.1f}px;top:{TOP_PAD - 8}px;'
             f'height:{len(tasks) * ROW_H + 8}px;"></div>'
-            f'<div class="tick-label" style="left:{x:.1f}px;top:{TOP_PAD - 26}px;">'
+            f'<div class="tick-label" style="left:{x:.1f}px;top:{TOP_PAD - 20}px;">'
             f"{tick_date.strftime('%d.%m')}</div>"
         )
-        d += tick_step
+        d += 1
     today_x = LABEL_W
     ticks_html.append(
         f'<div class="today-line" style="left:{today_x:.1f}px;top:{TOP_PAD - 8}px;'
@@ -245,10 +246,12 @@ def main():
   }}
   .tick-label {{
     position: absolute;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-muted);
-    transform: translateX(-50%);
+    transform: rotate(-60deg);
+    transform-origin: left center;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }}
   .today-line {{
     position: absolute;
