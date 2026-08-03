@@ -9,7 +9,9 @@ task (and per no_deadline entry) pointing at the Worksection task page.
 Every row is a real <a href> to that URL, so the rendered artifact is
 clickable straight from the session.
 """
+import base64
 import json
+import os
 import sys
 import datetime as dt
 
@@ -20,6 +22,18 @@ TOP_PAD = 100
 CHART_PAD_BOTTOM = 34
 DAY_W = 30
 MIN_TRACK_W = 820
+
+ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets")
+
+
+def _b64(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode("ascii")
+
+
+def _svg(path):
+    with open(path, encoding="utf-8") as f:
+        return f.read()
 
 
 def esc(s):
@@ -140,78 +154,97 @@ def main():
         )
         nodl_html = f'<section class="no-deadline"><h2>Без дедлайну</h2><ul>{items}</ul></section>'
 
+    font_regular_b64 = _b64(os.path.join(ASSETS_DIR, "fonts", "Ruberoid-Regular.woff2"))
+    font_bold_b64 = _b64(os.path.join(ASSETS_DIR, "fonts", "Ruberoid-Bold.woff2"))
+    logo_green = _svg(os.path.join(ASSETS_DIR, "logos", "ecofactor-green-horizontal.svg"))
+    logo_white = _svg(os.path.join(ASSETS_DIR, "logos", "ecofactor-white-horizontal.svg"))
+
     html = f"""<title>Гант — задачі Worksection</title>
 <style>
+  @font-face {{
+    font-family: 'Ruberoid';
+    src: url('data:font/woff2;base64,{font_regular_b64}') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }}
+  @font-face {{
+    font-family: 'Ruberoid';
+    src: url('data:font/woff2;base64,{font_bold_b64}') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }}
   :root {{
-    --surface-page: #f6f5f1;
+    --surface-page: #F1F3F5;
     --surface-card: #ffffff;
-    --text-primary: #17181c;
-    --text-secondary: #55564f;
-    --text-muted: #8c8a80;
-    --border: #e2e0d5;
-    --accent: #2f5fd1;
-    --accent-soft: rgba(47,95,209,0.10);
+    --text-primary: #3A3A3A;
+    --text-secondary: #525252;
+    --text-muted: #7B7F84;
+    --border: #D9DBDE;
+    --accent: #23A859;
+    --accent-soft: rgba(35,168,89,0.08);
     --critical: #d03b3b;
     --warning-fill: #f7ae1f;
     --warning-text: #9c6600;
     --good: #0ca30c;
-    --shadow-text: #8536a8;
-    --row-hover: rgba(47,95,209,0.06);
+    --shadow-text: #3577D8;
+    --row-hover: rgba(35,168,89,0.06);
   }}
   @media (prefers-color-scheme: dark) {{
     :root {{
-      --surface-page: #101114;
-      --surface-card: #191a1e;
-      --text-primary: #f3f3f1;
-      --text-secondary: #c2c1b9;
-      --text-muted: #8f8e86;
-      --border: #2d2e33;
-      --accent: #6e97ee;
-      --accent-soft: rgba(110,151,238,0.14);
+      --surface-page: #1F1F1F;
+      --surface-card: #262626;
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255,255,255,0.72);
+      --text-muted: rgba(255,255,255,0.5);
+      --border: rgba(255,255,255,0.14);
+      --accent: #3AF185;
+      --accent-soft: rgba(58,241,133,0.14);
       --critical: #e2645f;
       --warning-fill: #d99a1c;
       --warning-text: #f0c674;
       --good: #3fc463;
-      --shadow-text: #cf94e6;
-      --row-hover: rgba(110,151,238,0.10);
+      --shadow-text: #6ea3ea;
+      --row-hover: rgba(58,241,133,0.10);
     }}
   }}
   :root[data-theme="dark"] {{
-    --surface-page: #101114;
-    --surface-card: #191a1e;
-    --text-primary: #f3f3f1;
-    --text-secondary: #c2c1b9;
-    --text-muted: #8f8e86;
-    --border: #2d2e33;
-    --accent: #6e97ee;
-    --accent-soft: rgba(110,151,238,0.14);
+    --surface-page: #1F1F1F;
+    --surface-card: #262626;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255,255,255,0.72);
+    --text-muted: rgba(255,255,255,0.5);
+    --border: rgba(255,255,255,0.14);
+    --accent: #3AF185;
+    --accent-soft: rgba(58,241,133,0.14);
     --critical: #e2645f;
     --warning-fill: #d99a1c;
     --warning-text: #f0c674;
     --good: #3fc463;
-    --shadow-text: #cf94e6;
-    --row-hover: rgba(110,151,238,0.10);
+    --shadow-text: #6ea3ea;
+    --row-hover: rgba(58,241,133,0.10);
   }}
   :root[data-theme="light"] {{
-    --surface-page: #f6f5f1;
+    --surface-page: #F1F3F5;
     --surface-card: #ffffff;
-    --text-primary: #17181c;
-    --text-secondary: #55564f;
-    --text-muted: #8c8a80;
-    --border: #e2e0d5;
-    --accent: #2f5fd1;
-    --accent-soft: rgba(47,95,209,0.10);
+    --text-primary: #3A3A3A;
+    --text-secondary: #525252;
+    --text-muted: #7B7F84;
+    --border: #D9DBDE;
+    --accent: #23A859;
+    --accent-soft: rgba(35,168,89,0.08);
     --critical: #d03b3b;
     --warning-fill: #f7ae1f;
     --warning-text: #9c6600;
     --good: #0ca30c;
-    --shadow-text: #8536a8;
-    --row-hover: rgba(47,95,209,0.06);
+    --shadow-text: #3577D8;
+    --row-hover: rgba(35,168,89,0.06);
   }}
   * {{ box-sizing: border-box; }}
   body {{ background: var(--surface-page); }}
   .page {{
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: 'Ruberoid', 'Open Sans', -apple-system, "Segoe UI", sans-serif;
     color: var(--text-primary);
     max-width: 1400px;
     margin: 0 auto;
@@ -220,9 +253,21 @@ def main():
     flex-direction: column;
     gap: 20px;
   }}
+  .logo {{ margin-bottom: 12px; }}
+  .logo svg {{ height: 28px; width: auto; display: block; }}
+  .logo-dark {{ display: none; }}
+  @media (prefers-color-scheme: dark) {{
+    .logo-light {{ display: none; }}
+    .logo-dark {{ display: block; }}
+  }}
+  :root[data-theme="dark"] .logo-light {{ display: none; }}
+  :root[data-theme="dark"] .logo-dark {{ display: block; }}
+  :root[data-theme="light"] .logo-light {{ display: block; }}
+  :root[data-theme="light"] .logo-dark {{ display: none; }}
   .head h1 {{
     font-size: 1.5rem;
     font-weight: 700;
+    letter-spacing: 0.03em;
     margin: 0 0 4px;
     text-wrap: balance;
   }}
@@ -235,7 +280,7 @@ def main():
     overflow-x: auto;
     background: var(--surface-card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 4px 8px;
   }}
   .chart {{ position: relative; }}
@@ -361,6 +406,8 @@ def main():
 </style>
 <div class="page">
   <header class="head">
+    <div class="logo logo-light">{logo_green}</div>
+    <div class="logo logo-dark">{logo_white}</div>
     <h1>Гант — задачі Ксенії Фаст (Worksection)</h1>
     <p class="meta">Сьогодні: {today.isoformat()} · Період: {esc(period_label)} · клікни на задачу, щоб відкрити її у Worksection</p>
   </header>
