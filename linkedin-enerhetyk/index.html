@@ -1,0 +1,191 @@
+<!-- ECOFACTOR × ЕНЕРГЕТИК — LinkedIn concept, 1080×1350 -->
+<style>
+  /* ---- Ruberoid (brand typeface) ---- */
+  @font-face{font-family:'Ruberoid';src:url('assets/fonts/Ruberoid-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+  @font-face{font-family:'Ruberoid';src:url('assets/fonts/Ruberoid-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+  @font-face{font-family:'Ruberoid';src:url('assets/fonts/Ruberoid-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+  @font-face{font-family:'Ruberoid';src:url('assets/fonts/Ruberoid-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+
+  :root{
+    --green-60:#3AF185; --green-40:#23A859;
+    --white:#FFFFFF; --gray-95:#F1F3F5; --gray-50:#7B7F84; --gray-20:#3A3A3A; --gray-10:#1F1F1F;
+    --font:'Ruberoid','Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#0c0c0c;font-family:var(--font);display:flex;justify-content:center;align-items:flex-start;min-height:100vh}
+  body{padding:24px}
+
+  /* The exported canvas is EXACTLY 1080×1350. It is scaled down to fit the
+     screen for preview via transform; export at 100% (see note at bottom). */
+  .stage{width:1080px;height:1350px;transform-origin:top center}
+  @media(max-width:1140px){ .stage{transform:scale(calc((100vw - 48px)/1080))} }
+
+  .canvas{
+    position:relative;width:1080px;height:1350px;overflow:hidden;
+    background:var(--gray-10);border-radius:2px;
+    font-family:var(--font);color:var(--white);
+    isolation:isolate;
+  }
+
+  /* ---------- PHOTO LAYER (drop assets/stations.jpg here) ---------- */
+  .photo{position:absolute;inset:0;z-index:0}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block}
+  /* Fallback dusk EV-charging scene shown until stations.jpg is added */
+  .photo .scene{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(120% 80% at 78% 22%, rgba(255,244,214,.85) 0%, rgba(255,236,190,.35) 22%, rgba(120,140,120,0) 46%),
+      linear-gradient(180deg,#c9d2cf 0%,#b4c0ba 38%,#8fa393 60%,#6f8676 100%);
+  }
+  .photo .scene::before{ /* green charging pad ground */
+    content:"";position:absolute;left:0;right:0;bottom:0;height:34%;
+    background:linear-gradient(180deg,#5f7d5c 0%,#3f5a3d 100%);
+    clip-path:polygon(0 22%,100% 0,100% 100%,0% 100%);
+  }
+  .photo .scene .stn{position:absolute;bottom:30%;width:120px;height:300px;border-radius:10px 10px 4px 4px;
+    background:linear-gradient(180deg,#5a655c,#414b43);box-shadow:0 30px 60px rgba(0,0,0,.28)}
+  .photo .scene .stn.a{right:20%;height:340px;bottom:29%}
+  .photo .scene .stn.b{right:42%;height:250px;bottom:31%;opacity:.85;width:96px}
+  .photo .scene .stn::after{content:"";position:absolute;top:34px;left:22px;right:22px;height:70px;border-radius:4px;background:#2b322c}
+
+  /* ---------- SCRIMS ---------- */
+  .scrim-top{position:absolute;left:0;right:0;top:0;height:360px;z-index:1;
+    background:linear-gradient(180deg,rgba(15,15,15,.55) 0%,rgba(15,15,15,0) 100%)}
+  .scrim-bot{position:absolute;left:0;right:0;bottom:0;height:820px;z-index:1;
+    background:linear-gradient(180deg,rgba(15,15,15,0) 0%,rgba(17,17,17,.72) 46%,rgba(15,15,15,.96) 100%)}
+
+  /* ---------- CONTENT GRID ---------- */
+  .content{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:64px}
+
+  /* Top partner lockup (glass bar) */
+  .partners{
+    display:inline-flex;align-items:center;gap:32px;align-self:flex-start;
+    padding:22px 32px;border-radius:16px;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+    box-shadow:0 8px 24px rgba(31,31,31,.14);
+  }
+  .partners .plabel{
+    font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gray-50);writing-mode:vertical-rl;transform:rotate(180deg);
+    border-right:none;padding-right:4px;
+  }
+  .partners .vrule{width:1px;height:56px;background:#D9DBDE}
+
+  /* --- Recreated ЕНЕРГЕТИК wordmark (REPLACE with official logo) --- */
+  .enerhetyk{display:inline-flex;align-items:center;font-weight:700;color:var(--gray-10);
+    font-size:38px;letter-spacing:.01em;line-height:1}
+  .enerhetyk .bolt{width:26px;height:40px;margin:0 -2px;display:inline-block}
+  .enerhetyk .bolt path{fill:var(--green-40)}
+
+  /* --- Recreated Global Compact Network Ukraine lockup (REPLACE) --- */
+  .gcnu{display:inline-flex;align-items:center;gap:12px;color:var(--gray-20)}
+  .gcnu .globe{width:44px;height:44px;flex:0 0 44px}
+  .gcnu .globe path,.gcnu .globe circle,.gcnu .globe line{stroke:var(--gray-20);stroke-width:1.4;fill:none}
+  .gcnu .gtxt{font-size:14px;font-weight:600;line-height:1.28;letter-spacing:.01em;max-width:190px}
+  .gcnu .gtxt b{font-weight:700}
+  .gcnu .gtxt span{color:var(--gray-50);font-weight:500}
+
+  /* Green campaign chip */
+  .chip{
+    display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
+    padding:10px 20px;border-radius:9999px;background:var(--green-60);
+    color:var(--gray-10);font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .chip .dot{width:9px;height:9px;border-radius:9999px;background:var(--gray-10)}
+
+  /* Bottom block */
+  .bottom{display:flex;flex-direction:column;gap:32px}
+  .ef-logo{width:300px;height:auto;display:block}
+  .ef-logo svg{width:100%;height:auto;display:block}
+
+  .headline{
+    font-weight:700;letter-spacing:.03em;line-height:1.06;text-transform:uppercase;
+    font-size:82px;color:var(--white);max-width:940px;
+    text-shadow:0 2px 24px rgba(0,0,0,.35);
+  }
+  .headline .g{color:var(--green-60)}
+
+  .accentline{width:120px;height:8px;border-radius:9999px;background:var(--green-60)}
+
+  .footnote{font-size:16px;font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.72)}
+  .footnote b{color:var(--white);font-weight:700}
+</style>
+
+<div class="stage">
+  <div class="canvas" id="canvas">
+
+    <!-- PHOTO: replace src with your real station photo (assets/stations.jpg) -->
+    <div class="photo">
+      <img src="assets/stations.jpg" alt=""
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="scene" style="display:none">
+        <div class="stn b"></div>
+        <div class="stn a"></div>
+      </div>
+    </div>
+
+    <div class="scrim-top"></div>
+    <div class="scrim-bot"></div>
+
+    <div class="content">
+
+      <!-- TOP: course + backer lockup -->
+      <div class="partners">
+        <div class="plabel">Course&nbsp;partner</div>
+        <!-- ЕНЕРГЕТИК (recreated stand-in) -->
+        <div class="enerhetyk" title="Replace with official ЕНЕРГЕТИК logo">
+          Е<svg class="bolt" viewBox="0 0 26 40"><path d="M15 0 3 22h8L9 40 23 15h-8L18 0z"/></svg>ЕРГЕТИК
+        </div>
+        <div class="vrule"></div>
+        <!-- Global Compact Network Ukraine (recreated stand-in) -->
+        <div class="gcnu" title="Replace with official Global Compact Network Ukraine logo">
+          <svg class="globe" viewBox="0 0 44 44">
+            <circle cx="22" cy="22" r="20"/>
+            <ellipse cx="22" cy="22" rx="9" ry="20"/>
+            <line x1="2" y1="22" x2="42" y2="22"/>
+            <line x1="5" y1="12" x2="39" y2="12"/>
+            <line x1="5" y1="32" x2="39" y2="32"/>
+          </svg>
+          <div class="gtxt"><b>Global Compact</b><br>Network <b>Ukraine</b></div>
+        </div>
+      </div>
+
+      <!-- BOTTOM: ECOFACTOR + statement -->
+      <div class="bottom">
+        <div class="chip"><span class="dot"></span>Partnership · Talent</div>
+
+        <div class="ef-logo">
+          <!-- Official ECOFACTOR horizontal / white -->
+          <svg viewBox="0 0 250 40" xmlns="http://www.w3.org/2000/svg" fill="none">
+            <g clip-path="url(#c)">
+            <path d="M33.4628 38.7404H5.83699C2.83853 38.7404 0.39978 36.3017 0.39978 33.2632V5.63741C0.39978 2.63895 2.83853 0.200195 5.83699 0.200195H33.4628C36.4613 0.200195 38.94 2.63895 38.94 5.67739V33.3032C38.94 36.3017 36.5013 38.7404 33.4628 38.7404Z" fill="white"/>
+            <path d="M13.1933 15.952C15.592 15.952 17.5111 13.993 17.5111 11.6342C17.5111 9.23542 15.5521 7.31641 13.1933 7.31641C10.8345 7.31641 8.87548 9.2754 8.87548 11.6342C8.8355 14.033 10.7945 15.952 13.1933 15.952Z" fill="#3AF185"/>
+            <path d="M26.2666 23.5082H17.7109V21.1894H23.9877C24.6674 21.1894 25.0672 20.7896 25.0672 20.1099V18.031C25.0672 17.3513 24.6674 16.9515 23.9877 16.9515H17.7109V14.8726H26.0267C26.7063 14.8726 27.1061 14.4728 27.1061 13.7931V11.7142C27.1061 11.0346 26.7063 10.6348 26.0267 10.6348H14.1128C13.4331 10.6348 13.0333 11.0346 13.0333 11.7142V23.828C12.6735 24.0279 12.4337 24.3877 12.4337 24.7875C12.4337 25.3872 12.9134 25.867 13.5131 25.867C14.1128 25.867 14.5925 25.3872 14.5925 24.7875C14.5925 24.3477 14.3527 23.9879 13.9929 23.828V11.7142C13.9929 11.6742 13.9929 11.6742 13.9929 11.6343C13.9929 11.6343 14.0328 11.6343 14.0728 11.6343H25.9867C26.0267 11.6343 26.0267 11.6343 26.0667 11.6343C26.0667 11.6343 26.0667 11.6742 26.0667 11.7142V13.7931C26.0667 13.8331 26.0667 13.8331 26.0667 13.8731C26.0667 13.8731 26.0267 13.8731 25.9867 13.8731H17.2312C16.9513 13.8731 16.7115 14.113 16.7115 14.3928V17.4713C16.7115 17.7511 16.9513 17.991 17.2312 17.991H23.9877C24.0277 17.991 24.0277 17.991 24.0677 17.991C24.0677 17.991 24.0677 18.031 24.0677 18.071V20.1499C24.0677 20.1899 24.0677 20.1899 24.0677 20.2298C24.0677 20.2298 24.0277 20.2298 23.9877 20.2298H17.2312C16.9513 20.2298 16.7115 20.4697 16.7115 20.7496V23.9879C16.7115 24.2678 16.9513 24.5077 17.2312 24.5077H26.3065C26.3465 24.5077 26.3465 24.5077 26.3865 24.5077C26.3865 24.5077 26.3865 24.5476 26.3865 24.5876V26.6665C26.3865 26.7065 26.3865 26.7065 26.3865 26.7465C26.3865 26.7465 26.3465 26.7465 26.3065 26.7465H20.5895C20.3096 26.7465 20.0697 26.9864 20.0697 27.2662C20.0697 27.5461 20.3096 27.786 20.5895 27.786H26.3065C26.9862 27.786 27.386 27.3862 27.386 26.7065V24.6276C27.346 23.908 26.9462 23.5082 26.2666 23.5082Z" fill="#3A3A3A"/>
+            <path d="M55.3313 24.8275V21.4692H62.9674C63.4871 21.4692 63.9269 21.0294 63.9269 20.5097V18.3508C63.9269 17.831 63.4871 17.3913 62.9674 17.3913H55.3313V14.033H65.566C66.0858 14.033 66.5255 13.5932 66.5255 13.0735V10.9146C66.5255 10.3949 66.0858 9.95508 65.566 9.95508H52.2528C51.7331 9.95508 51.2933 10.3949 51.2933 10.9146V27.8659C51.2933 28.3856 51.7331 28.8254 52.2528 28.8254H65.9258C66.4456 28.8254 66.8853 28.3856 66.8853 27.8659V25.707C66.8853 25.1873 66.4456 24.7475 65.9258 24.7475L55.3313 24.8275Z" fill="white"/>
+            <path d="M202.416 10.0752H186.904C186.384 10.0752 185.944 10.515 185.944 11.0347V13.1936C185.944 13.7133 186.384 14.1531 186.904 14.1531H192.661V27.986C192.661 28.5057 193.1 28.9455 193.62 28.9455H195.779C196.299 28.9455 196.739 28.5057 196.739 27.986V14.1131H202.496C203.015 14.1131 203.455 13.6734 203.455 13.1536V10.9947C203.375 10.515 202.935 10.0752 202.416 10.0752Z" fill="white"/>
+            <path d="M137.929 13.1536V10.9947C137.929 10.4749 137.489 10.0352 136.969 10.0352H123.296C122.777 10.0352 122.337 10.4749 122.337 10.9947V27.906C122.337 28.4257 122.777 28.8655 123.296 28.8655H125.455C125.975 28.8655 126.415 28.4257 126.415 27.906V21.4693H134.091C134.611 21.4693 135.05 21.0295 135.05 20.5098V18.3509C135.05 17.8312 134.611 17.3914 134.091 17.3914H126.415V14.0331H136.969C137.529 14.1131 137.929 13.6733 137.929 13.1536Z" fill="white"/>
+            <path d="M155.8 28.8655H158.598C158.958 28.8655 159.158 28.5057 159.038 28.1859L151.082 10.5949C150.922 10.275 150.602 10.0352 150.242 10.0352H147.404C147.044 10.0352 146.684 10.2351 146.564 10.5949L138.648 28.1859C138.488 28.5057 138.728 28.8655 139.088 28.8655H141.887C142.446 28.8655 142.926 28.5457 143.166 28.0259L144.325 25.5072H153.481L154.64 28.0259C154.72 28.5457 155.24 28.8655 155.8 28.8655ZM146.005 21.4693L148.763 15.3524L151.522 21.4693H146.005Z" fill="white"/>
+            <path d="M245.954 28.8656H249.232C249.592 28.8656 249.832 28.4258 249.632 28.1459L246.513 23.6282C248.312 22.7487 249.512 20.9096 249.512 18.7507V15.5124C249.512 12.5139 247.073 10.0752 244.075 10.0752H233.56C233.04 10.0752 232.6 10.515 232.6 11.0347V12.1141V27.946C232.6 28.4658 233.04 28.9055 233.56 28.9055H235.719C236.239 28.9055 236.678 28.4658 236.678 27.946V24.188H241.996L244.794 28.2659C245.074 28.6257 245.514 28.8656 245.954 28.8656ZM236.678 14.1131H244.114C244.874 14.1131 245.514 14.7528 245.514 15.5124V18.7507C245.514 19.5104 244.874 20.15 244.114 20.15H236.678V14.1131Z" fill="white"/>
+            <path d="M177.748 28.8656H167.993C165.835 28.8656 164.115 27.1065 164.115 24.9876V13.9532C164.115 11.7943 165.875 10.0752 167.993 10.0752H177.748C179.907 10.0752 181.626 11.8343 181.626 13.9532V15.3125C181.626 15.8322 181.187 16.272 180.667 16.272H178.508C177.988 16.272 177.549 15.8322 177.549 15.3125V15.0327C177.549 14.5129 177.109 14.0731 176.589 14.0731H168.993C168.473 14.0731 168.033 14.5129 168.033 15.0327V23.9081C168.033 24.4278 168.473 24.8676 168.993 24.8676H176.589C177.109 24.8676 177.549 24.4278 177.549 23.9081V23.5883C177.549 23.0685 177.988 22.6288 178.508 22.6288H180.667C181.187 22.6288 181.626 23.0685 181.626 23.5883V24.9476C181.666 27.1464 179.907 28.8656 177.748 28.8656Z" fill="white"/>
+            <path d="M86.7152 28.8656H76.9602C74.8013 28.8656 73.0822 27.1065 73.0822 24.9876V13.9532C73.0822 11.7943 74.8413 10.0752 76.9602 10.0752H86.7152C88.8741 10.0752 90.5932 11.8343 90.5932 13.9532V15.3125C90.5932 15.8322 90.1534 16.272 89.6337 16.272H87.4748C86.955 16.272 86.5153 15.8322 86.5153 15.3125V15.0327C86.5153 14.5129 86.0755 14.0731 85.5558 14.0731H77.9597C77.4399 14.0731 77.0001 14.5129 77.0001 15.0327V23.9081C77.0001 24.4278 77.4399 24.8676 77.9597 24.8676H85.5558C86.0755 24.8676 86.5153 24.4278 86.5153 23.9081V23.5883C86.5153 23.0685 86.955 22.6288 87.4748 22.6288H89.6337C90.1534 22.6288 90.5932 23.0685 90.5932 23.5883V24.9476C90.5932 27.1464 88.8741 28.8656 86.7152 28.8656Z" fill="white"/>
+            <path d="M221.286 28.8656H211.531C209.372 28.8656 207.653 27.1065 207.653 24.9876V13.9532C207.653 11.7943 209.412 10.0752 211.531 10.0752H221.286C223.445 10.0752 225.164 11.8343 225.164 13.9532V24.9876C225.204 27.1065 223.445 28.8656 221.286 28.8656ZM212.611 24.8276H220.207C220.726 24.8276 221.166 24.3879 221.166 23.8681V15.0327C221.166 14.5129 220.726 14.0731 220.207 14.0731H212.611C212.091 14.0731 211.651 14.5129 211.651 15.0327V23.9081C211.651 24.4278 212.091 24.8276 212.611 24.8276Z" fill="white"/>
+            <path d="M111.183 28.8656H101.428C99.2687 28.8656 97.5496 27.1065 97.5496 24.9876V13.9532C97.5496 11.7943 99.3087 10.0752 101.428 10.0752H111.183C113.342 10.0752 115.061 11.8343 115.061 13.9532V24.9876C115.101 27.1065 113.342 28.8656 111.183 28.8656ZM102.507 24.8276H110.103C110.623 24.8276 111.063 24.3879 111.063 23.8681V15.0327C111.063 14.5129 110.623 14.0731 110.103 14.0731H102.507C101.987 14.0731 101.548 14.5129 101.548 15.0327V23.9081C101.548 24.4278 101.987 24.8276 102.507 24.8276Z" fill="white"/>
+            </g><defs><clipPath id="c"><rect width="249.312" height="39.02" fill="white"/></clipPath></defs>
+          </svg>
+        </div>
+
+        <h1 class="headline">
+          We joined the <span class="g">ENERHETYK</span> course<br>
+          to boost <span class="g">new energy talent</span>
+        </h1>
+
+        <div class="accentline"></div>
+
+        <div class="footnote"><b>ECOFACTOR</b> supports Ukraine's next generation of energy professionals.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
