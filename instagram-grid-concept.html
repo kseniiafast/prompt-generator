@@ -97,6 +97,9 @@ h1{font-size:clamp(28px,4.6vw,46px);line-height:1.06;letter-spacing:.03em;font-w
           mask:radial-gradient(120% 90% at 50% 40%,#000 55%,transparent 78%)}
 .pinlive{position:absolute;width:4cqw;height:4cqw;border-radius:50%;background:var(--g60);
   box-shadow:0 0 0 2cqw rgba(58,241,133,.28),0 0 6cqw rgba(58,241,133,.7)}
+.route{position:absolute;inset:0;overflow:visible}
+.route line{stroke:var(--g60);stroke-width:1.1;stroke-dasharray:3 3.5;stroke-linecap:round;opacity:.75}
+.route .n,.route .s{font-size:3.3cqw;font-weight:600;letter-spacing:.14em;text-transform:uppercase;fill:rgba(255,255,255,.82)}
 
 /* --- sieci network --- */
 .net{position:absolute;inset:0}
@@ -261,19 +264,22 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
             <svg viewBox="0 0 100 132" aria-hidden="true"><path class="pin" fill-rule="evenodd" d="M50 2C24 2 3 23 3 49c0 34 47 81 47 81s47-47 47-81C97 23 76 2 50 2Zm0 30a17 17 0 1 1 0 34 17 17 0 0 1 0-34Z"/></svg>
             <span>kalizacji</span>
           </div>
-          <div class="sub light">знаходь найближчу</div>
+          <div class="sub light">znajdź najbliższą</div>
         </div>
       </div>
 
       <div class="tile row0">
         <div class="mapdots"><div class="dotgrid"></div>
-          <span class="pinlive" style="top:22%;left:38%"></span>
-          <span class="pinlive" style="top:46%;left:60%"></span>
-          <span class="pinlive" style="top:64%;left:30%"></span>
+          <svg class="route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="40" y1="14" x2="58" y2="84"/>
+            <text class="n" x="46" y="9">N</text><text class="s" x="63" y="90">S</text>
+          </svg>
+          <span class="pinlive" style="top:10%;left:36%"></span>
+          <span class="pinlive" style="top:80%;left:55%"></span>
         </div>
         <div class="inner" style="justify-content:flex-end">
           <div class="word" style="font-size:15cqw">w&nbsp;Polsce</div>
-          <div class="sub light">cała mapa kraju</div>
+          <div class="sub light">od Gdańska po Kraków</div>
         </div>
       </div>
 
@@ -322,9 +328,9 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
 
       <div class="tile row2">
         <svg class="trend" viewBox="0 0 100 44" preserveAspectRatio="none" aria-hidden="true">
-          <path class="bar" d="M4 44 V30 L28 24 L52 26 L76 12 L96 4 V44 Z"/>
-          <polyline points="4,30 28,24 52,26 76,12 96,4"/>
-          <path class="head" d="M96 4 l-11 1.5 l7 8 Z"/>
+          <path class="bar" d="M4 44 V6 L28 13 L52 12 L76 26 L96 34 V44 Z"/>
+          <polyline points="4,6 28,13 52,12 76,26 96,34"/>
+          <path class="head" d="M96 34 l-10 0.5 l4.5 7 Z"/>
         </svg>
         <div class="inner" style="justify-content:flex-end">
           <div class="word" style="font-size:16cqw">Korzystnie</div>
@@ -410,8 +416,8 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
     <div class="card"><div class="chip row0"><div class="inner"><div class="lok" style="font-size:11cqw"><span>l</span><svg viewBox="0 0 100 132"><path class="pin" fill-rule="evenodd" d="M50 2C24 2 3 23 3 49c0 34 47 81 47 81s47-47 47-81C97 23 76 2 50 2Zm0 30a17 17 0 1 1 0 34 17 17 0 0 1 0-34Z"/></svg><span>kalizacji</span></div></div></div>
       <div class="body"><div class="no">02 · rząd 1</div><h3>lokalizacji</h3><p>Перша «o» — це мапа-пін (як у референсі). Слово буквально стає точкою на карті.</p></div></div>
 
-    <div class="card"><div class="chip row0"><div class="mapdots" style="inset:14cqw 18cqw 14cqw"><div class="dotgrid"></div><span class="pinlive" style="top:30%;left:40%"></span><span class="pinlive" style="top:55%;left:62%"></span></div></div>
-      <div class="body"><div class="no">03 · rząd 1</div><h3>w Polsce</h3><p>Крапкова мапа-покриття: активні локації спалахують зеленим по всій країні.</p></div></div>
+    <div class="card"><div class="chip row0"><div class="mapdots" style="inset:14cqw 18cqw 14cqw"><div class="dotgrid"></div><svg class="route" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="38" y1="16" x2="60" y2="82"/></svg><span class="pinlive" style="top:12%;left:34%"></span><span class="pinlive" style="top:78%;left:57%"></span></div></div>
+      <div class="body"><div class="no">03 · rząd 1</div><h3>w Polsce</h3><p>Вісь Північ→Південь (Ґданськ угорі → Краків унизу): охоплення край-в-край, по всій країні.</p></div></div>
 
     <div class="card"><div class="chip row1"><div class="inner"><div class="odo" style="transform:scale(.9)"><span class="cell">2</span><span class="cell">0</span><span class="cell">5</span></div></div></div>
       <div class="body"><div class="no">04 · rząd 2</div><h3>205</h3><p>Той самий лічильник + індикатор «na żywo» з пульсуючою крапкою — реальні станції зараз.</p></div></div>
@@ -425,8 +431,8 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
     <div class="card"><div class="chip row2"><div class="radar" style="width:40cqw;height:40cqw;top:8cqw"><span class="r1"></span><span class="r2"></span><span class="r3"></span><span class="core"></span></div></div>
       <div class="body"><div class="no">07 · rząd 3</div><h3>Blisko</h3><p>Радар-кола від піна: відчуття близькості та «завжди поруч».</p></div></div>
 
-    <div class="card"><div class="chip row2"><svg class="trend" style="left:16cqw;right:16cqw;top:10cqw;height:26cqw" viewBox="0 0 100 44" preserveAspectRatio="none"><path class="bar" d="M4 44 V30 L28 24 L52 26 L76 12 L96 4 V44 Z"/><polyline points="4,30 28,24 52,26 76,12 96,4"/><path class="head" d="M96 4 l-11 1.5 l7 8 Z"/></svg></div>
-      <div class="body"><div class="no">08 · rząd 3</div><h3>Korzystnie</h3><p>Висхідний тренд-графік = вигода: нижча ціна, більше користі від зарядки.</p></div></div>
+    <div class="card"><div class="chip row2"><svg class="trend" style="left:16cqw;right:16cqw;top:10cqw;height:26cqw" viewBox="0 0 100 44" preserveAspectRatio="none"><path class="bar" d="M4 44 V6 L28 13 L52 12 L76 26 L96 34 V44 Z"/><polyline points="4,6 28,13 52,12 76,26 96,34"/><path class="head" d="M96 34 l-10 0.5 l4.5 7 Z"/></svg></div>
+      <div class="body"><div class="no">08 · rząd 3</div><h3>Korzystnie</h3><p>Спадна лінія = менша ціна за kWh. Графік іде вниз — заряджати вигідніше.</p></div></div>
 
     <div class="card"><div class="chip row2"><div class="inner"><svg class="bolt" style="width:16cqw" viewBox="0 0 48 64"><path d="M28 2 6 36h14L18 62l24-36H26L28 2z"/></svg><div class="kw"><span class="x" style="font-size:16cqw">+X</span><span class="u" style="font-size:7cqw">kW</span></div></div></div>
       <div class="body"><div class="no">09 · rząd 3</div><h3>+X kW przy rejestracji</h3><p>Блискавка + бонусні кіловати: чіткий оффер-гачок для реєстрації (X — підстав число).</p></div></div>
