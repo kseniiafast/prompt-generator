@@ -15,13 +15,15 @@ argument-hint: [період: тиждень | 2 тижні | весь липе�
 
 **Тіньові задачі** (тегнули в коментарях, виконавець інший) — шукати ЛИШЕ в
 проєктах `International exhibitions` (project_id 405788), `Events`
-(project_id 376382), `LinkedIn Management` (project_id 376166) та
-`Сайт ECOFACTOR` (project_id 376154):
+(project_id 376382), `LinkedIn Management` (project_id 376166),
+`Сайт ECOFACTOR` (project_id 376154) та `Instagram Poland`
+(project_id 406166):
 1. `list_tasks(project_id=405788, open_only=true, limit=500)`,
    `list_tasks(project_id=376382, open_only=true, limit=500)`,
-   `list_tasks(project_id=376166, open_only=true, limit=500)` та
-   `list_tasks(project_id=376154, open_only=true, limit=500)`.
-2. Для кожної задачі з цих чотирьох списків, де `user_to` НЕ дорівнює
+   `list_tasks(project_id=376166, open_only=true, limit=500)`,
+   `list_tasks(project_id=376154, open_only=true, limit=500)` та
+   `list_tasks(project_id=406166, open_only=true, limit=500)`.
+2. Для кожної задачі з цих п'яти списків, де `user_to` НЕ дорівнює
    `Kseniia.Fast@ecofactortech.com` (без урахування регістру) — виклич
    `list_comments(task_id=...)`.
 3. Якщо в тексті будь-якого коментаря є згадка (без урахування регістру):
@@ -29,7 +31,8 @@ argument-hint: [період: тиждень | 2 тижні | весь липе�
    Познач її маркером `@` перед назвою.
 4. Якщо якийсь із цих project_id змінився/перейменувався, підтвердь через
    `list_projects` (шукай назви "International exhibitions", "Events",
-   "LinkedIn Management" і "Сайт ECOFACTOR") перед тим, як здатися.
+   "LinkedIn Management", "Сайт ECOFACTOR" і "Instagram Poland") перед тим,
+   як здатися.
 
 **Дедуплікація:** прибери дублі за `id` задачі (мої задачі мають пріоритет
 над тіньовими, якщо id співпадає).
