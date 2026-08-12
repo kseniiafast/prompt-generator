@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A4 · 4-колонкова сітка</title>
+  <style>
+    /* ─────────────────────────────────────────────────────────────
+       A4 4-column layout grid
+       Аркуш A4: 210 × 297 мм
+       Бокові відступи (margins): 9 мм зліва + 9 мм справа
+       Робоча ширина: 210 − 9 − 9 = 192 мм
+       4 колонки + 3 міжколонкові відступи (gutter) по 4 мм:
+         4 × 45 мм (колонки) + 3 × 4 мм (gutter) = 180 + 12 = 192 мм ✓
+       ───────────────────────────────────────────────────────────── */
+    :root {
+      --page-w: 210mm;   /* ширина A4 */
+      --page-h: 297mm;   /* висота A4 */
+      --margin-x: 9mm;   /* бокові відступи (за завданням) */
+      --margin-y: 12mm;  /* верх/низ — типове значення, можна змінити */
+      --cols: 4;         /* кількість колонок */
+      --gutter: 4mm;     /* міжколонковий відступ; 45мм колонка при 9мм полях */
+      --col-w: 45mm;     /* довідково: обчислена ширина однієї колонки */
+
+      --ink: #1a1a1a;
+      --muted: #8a8a8a;
+      --guide: rgba(124, 58, 237, 0.10); /* заливка колонок (лише на екрані) */
+      --guide-line: rgba(124, 58, 237, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Друк: A4 без полів принтера — усі відступи задаємо самі всередині .page */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    body {
+      background: #e9e9ef;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 12px 48px;
+    }
+
+    .legend {
+      max-width: var(--page-w);
+      width: 100%;
+      background: #fff;
+      border: 1px solid #d5d5df;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #333;
+    }
+    .legend h1 { font-size: 15px; margin-bottom: 6px; }
+    .legend code {
+      background: #f2f2f7; padding: 1px 5px; border-radius: 3px;
+      font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;
+    }
+    .legend .row { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; color: #555; }
+
+    /* ── Аркуш A4 ── */
+    .page {
+      position: relative;
+      width: var(--page-w);
+      height: var(--page-h);
+      background: #fff;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.18);
+      /* Відступи аркуша: бокові 9мм, верх/низ 12мм */
+      padding: var(--margin-y) var(--margin-x);
+    }
+
+    /* ── Сама 4-колонкова сітка ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols), 1fr);
+      column-gap: var(--gutter);
+      height: 100%;
+    }
+
+    /* Колонка — сюди верстаєте контент */
+    .col {
+      /* напрямні колонок — видно лише на екрані */
+      background: var(--guide);
+      outline: 1px dashed var(--guide-line);
+      min-width: 0; /* дозволяє контенту стискатись у колонці */
+      padding: 0;
+    }
+
+    /* Демонстраційний контент у колонках */
+    .col-num {
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); padding: 4px 4px 8px; border-bottom: 1px solid #eee;
+      margin-bottom: 8px;
+    }
+    .col p {
+      font-size: 8.5pt; line-height: 1.5; color: #444;
+      padding: 0 4px; margin-bottom: 8px; text-align: justify;
+      hyphens: auto;
+    }
+
+    /* Приклад елемента, що займає всі 4 колонки (span) */
+    .full-span {
+      grid-column: 1 / -1;
+      background: transparent;
+      outline: none;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .full-span h2 { font-size: 20pt; font-weight: 700; }
+    .full-span .sub { font-size: 9pt; color: var(--muted); margin-top: 2px; }
+
+    /* ── Правила друку ── */
+    @media print {
+      body { background: #fff; padding: 0; gap: 0; }
+      .legend { display: none; }
+      .page { box-shadow: none; width: var(--page-w); height: var(--page-h); }
+      /* На друк напрямні прибираємо — залишається чиста сітка */
+      .col { background: transparent; outline: none; }
+      .full-span { outline: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="legend">
+    <h1>Аркуш A4 — 4 колонки для верстки</h1>
+    <div>Формат <code>210 × 297&nbsp;мм</code> · бокові відступи <code>9&nbsp;мм</code> · робоча ширина <code>192&nbsp;мм</code></div>
+    <div class="row">
+      <span>Колонок: <code>4</code></span>
+      <span>Ширина колонки: <code>45&nbsp;мм</code></span>
+      <span>Міжколонковий відступ (gutter): <code>4&nbsp;мм</code></span>
+      <span>Перевірка: 4×45 + 3×4 + 2×9 = <code>210&nbsp;мм</code></span>
+    </div>
+    <div class="row" style="margin-top:8px;color:#888">
+      Параметри змінюються у <code>:root</code> (--margin-x, --gutter, --cols). Друк / збереження в PDF — Ctrl/Cmd&nbsp;+&nbsp;P (напрямні колонок автоматично приховуються).
+    </div>
+  </div>
+
+  <!-- Аркуш A4 -->
+  <div class="page">
+    <div class="grid">
+
+      <!-- Приклад заголовка на всю ширину (span 4 колонки) -->
+      <div class="full-span">
+        <h2>Заголовок макета</h2>
+        <div class="sub">Елемент .full-span розтягнутий на всі 4 колонки (grid-column: 1 / -1)</div>
+      </div>
+
+      <!-- Колонка 1 -->
+      <div class="col">
+        <div class="col-num">Колонка 1</div>
+        <p>Це демонстраційна колонка шириною 45&nbsp;мм. Текст верстається всередині напрямних. Пунктирна рамка та фіолетова заливка видно лише на екрані — під час друку вони зникають.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      </div>
+
+      <!-- Колонка 2 -->
+      <div class="col">
+        <div class="col-num">Колонка 2</div>
+        <p>Між колонками — відступ 4&nbsp;мм (gutter). Він заданий через <b>column-gap</b> у контейнері <b>.grid</b>, тож змінюється однією змінною.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </div>
+
+      <!-- Колонка 3 -->
+      <div class="col">
+        <div class="col-num">Колонка 3</div>
+        <p>Колонки рівні за шириною завдяки <b>repeat(4, 1fr)</b>. Якщо змінити --cols або --gutter, ширина перерахується автоматично.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+      </div>
+
+      <!-- Колонка 4 -->
+      <div class="col">
+        <div class="col-num">Колонка 4</div>
+        <p>Остання колонка. Робоча область обмежена боковими полями по 9&nbsp;мм зліва та справа.</p>
+        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
