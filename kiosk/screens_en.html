@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ECOFACTOR Kiosk — English</title>
+<link rel="stylesheet" href="fonts.css" />
+<style>
+/* ================= ECOFACTOR tokens ================= */
+:root{
+  --green-60:#3AF185; --green-50:#3DD078; --green-40:#23A859;
+  --white:#FFFFFF; --gray-95:#F1F3F5; --color-85:#D9DBDE; --gray-70:#B0B2B5;
+  --gray-50:#7B7F84; --gray-30:#525252; --gray-20:#3A3A3A; --gray-10:#1F1F1F;
+  --blue-60:#3577D8; --red-60:#EA4335;
+  --font:'Ruberoid','Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:var(--font);color:var(--gray-30);background:#c8ccd0;-webkit-font-smoothing:antialiased;}
+
+/* gallery wrapper (screenshots ignore this; each .screen is captured) */
+.gallery{display:flex;flex-wrap:wrap;gap:64px;padding:64px;justify-content:center;align-items:flex-start;}
+.frame{display:flex;flex-direction:column;gap:24px;align-items:center;}
+.frame .cap{font-family:var(--font);font-weight:600;font-size:22px;color:#3A3A3A;letter-spacing:.02em;}
+
+/* ============ THE SCREEN — exact kiosk canvas ============ */
+.screen{
+  width:1080px;height:1920px;background:var(--white);
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  color:var(--gray-30);
+}
+
+/* ---- shared type ---- */
+.h1{font-weight:700;font-size:60px;line-height:1.15;letter-spacing:.03em;color:var(--gray-20);}
+.h2{font-weight:700;font-size:44px;line-height:1.2;color:var(--gray-20);}
+.h3{font-weight:700;font-size:34px;line-height:1.3;color:var(--gray-20);}
+.h4{font-weight:600;font-size:28px;line-height:1.35;color:var(--gray-20);}
+.sub{font-weight:500;font-size:26px;line-height:1.5;color:var(--gray-30);}
+.body{font-weight:400;font-size:26px;line-height:1.5;color:var(--gray-30);}
+.cap{font-weight:400;font-size:22px;line-height:1.5;color:var(--gray-50);}
+.price{font-weight:700;font-size:34px;color:var(--gray-10);letter-spacing:.01em;}
+.price-lg{font-weight:700;font-size:52px;color:var(--gray-10);letter-spacing:.01em;}
+.mono-num{font-variant-numeric:tabular-nums;}
+
+/* ---- top bar ---- */
+.topbar{height:150px;flex:0 0 150px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;border-bottom:1px solid var(--gray-95);background:var(--white);}
+.topbar .mid{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.brandmark{width:56px;height:56px;border-radius:12px;background:var(--green-60);display:flex;align-items:center;justify-content:center;}
+.brandmark span{width:24px;height:24px;border-radius:6px;background:var(--gray-10);}
+.iconbtn{width:88px;height:88px;border-radius:12px;border:1px solid var(--color-85);background:var(--white);
+  display:flex;align-items:center;justify-content:center;color:var(--gray-20);font-size:40px;}
+.iconbtn.ghost{border:none;}
+.langpills{display:flex;gap:8px;}
+.langpills .p{padding:12px 20px;border-radius:9999px;font-weight:600;font-size:22px;color:var(--gray-50);border:1px solid var(--color-85);}
+.langpills .p.on{background:var(--gray-10);color:var(--white);border-color:var(--gray-10);}
+
+/* stepper progress */
+.steps{display:flex;align-items:center;gap:12px;}
+.steps .dot{width:16px;height:16px;border-radius:9999px;background:var(--color-85);flex:0 0 auto;}
+.steps .dot.on{background:var(--green-60);width:56px;flex:0 0 56px;}
+.steps .dot.done{background:var(--green-40);width:56px;flex:0 0 56px;}
+
+/* ---- content ---- */
+.content{flex:1 1 auto;overflow:hidden;position:relative;}
+
+/* ---- bottom bar ---- */
+.bottombar{flex:0 0 auto;border-top:1px solid var(--gray-95);background:var(--white);padding:32px 48px 40px;}
+
+/* ---- buttons ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:16px;height:104px;padding:0 40px;
+  border-radius:12px;font-weight:700;font-size:30px;letter-spacing:.16px;border:none;cursor:pointer;width:100%;}
+.btn--primary{background:var(--green-60);color:var(--gray-20);}
+.btn--secondary{background:transparent;border:2px solid var(--green-60);color:var(--gray-20);}
+.btn--dark{background:var(--gray-10);color:var(--white);}
+.btn .ic{font-size:36px;display:flex;}
+
+/* ---- generic ---- */
+.icon{display:inline-flex;line-height:0;}
+.icon svg{width:1em;height:1em;}
+.skel{background:var(--gray-95);border-radius:9999px;height:22px;}
+.skel.d{background:var(--color-85);}
+
+/* image placeholder */
+.imgph{background:var(--gray-95);border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;}
+.imgph .glyph{width:40%;height:40%;border-radius:12px;background:var(--color-85);}
+.imgph .glyph.sm{border-radius:8px;}
+
+/* pill / round icon */
+.circleadd{width:76px;height:76px;border-radius:9999px;background:var(--green-60);color:var(--gray-10);
+  display:flex;align-items:center;justify-content:center;font-size:44px;flex:0 0 76px;}
+
+/* ================= per screen bits ================= */
+
+/* S1 attract */
+.attract{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;padding:0 80px;text-align:center;}
+.attract .plate{width:180px;height:180px;border-radius:32px;background:var(--green-60);display:flex;align-items:center;justify-content:center;}
+.attract .plate span{width:78px;height:78px;border-radius:18px;background:var(--gray-10);}
+.attract .tapring{width:120px;height:120px;border-radius:9999px;border:3px solid var(--green-60);display:flex;align-items:center;justify-content:center;color:var(--green-40);font-size:56px;}
+
+/* S2 order type cards */
+.typewrap{height:100%;display:flex;flex-direction:column;padding:80px 48px;gap:48px;}
+.typecards{display:flex;gap:32px;flex:1 1 auto;}
+.typecard{flex:1;border:2px solid var(--color-85);border-radius:16px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:40px;background:var(--white);}
+.typecard.sel{border-color:var(--green-60);background:#F3FDF7;}
+.typecard .big{width:220px;height:220px;border-radius:24px;background:var(--gray-95);display:flex;align-items:center;justify-content:center;color:var(--gray-70);font-size:110px;}
+.typecard.sel .big{background:var(--green-60);color:var(--gray-10);}
+
+/* S3 menu */
+.menu{display:flex;height:100%;}
+.rail{width:236px;flex:0 0 236px;background:var(--gray-95);padding:24px 16px;display:flex;flex-direction:column;gap:12px;overflow:hidden;}
+.railitem{border-radius:12px;padding:20px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--gray-50);}
+.railitem .ric{width:64px;height:64px;border-radius:16px;background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--gray-50);font-size:34px;}
+.railitem .rbar{width:70%;height:16px;border-radius:9999px;background:var(--color-85);}
+.railitem.on{background:var(--white);color:var(--gray-20);}
+.railitem.on .ric{background:var(--green-60);color:var(--gray-10);}
+.railitem.on .rbar{background:var(--gray-20);}
+.menumain{flex:1 1 auto;display:flex;flex-direction:column;overflow:hidden;}
+.menuhead{padding:32px 40px 24px;display:flex;flex-direction:column;gap:24px;}
+.search{height:88px;border-radius:12px;border:2px solid var(--gray-95);background:var(--gray-95);display:flex;align-items:center;gap:16px;padding:0 28px;color:var(--gray-70);font-size:26px;}
+.grid{padding:0 40px 40px;display:grid;grid-template-columns:1fr 1fr;gap:24px;overflow:hidden;align-content:start;}
+.card{background:var(--white);border:1px solid var(--gray-95);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+.card .ph{width:100%;aspect-ratio:1/1;}
+.card .lines{display:flex;flex-direction:column;gap:12px;}
+.card .foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+
+/* S4 product detail */
+.pd{height:100%;display:flex;flex-direction:column;padding:40px 48px;gap:32px;overflow:hidden;}
+.pd .hero{width:100%;height:520px;}
+.optgroup{display:flex;flex-direction:column;gap:20px;}
+.optrow{height:112px;border:1px solid var(--color-85);border-radius:16px;display:flex;align-items:center;gap:24px;padding:0 32px;}
+.optrow.sel{border-color:var(--green-60);border-width:2px;background:#F3FDF7;}
+.optrow .box{width:56px;height:56px;border-radius:9999px;border:2px solid var(--color-85);flex:0 0 56px;display:flex;align-items:center;justify-content:center;color:var(--white);}
+.optrow.sel .box{background:var(--green-60);border-color:var(--green-60);color:var(--gray-10);font-size:34px;}
+.optrow .obar{height:20px;border-radius:9999px;background:var(--gray-95);}
+.seg{display:flex;gap:16px;}
+.seg .s{flex:1;height:104px;border:2px solid var(--color-85);border-radius:12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;color:var(--gray-30);font-weight:600;font-size:26px;}
+.seg .s.on{border-color:var(--green-60);background:#F3FDF7;color:var(--gray-20);}
+.seg .s .sk{width:44px;height:14px;border-radius:9999px;background:var(--color-85);}
+
+/* quantity stepper */
+.qty{display:flex;align-items:center;gap:32px;}
+.qty .b{width:88px;height:88px;border-radius:9999px;border:2px solid var(--color-85);background:var(--white);
+  display:flex;align-items:center;justify-content:center;color:var(--gray-20);font-size:44px;}
+.qty .b.green{background:var(--green-60);border-color:var(--green-60);color:var(--gray-10);}
+.qty .n{font-weight:700;font-size:44px;color:var(--gray-10);min-width:60px;text-align:center;}
+
+/* S5 cart */
+.cart{height:100%;display:flex;flex-direction:column;padding:32px 48px 0;overflow:hidden;}
+.badge{display:inline-flex;align-items:center;gap:12px;padding:12px 24px;border-radius:9999px;background:var(--gray-95);
+  color:var(--gray-30);font-weight:600;font-size:24px;align-self:flex-start;}
+.badge .d{width:16px;height:16px;border-radius:9999px;background:var(--green-40);}
+.lineitem{display:flex;align-items:center;gap:24px;padding:28px 0;border-bottom:1px solid var(--gray-95);}
+.lineitem .ph{width:120px;height:120px;flex:0 0 120px;}
+.lineitem .info{flex:1 1 auto;display:flex;flex-direction:column;gap:14px;}
+.qty.sm .b{width:64px;height:64px;font-size:34px;}
+.qty.sm .n{font-size:32px;min-width:44px;}
+.summary{margin-top:auto;padding:32px 0 0;}
+.sumrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;}
+.sumrow.total{border-top:1px solid var(--color-85);margin-top:12px;padding-top:24px;}
+
+/* S6 payment */
+.pay{height:100%;display:flex;flex-direction:column;padding:48px 48px 0;gap:32px;overflow:hidden;}
+.totalbox{background:var(--gray-10);border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:8px;color:var(--white);}
+.totalbox .amt{font-weight:700;font-size:72px;letter-spacing:.01em;}
+.payrow{height:136px;border:2px solid var(--color-85);border-radius:16px;display:flex;align-items:center;gap:28px;padding:0 32px;}
+.payrow.sel{border-color:var(--green-60);background:#F3FDF7;}
+.payrow .pic{width:80px;height:80px;border-radius:16px;background:var(--gray-95);display:flex;align-items:center;justify-content:center;color:var(--gray-30);font-size:44px;flex:0 0 80px;}
+.payrow.sel .pic{background:var(--green-60);color:var(--gray-10);}
+.payrow .radio{width:52px;height:52px;border-radius:9999px;border:2px solid var(--color-85);margin-left:auto;flex:0 0 52px;display:flex;align-items:center;justify-content:center;}
+.payrow.sel .radio{border-color:var(--green-60);}
+.payrow.sel .radio::after{content:"";width:28px;height:28px;border-radius:9999px;background:var(--green-60);}
+
+/* S7 confirmation */
+.done{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;padding:0 80px;text-align:center;}
+.done .ok{width:200px;height:200px;border-radius:9999px;background:var(--green-60);color:var(--gray-10);display:flex;align-items:center;justify-content:center;font-size:120px;}
+.numbercard{width:100%;background:var(--gray-95);border-radius:16px;padding:48px;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.numbercard .num{font-weight:700;font-size:140px;line-height:1;color:var(--gray-10);letter-spacing:.02em;}
+.chip{display:inline-flex;align-items:center;gap:14px;padding:16px 28px;border-radius:9999px;background:var(--white);border:1px solid var(--color-85);font-weight:500;font-size:26px;color:var(--gray-30);}
+</style>
+</head>
+<body>
+<div class="gallery">
+<div class="frame">
+  <div class="cap">3 · Menu — product selection</div>
+  <div class="screen" id="s3en">
+    <div class="topbar">
+      <div class="iconbtn ghost"><span class="icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m4 12l6-6m-6 6l6 6m-6-6h10.5m5.5 0h-2.5"/></svg></span></div>
+      <div class="mid"><div class="steps"><span class="dot done"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div></div>
+      <div class="badge"><span class="d"></span>Dine in</div>
+    </div>
+    <div class="content">
+      <div class="menu">
+        <div class="rail">
+          <!-- category chips (placeholder labels as bars) -->
+          <div class="railitem on"><div class="ric"><span class="icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></div><div class="rbar"></div></div>
+          <div class="railitem"><div class="ric"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></div><div class="rbar" style="width:55%"></div></div>
+          <div class="railitem"><div class="ric"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 4l8 14H4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span></div><div class="rbar" style="width:65%"></div></div>
+          <div class="railitem"><div class="ric"><span class="icon"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></div><div class="rbar" style="width:50%"></div></div>
+          <div class="railitem"><div class="ric"><span class="icon"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></div><div class="rbar" style="width:60%"></div></div>
+          <div class="railitem"><div class="ric"><span class="icon"><svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div><div class="rbar" style="width:45%"></div></div>
+        </div>
+        <div class="menumain">
+          <div class="menuhead">
+            <div class="h3">Choose your dishes</div>
+            <div class="search">
+              <span class="icon" style="font-size:32px"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20l-3-3"/></g></svg></span>
+              Search the menu
+            </div>
+          </div>
+          <div class="grid">
+            <!-- product cards: image + name skeleton + price + add -->
+            <div class="card"><div class="imgph ph"><div class="glyph"></div></div>
+              <div class="lines"><div class="skel d" style="width:80%"></div><div class="skel" style="width:55%"></div></div>
+              <div class="foot"><span class="price">85 ₴</span><div class="circleadd"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></div></div>
+            </div>
+            <div class="card"><div class="imgph ph"><div class="glyph"></div></div>
+              <div class="lines"><div class="skel d" style="width:70%"></div><div class="skel" style="width:60%"></div></div>
+              <div class="foot"><span class="price">120 ₴</span><div class="circleadd"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></div></div>
+            </div>
+            <div class="card"><div class="imgph ph"><div class="glyph"></div></div>
+              <div class="lines"><div class="skel d" style="width:75%"></div><div class="skel" style="width:45%"></div></div>
+              <div class="foot"><span class="price">65 ₴</span><div class="circleadd"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></div></div>
+            </div>
+            <div class="card"><div class="imgph ph"><div class="glyph"></div></div>
+              <div class="lines"><div class="skel d" style="width:85%"></div><div class="skel" style="width:50%"></div></div>
+              <div class="foot"><span class="price">140 ₴</span><div class="circleadd"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></div></div>
+            </div>
+            <div class="card"><div class="imgph ph"><div class="glyph"></div></div>
+              <div class="lines"><div class="skel d" style="width:65%"></div><div class="skel" style="width:55%"></div></div>
+              <div class="foot"><span class="price">95 ₴</span><div class="circleadd"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></div></div>
+            </div>
+            <div class="card"><div class="imgph ph"><div class="glyph"></div></div>
+              <div class="lines"><div class="skel d" style="width:78%"></div><div class="skel" style="width:48%"></div></div>
+              <div class="foot"><span class="price">110 ₴</span><div class="circleadd"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottombar" style="display:flex;align-items:center;gap:24px;">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <div class="iconbtn" style="border:none;background:var(--gray-95);position:relative;">
+          <span class="icon" style="font-size:40px"><svg viewBox="0 0 24 24"><path d="M5 9h14l-1.2 9.2A2 2 0 0 1 15.8 20H8.2a2 2 0 0 1-2-1.8L5 9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 9V6a3 3 0 0 1 6 0v3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+          <span style="position:absolute;top:-6px;right:-6px;background:var(--green-40);color:#fff;font-size:20px;font-weight:700;width:34px;height:34px;border-radius:9999px;display:flex;align-items:center;justify-content:center;">3</span>
+        </div>
+        <div><div class="cap">3 items</div><div class="price">270 ₴</div></div>
+      </div>
+      <button class="btn btn--primary" style="flex:1;width:auto;">View order
+        <span class="ic icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12h2.5M20 12l-6-6m6 6l-6 6m6-6H9.5"/></svg></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="frame">
+  <div class="cap">4 · Product — quantity & options</div>
+  <div class="screen" id="s4en">
+    <div class="topbar">
+      <div class="iconbtn ghost"><span class="icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m4 12l6-6m-6 6l6 6m-6-6h10.5m5.5 0h-2.5"/></svg></span></div>
+      <div class="mid"><span class="cap">Customize item</span></div>
+      <div class="iconbtn"><span class="icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="m14.5 9.5l-5 5m0-5l5 5" transform="translate(-2 -2) scale(1.15)"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+    </div>
+    <div class="content">
+      <div class="pd">
+        <div class="imgph hero"><div class="glyph" style="width:34%;height:34%"></div></div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="skel d" style="width:55%;height:34px"></div>
+          <div class="skel" style="width:80%;height:20px"></div>
+          <div class="skel" style="width:40%;height:20px"></div>
+        </div>
+        <div class="optgroup">
+          <div class="h4">Portion size</div>
+          <div class="seg">
+            <div class="s"><div class="sk"></div><span>85 ₴</span></div>
+            <div class="s on"><div class="sk" style="width:60px"></div><span>110 ₴</span></div>
+            <div class="s"><div class="sk" style="width:72px"></div><span>140 ₴</span></div>
+          </div>
+        </div>
+        <div class="optgroup">
+          <div class="h4">Add-ons</div>
+          <div class="optrow sel"><div class="box"><span class="icon"><svg viewBox="0 0 24 24"><path d="m6 12l4 4l8-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="obar" style="width:45%;flex:1"></div><span class="price" style="font-size:28px">+20 ₴</span></div>
+          <div class="optrow"><div class="box"></div><div class="obar" style="width:38%;flex:1"></div><span class="price" style="font-size:28px">+15 ₴</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="bottombar" style="display:flex;align-items:center;gap:32px;">
+      <div class="qty">
+        <div class="b"><span class="icon"><svg viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div>
+        <div class="n">2</div>
+        <div class="b green"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div>
+      </div>
+      <button class="btn btn--primary" style="flex:1;width:auto;">Add · 260 ₴</button>
+    </div>
+  </div>
+</div>
+
+<div class="frame">
+  <div class="cap">5 · Order confirmation</div>
+  <div class="screen" id="s5en">
+    <div class="topbar">
+      <div class="iconbtn ghost"><span class="icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m4 12l6-6m-6 6l6 6m-6-6h10.5m5.5 0h-2.5"/></svg></span></div>
+      <div class="mid"><div class="steps"><span class="dot done"></span><span class="dot done"></span><span class="dot on"></span><span class="dot"></span></div></div>
+      <div class="badge"><span class="d"></span>Dine in</div>
+    </div>
+    <div class="content">
+      <div class="cart">
+        <div class="h2" style="margin-bottom:24px;">Your order</div>
+        <div style="flex:1 1 auto;overflow:hidden;">
+          <!-- line items -->
+          <div class="lineitem">
+            <div class="imgph ph"><div class="glyph"></div></div>
+            <div class="info"><div class="skel d" style="width:70%;height:24px"></div><div class="skel" style="width:45%"></div></div>
+            <div class="qty sm"><div class="b"><span class="icon"><svg viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div><div class="n">2</div><div class="b green"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div></div>
+            <div class="price" style="min-width:130px;text-align:right;">260 ₴</div>
+          </div>
+          <div class="lineitem">
+            <div class="imgph ph"><div class="glyph"></div></div>
+            <div class="info"><div class="skel d" style="width:60%;height:24px"></div><div class="skel" style="width:50%"></div></div>
+            <div class="qty sm"><div class="b"><span class="icon"><svg viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div><div class="n">1</div><div class="b green"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div></div>
+            <div class="price" style="min-width:130px;text-align:right;">120 ₴</div>
+          </div>
+          <div class="lineitem">
+            <div class="imgph ph"><div class="glyph"></div></div>
+            <div class="info"><div class="skel d" style="width:75%;height:24px"></div><div class="skel" style="width:40%"></div></div>
+            <div class="qty sm"><div class="b"><span class="icon"><svg viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div><div class="n">1</div><div class="b green"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div></div>
+            <div class="price" style="min-width:130px;text-align:right;">65 ₴</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;color:var(--green-40);font-weight:700;font-size:28px;padding:28px 0;">
+            <span class="icon" style="font-size:34px"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            Add another item
+          </div>
+        </div>
+        <div class="summary">
+          <div class="sumrow"><span class="body">Subtotal</span><span class="body" style="color:var(--gray-20)">445 ₴</span></div>
+          <div class="sumrow"><span class="body">Discount</span><span class="body" style="color:var(--green-40)">−0 ₴</span></div>
+          <div class="sumrow total"><span class="h3">Total</span><span class="price-lg">445 ₴</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="bottombar" style="display:flex;gap:24px;">
+      <button class="btn btn--secondary" style="flex:0 0 320px;width:auto;">Back to menu</button>
+      <button class="btn btn--primary" style="flex:1;width:auto;">Checkout
+        <span class="ic icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12h2.5M20 12l-6-6m6 6l-6 6m6-6H9.5"/></svg></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="frame">
+  <div class="cap">6 · Payment method</div>
+  <div class="screen" id="s6en">
+    <div class="topbar">
+      <div class="iconbtn ghost"><span class="icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m4 12l6-6m-6 6l6 6m-6-6h10.5m5.5 0h-2.5"/></svg></span></div>
+      <div class="mid"><div class="steps"><span class="dot done"></span><span class="dot done"></span><span class="dot done"></span><span class="dot on"></span></div></div>
+      <div class="badge"><span class="d"></span>Dine in</div>
+    </div>
+    <div class="content">
+      <div class="pay">
+        <div class="h2">Choose payment method</div>
+        <div class="totalbox">
+          <span class="cap" style="color:var(--gray-70)">Amount due</span>
+          <span class="amt">445 ₴</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="payrow sel">
+            <div class="pic"><span class="icon"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10h18" stroke-linecap="round"/><path d="M7 15h4" stroke-linecap="round"/></g></svg></span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;"><span class="h4">Bank card</span><div class="skel" style="width:180px"></div></div>
+            <div class="radio"></div>
+          </div>
+          <div class="payrow">
+            <div class="pic"><span class="icon"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 4v16M8 4a4 4 0 0 1 0 8h-.5"/><path d="M12 6c3 0 6 1.5 6 6s-3 6-6 6"/></g></svg></span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;"><span class="h4">Contactless / terminal</span><div class="skel" style="width:220px"></div></div>
+            <div class="radio"></div>
+          </div>
+          <div class="payrow">
+            <div class="pic"><span class="icon"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="10" rx="2"/><circle cx="12" cy="12" r="2.5"/></g></svg></span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;"><span class="h4">Cash at the counter</span><div class="skel" style="width:160px"></div></div>
+            <div class="radio"></div>
+          </div>
+          <div class="payrow">
+            <div class="pic"><span class="icon"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><path d="M13 15h3v5M20 13v7" stroke-linecap="round"/></g></svg></span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;"><span class="h4">QR payment</span><div class="skel" style="width:200px"></div></div>
+            <div class="radio"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottombar">
+      <button class="btn btn--primary">Pay 445 ₴</button>
+    </div>
+  </div>
+</div>
+
+<div class="frame">
+  <div class="cap">7 · Order accepted</div>
+  <div class="screen" id="s7en">
+    <div class="topbar">
+      <div class="brandmark"><span></span></div>
+      <div class="mid"><span class="cap">Thanks for choosing us</span></div>
+      <div style="width:88px"></div>
+    </div>
+    <div class="content">
+      <div class="done">
+        <div class="ok"><span class="icon"><svg viewBox="0 0 24 24"><path d="m6 12.5l4 4l8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div>
+          <div class="h1">Order accepted!</div>
+          <div class="sub" style="margin-top:20px;font-size:28px;">Payment successful. Take your receipt below.</div>
+        </div>
+        <div class="numbercard">
+          <span class="cap" style="font-size:26px;">Your order number</span>
+          <span class="num">042</span>
+        </div>
+        <div style="display:flex;gap:16px;">
+          <div class="chip"><span class="icon" style="font-size:30px;color:var(--green-40)"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 8v4l2.5 2.5"/><circle cx="12" cy="12" r="9"/></g></svg></span>Ready in ~8 min</div>
+          <div class="chip"><span class="d" style="width:16px;height:16px;border-radius:9999px;background:var(--green-40);display:inline-block;"></span>Dine in</div>
+        </div>
+        <div class="body" style="font-size:24px;color:var(--gray-50);">Watch for your number on the pickup screen</div>
+      </div>
+    </div>
+    <div class="bottombar">
+      <button class="btn btn--dark">New order</button>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
