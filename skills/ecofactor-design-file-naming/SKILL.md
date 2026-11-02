@@ -1,6 +1,6 @@
 ---
 name: ecofactor-design-file-naming
-description: Design-team file naming for ECOFACTOR. Use this skill EVERY time you create a DESIGN asset the user will download for ECOFACTOR — animations (HTML/CSS/JS, GIF, MP4, MOV, WebM, Lottie JSON), captions/subtitles (SRT, VTT), images, videos, or any exported asset. Gives every file a correct name by the EF naming convention (EF_<project>_<type>_<name>_v<NN>.<ext>) instead of generic names like animation.html or output.mp4. Also applies to download buttons inside artifacts (the `download` attribute).
+description: Design-team file naming for ECOFACTOR. Use this skill EVERY time you create a DESIGN asset the user will download for ECOFACTOR - animations (HTML/CSS/JS, GIF, MP4, MOV, WebM, Lottie JSON), captions/subtitles (SRT, VTT), images, videos, or any exported asset. Gives every file a correct name by the EF naming convention, for example EF_ECO-Totem_anim_intro_9x16_v01.mp4 (brand, project, type, name, optional format and language, version), instead of generic names like animation.html or output.mp4. Also applies to download buttons inside artifacts (the download attribute).
 ---
 
 # ECOFACTOR Design: як називати файли
