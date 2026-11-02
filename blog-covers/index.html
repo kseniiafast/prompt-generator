@@ -101,6 +101,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .card:focus-visible{outline:2px solid var(--green-60);outline-offset:4px}
 .card__media{position:relative;width:100%;max-width:100%;overflow:hidden;background:var(--gray-95)}
 .card__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.shade{position:absolute;inset:0;z-index:1;background:rgba(0,0,0,.2);pointer-events:none}
 .card__body{display:flex;flex-direction:column;gap:12px;min-width:0;padding:24px 16px 24px 20px}
 .cat{color:var(--green-40);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
 .card__title{font-size:17px;line-height:1.35;font-weight:400;color:var(--gray-20);margin:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.35em * 3)}
@@ -421,7 +422,7 @@ const pctCut = c => Math.round((1 - c.w*c.h) * 100);
 function visiblePosts() {
   return Store.posts
     .filter(p => S.filter === 'all' || p.status === S.filter)
-    .sort((a,b) => (b.date||'').localeCompare(a.date||'') || (b.updatedAt||0) - (a.updatedAt||0));
+    .sort((a,b) => (b.createdAt||0) - (a.createdAt||0) || (b.date||'').localeCompare(a.date||''));
 }
 function mediaHTML(p, ratio, label) {
   const cv = (p.covers||[])[p.active||0];
@@ -432,9 +433,9 @@ function mediaHTML(p, ratio, label) {
   } else if (S.check && !S.clean) {
     ar = `${cv.w} / ${cv.h}`;
     const c = cropWin(cv, rc);
-    inner = `<img src="${esc(cv.src)}" alt="" loading="lazy"><div class="win" style="${winStyle(c)}"><span>${label} · обрізано ${pctCut(c)}%</span></div>`;
+    inner = `<img src="${esc(cv.src)}" alt="" loading="lazy"><span class="shade"></span><div class="win" style="${winStyle(c)}"><span>${label} · обрізано ${pctCut(c)}%</span></div>`;
   } else {
-    inner = `<img src="${esc(cv.src)}" alt="" loading="lazy" style="object-position:${cv.fx}% ${cv.fy}%">`;
+    inner = `<img src="${esc(cv.src)}" alt="" loading="lazy" style="object-position:${cv.fx}% ${cv.fy}%"><span class="shade"></span>`;
   }
   const n = (p.covers||[]).length;
   const badges = p.status === 'planned' ? `<span class="badge">${ico('time')}Заплановано · ${esc(fmtShort(p.date))}</span>` : '';
@@ -458,14 +459,13 @@ function render() {
   const feed = $('#feed');
   if (Store.mode === 'loading') { feed.innerHTML = '<div class="loading">Завантаження публікацій…</div>'; return; }
   const list = visiblePosts();
-  const addCard = `<button type="button" class="add-card" data-act="new">${ico('plus')}<b>Запланувати публікацію</b><span>або перетягніть сюди обкладинку</span></button>`;
   if (!Store.posts.length) {
     feed.innerHTML = `<div class="grid"><div class="empty"><b>Поки що немає публікацій</b><span>Додайте статті з сайту й заплановані публікації.</span>
       <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><button class="btn btn--primary" type="button" data-act="new">${ico('plus')}Додати публікацію</button><button class="btn btn--ghost" type="button" data-act="samples">Повернути 6 статей із сайту</button></div></div></div>`;
   } else if (!list.length) {
-    feed.innerHTML = `<div class="grid"><div class="empty"><b>Нічого не знайдено</b><span>Змініть фільтр.</span></div>${addCard}</div>`;
+    feed.innerHTML = `<div class="grid"><div class="empty"><b>Нічого не знайдено</b><span>Змініть фільтр.</span></div></div>`;
   } else {
-    feed.innerHTML = `<div class="grid">${list.map(cardHTML).join('')}${addCard}</div>`;
+    feed.innerHTML = `<div class="grid">${list.map(cardHTML).join('')}</div>`;
   }
   requestAnimationFrame(measure);
 }
@@ -563,18 +563,18 @@ $('#feed').addEventListener('keydown', e => {
 const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
 $('#feed').addEventListener('dragover', e => {
   if (!hasFiles(e)) return;
-  const t = e.target.closest('.card, .add-card'); if (!t) return;
+  const t = e.target.closest('.card'); if (!t) return;
   e.preventDefault(); e.dataTransfer.dropEffect = 'copy';
   document.querySelectorAll('.is-drop').forEach(x => x !== t && x.classList.remove('is-drop'));
   t.classList.add('is-drop');
 });
-$('#feed').addEventListener('dragleave', e => { const t = e.target.closest('.card, .add-card'); if (t && !t.contains(e.relatedTarget)) t.classList.remove('is-drop'); });
+$('#feed').addEventListener('dragleave', e => { const t = e.target.closest('.card'); if (t && !t.contains(e.relatedTarget)) t.classList.remove('is-drop'); });
 $('#feed').addEventListener('drop', e => {
-  const t = e.target.closest('.card, .add-card'); if (!t || !hasFiles(e)) return;
+  const t = e.target.closest('.card'); if (!t || !hasFiles(e)) return;
   e.preventDefault(); t.classList.remove('is-drop');
   const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
   if (!files.length) return toast('Перетягніть файл зображення: JPG, PNG або WebP.');
-  if (t.classList.contains('card')) addCoversToPost(t.dataset.id, files); else newWithCovers(files);
+  addCoversToPost(t.dataset.id, files);
 });
 window.addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
 window.addEventListener('drop', e => { if (hasFiles(e)) e.preventDefault(); });
@@ -611,7 +611,7 @@ function coverPanel() {
   return `<div class="big" id="big" title="Клікніть, щоб вибрати головну точку кадру"><img src="${esc(cv.src)}" alt="Обкладинка"><div class="win" style="${winStyle(c)}"><span>кадр картки</span></div><span class="fp" style="left:${cv.fx}%;top:${cv.fy}%"></span></div>
     <p class="hint">Клікніть на картинку, щоб вибрати, яка частина лишиться в кадрі після обрізання.</p>
     <div class="minis">
-      <div class="mini"><div style="aspect-ratio:${S.card.w}/${S.card.h}"><img src="${esc(cv.src)}" alt="" style="object-position:${cv.fx}% ${cv.fy}%"></div><span>Картка в блозі · ${S.card.id==='custom'?`${S.card.w} × ${S.card.h}`:PRESETS.find(p=>p.id===S.card.id).label}</span></div>
+      <div class="mini"><div style="aspect-ratio:${S.card.w}/${S.card.h}"><img src="${esc(cv.src)}" alt="" style="object-position:${cv.fx}% ${cv.fy}%"><span class="shade"></span></div><span>Картка в блозі · ${S.card.id==='custom'?`${S.card.w} × ${S.card.h}`:PRESETS.find(p=>p.id===S.card.id).label}</span></div>
       <div class="mini"><div style="aspect-ratio:${ADMIN.w}/${ADMIN.h}"><img src="${esc(cv.src)}" alt="" style="object-position:${cv.fx}% ${cv.fy}%"></div><span>Після обрізання до ${ADMIN.w} × ${ADMIN.h}</span></div>
     </div>
     <div class="warns">${warnings(cv)}</div>`;
@@ -681,6 +681,7 @@ $('#modalRoot').addEventListener('click', async e => {
   if (a === 'save') {
     if (!D.title) { $('#errTitle').hidden = false; $('#fTitle').focus(); return; }
     const { isNew, ...post } = D;
+    if (isNew) post.createdAt = Date.now();
     b.disabled = true; b.textContent = 'Зберігаємо…';
     try { await Store.save(post); toast(isNew ? (post.status === 'planned' ? 'Публікацію заплановано' : 'Публікацію додано') : 'Зміни збережено'); closeEditor(); }
     catch (er) { toast(er.message || 'Не вдалося зберегти. Спробуйте ще раз.'); b.disabled = false; b.textContent = 'Зберегти'; }
