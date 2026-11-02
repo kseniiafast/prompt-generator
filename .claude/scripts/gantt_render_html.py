@@ -403,6 +403,29 @@ def main():
     border-radius: 6px;
   }}
   .no-deadline a:hover {{ background: var(--row-hover); }}
+  .head-actions {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }}
+  .refresh-btn {{
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }}
+  .refresh-btn:disabled {{ opacity: 0.5; cursor: default; }}
+  .refresh-status {{
+    font-size: 12px;
+    color: var(--text-muted);
+  }}
 </style>
 <div class="page">
   <header class="head">
@@ -410,6 +433,10 @@ def main():
     <div class="logo logo-dark">{logo_white}</div>
     <h1>Гант — задачі Ксенії Фаст (Worksection)</h1>
     <p class="meta">Сьогодні: {today.isoformat()} · Період: {esc(period_label)} · клікни на задачу, щоб відкрити її у Worksection</p>
+    <div class="head-actions">
+      <button id="gantt-refresh-btn" class="refresh-btn" type="button" disabled>🔄 Оновити гант</button>
+      <span id="gantt-refresh-status" class="refresh-status" role="status" aria-live="polite">перевіряю доступність...</span>
+    </div>
   </header>
 
   <div class="scroll-wrap">
@@ -430,6 +457,73 @@ def main():
 
   {nodl_html}
 </div>
+<script>
+(function () {{
+  var btn = document.getElementById('gantt-refresh-btn');
+  var status = document.getElementById('gantt-refresh-status');
+  if (!btn) return;
+  var comments = null;
+
+  function setStatus(text) {{ if (status) status.textContent = text; }}
+
+  var REASONS = {{
+    writers_only: 'лише редактор артефакту може надсилати запит звідси',
+    no_session: 'зараз немає активної сесії Claude — відкрий чат і напиши «онови ще раз»',
+    off: 'надсилання до Claude вимкнено для цього перегляду'
+  }};
+  var ERRORS = {{
+    consent_required: 'дозволь коментарі зі сторінки у вікні, що з’явилось, і натисни ще раз',
+    forbidden: 'коментування з цієї сторінки вимкнено для тебе',
+    claude_unavailable: 'Claude зараз недоступний — напиши «онови» в чаті',
+    rate_limited: 'забагато запитів поспіль, зачекай трохи',
+    invalid: 'не вдалось сформувати запит',
+    unavailable: 'тимчасово недоступно, спробуй ще раз'
+  }};
+
+  async function init() {{
+    try {{
+      if (!window.claude || typeof window.claude.use !== 'function') {{
+        setStatus('кнопка працює лише всередині Claude');
+        return;
+      }}
+      comments = await window.claude.use('comments');
+      if (!comments) {{
+        setStatus('недоступно для цього перегляду');
+        return;
+      }}
+      btn.disabled = false;
+      setStatus('натисни, щоб попросити Claude оновити гант');
+    }} catch (e) {{
+      setStatus('недоступно');
+    }}
+  }}
+  init();
+
+  btn.addEventListener('click', async function () {{
+    if (!comments) {{ setStatus('ще завантажується, спробуй за мить'); return; }}
+    btn.disabled = true;
+    setStatus('надсилаю запит...');
+    try {{
+      if (typeof comments.canSendToClaude === 'function') {{
+        var can = await comments.canSendToClaude();
+        if (can !== 'available') {{
+          setStatus(REASONS[can] || 'зараз недоступно');
+          btn.disabled = false;
+          return;
+        }}
+      }}
+      var anchor = await comments.anchorFor(btn);
+      await comments.sendToClaude({{ anchor: anchor, text: 'Онови гант, будь ласка 🔄' }});
+      setStatus('запит надіслано ✅ перевір чат за хвилину-дві');
+    }} catch (err) {{
+      var code = err && err.code;
+      setStatus((code && ERRORS[code]) || 'не вдалось надіслати запит');
+    }} finally {{
+      btn.disabled = false;
+    }}
+  }});
+}})();
+</script>
 """
 
     with open(out_html, "w", encoding="utf-8") as f:
