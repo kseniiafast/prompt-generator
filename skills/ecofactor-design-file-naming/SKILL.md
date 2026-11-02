@@ -1,9 +1,12 @@
 ---
-name: ecofactor-file-naming
-description: Use this skill EVERY time you create a file the user will download for ECOFACTOR — animations (HTML/CSS/JS, GIF, MP4, MOV, WebM, Lottie JSON), captions/subtitles (SRT, VTT), images, videos, or any exported asset. Gives every file a correct name by the EF naming convention (EF_<project>_<type>_<name>_v<NN>.<ext>) instead of generic names like animation.html or output.mp4. Also applies to download buttons inside artifacts (the `download` attribute).
+name: ecofactor-design-file-naming
+description: Design-team file naming for ECOFACTOR. Use this skill EVERY time you create a DESIGN asset the user will download for ECOFACTOR — animations (HTML/CSS/JS, GIF, MP4, MOV, WebM, Lottie JSON), captions/subtitles (SRT, VTT), images, videos, or any exported asset. Gives every file a correct name by the EF naming convention (EF_<project>_<type>_<name>_v<NN>.<ext>) instead of generic names like animation.html or output.mp4. Also applies to download buttons inside artifacts (the `download` attribute).
 ---
 
-# ECOFACTOR: як називати файли
+# ECOFACTOR Design: як називати файли
+
+Ці правила діють для **дизайнерських файлів**: анімацій, титрів, графіки, відео, звуку, макетів і презентацій, які робить дизайн-команда.
+На робочі документи інших відділів (договори, звіти, таблиці) вони не поширюються.
 
 Кожен файл, який користувач скачає, має одразу називатися правильно.
 Не можна віддавати файли з назвами `animation.html`, `output.mp4`, `index.html`, `captions.srt`, `untitled` тощо.
